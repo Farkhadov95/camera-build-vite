@@ -31,6 +31,8 @@ export type PromoItems = PromoItem[];
 
 export type CatalogData = {
     catalog: CatalogItems;
+    product: CatalogItem | null;
+    similarProducts: CatalogItems;
     promos: PromoItems;
     isDataLoading: boolean;
 }

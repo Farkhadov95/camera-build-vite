@@ -1,17 +1,16 @@
+import React from 'react';
 import { CatalogItem } from '../../type/catalog';
-import { Link } from 'react-router-dom';
 
 type Props = {
   item: CatalogItem;
 };
 
-const CatalogItemCard = ({ item }: Props) => {
+const SimilarItem = ({ item }: Props) => {
   const {
-    id,
+    name,
+    price,
     rating,
     reviewCount,
-    price,
-    name,
     previewImg,
     previewImg2x,
     previewImgWebp,
@@ -19,19 +18,19 @@ const CatalogItemCard = ({ item }: Props) => {
   } = item;
 
   return (
-    <div className="product-card">
+    <div className="product-card is-active">
       <div className="product-card__img">
         <picture>
           <source
             type="image/webp"
-            srcSet={`${previewImgWebp}, ${previewImgWebp2x}, 2x`}
+            srcSet={`/${previewImgWebp}, /${previewImgWebp2x}, 2x`}
           />
           <img
-            src={previewImg}
-            srcSet={`${previewImg2x} 2x`}
+            src={`/${previewImg}`}
+            srcSet={`/${previewImg2x} 2x`}
             width="280"
             height="240"
-            alt={name}
+            alt="Фотоаппарат FastShot MR-5"
           />
         </picture>
       </div>
@@ -47,7 +46,7 @@ const CatalogItemCard = ({ item }: Props) => {
             <use xlinkHref="#icon-full-star"></use>
           </svg>
           <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
+            <use xlinkHref="#icon-full-star"></use>
           </svg>
           <svg width="17" height="16" aria-hidden="true">
             <use xlinkHref="#icon-star"></use>
@@ -68,12 +67,12 @@ const CatalogItemCard = ({ item }: Props) => {
         <button className="btn btn--purple product-card__btn" type="button">
           Купить
         </button>
-        <Link className="btn btn--transparent" to={`/product/${id}`}>
+        <a className="btn btn--transparent" href="#">
           Подробнее
-        </Link>
+        </a>
       </div>
     </div>
   );
 };
 
-export default CatalogItemCard;
+export default SimilarItem;
