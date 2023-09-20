@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Header = () => (
   <header className="header" id="header">
     <div className="container">
@@ -13,9 +15,9 @@ const Header = () => (
       <nav className="main-nav header__main-nav">
         <ul className="main-nav__list">
           <li className="main-nav__item">
-            <a className="main-nav__link" href="catalog.html">
+            <Link className="main-nav__link" to="/">
               Каталог
-            </a>
+            </Link>
           </li>
           <li className="main-nav__item">
             <a className="main-nav__link" href="#">

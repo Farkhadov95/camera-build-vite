@@ -1,5 +1,6 @@
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
+import { Link } from 'react-router-dom';
 
 const Catalog = () => (
   <>
@@ -87,7 +88,7 @@ const Catalog = () => (
                       <legend className="title title--h5">Категория</legend>
                       <div className="custom-checkbox catalog-filter__item">
                         <label>
-                          <input type="checkbox" name="photocamera" checked />
+                          <input type="checkbox" name="photocamera" />
                           <span className="custom-checkbox__icon"></span>
                           <span className="custom-checkbox__label">
                             Фотокамера
@@ -108,7 +109,7 @@ const Catalog = () => (
                       <legend className="title title--h5">Тип камеры</legend>
                       <div className="custom-checkbox catalog-filter__item">
                         <label>
-                          <input type="checkbox" name="digital" checked />
+                          <input type="checkbox" name="digital" />
                           <span className="custom-checkbox__icon"></span>
                           <span className="custom-checkbox__label">
                             Цифровая
@@ -117,7 +118,7 @@ const Catalog = () => (
                       </div>
                       <div className="custom-checkbox catalog-filter__item">
                         <label>
-                          <input type="checkbox" name="film" disabled />
+                          <input type="checkbox" name="film" />
                           <span className="custom-checkbox__icon"></span>
                           <span className="custom-checkbox__label">
                             Плёночная
@@ -135,12 +136,7 @@ const Catalog = () => (
                       </div>
                       <div className="custom-checkbox catalog-filter__item">
                         <label>
-                          <input
-                            type="checkbox"
-                            name="collection"
-                            checked
-                            disabled
-                          />
+                          <input type="checkbox" name="collection" />
                           <span className="custom-checkbox__icon"></span>
                           <span className="custom-checkbox__label">
                             Коллекционная
@@ -152,7 +148,7 @@ const Catalog = () => (
                       <legend className="title title--h5">Уровень</legend>
                       <div className="custom-checkbox catalog-filter__item">
                         <label>
-                          <input type="checkbox" name="zero" checked />
+                          <input type="checkbox" name="zero" />
                           <span className="custom-checkbox__icon"></span>
                           <span className="custom-checkbox__label">
                             Нулевой
@@ -194,12 +190,7 @@ const Catalog = () => (
                       <p className="title title--h5">Сортировать:</p>
                       <div className="catalog-sort__type">
                         <div className="catalog-sort__btn-text">
-                          <input
-                            type="radio"
-                            id="sortPrice"
-                            name="sort"
-                            checked
-                          />
+                          <input type="radio" id="sortPrice" name="sort" />
                           <label htmlFor="sortPrice">по цене</label>
                         </div>
                         <div className="catalog-sort__btn-text">
@@ -213,7 +204,6 @@ const Catalog = () => (
                             type="radio"
                             id="up"
                             name="sort-icon"
-                            checked
                             aria-label="По возрастанию"
                           />
                           <label htmlFor="up">
@@ -293,9 +283,9 @@ const Catalog = () => (
                       >
                         Купить
                       </button>
-                      <a className="btn btn--transparent" href="#">
+                      <Link className="btn btn--transparent" to="/product">
                         Подробнее
-                      </a>
+                      </Link>
                     </div>
                   </div>
                   <div className="product-card">
