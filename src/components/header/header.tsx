@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Header = () => (
   <header className="header" id="header">
     <div className="container">

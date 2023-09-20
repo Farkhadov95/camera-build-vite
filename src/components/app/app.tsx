@@ -1,6 +1,6 @@
-import React from 'react';
 import Catalog from '../../pages/catalog';
+// import Product from '../../pages/product';
 
-const app = () => <Catalog />;
+const App = () => <Catalog />;
 
-export default app;
+export default App;
