@@ -4,9 +4,26 @@ import CatalogItemCard from '../components/catalog/catalog-item-card';
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 import Banner from '../components/promo-banner/banner';
+import { useState } from 'react';
+import PaginationItem from '../components/pagination/pagination';
 
 const Catalog = () => {
   const catalogItems = useAppSelector(catalogItemsSelector);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 9;
+
+  const totalPages = Math.ceil(catalogItems.length / perPage);
+
+  const displayedItems = catalogItems.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <Header />
@@ -209,30 +226,20 @@ const Catalog = () => {
                     </form>
                   </div>
                   <div className="cards catalog__cards">
-                    {catalogItems.map((item) => (
+                    {displayedItems.map((item) => (
                       <CatalogItemCard key={item.id} item={item} />
                     ))}
                   </div>
                   <div className="pagination">
                     <ul className="pagination__list">
-                      <li className="pagination__item">
-                        <a
-                          className="pagination__link pagination__link--active"
-                          href="1"
-                        >
-                          1
-                        </a>
-                      </li>
-                      <li className="pagination__item">
-                        <a className="pagination__link" href="2">
-                          2
-                        </a>
-                      </li>
-                      <li className="pagination__item">
-                        <a className="pagination__link" href="3">
-                          3
-                        </a>
-                      </li>
+                      {Array.from({ length: totalPages }).map((_, index) => (
+                        <PaginationItem
+                          key={`page-${index + 1}`}
+                          currentPage={currentPage}
+                          index={index}
+                          handlePageChange={handlePageChange}
+                        />
+                      ))}
                       <li className="pagination__item">
                         <a
                           className="pagination__link pagination__link--text"
