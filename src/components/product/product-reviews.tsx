@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Reviews = () => (
   <section className="review-block">
     <div className="container">
