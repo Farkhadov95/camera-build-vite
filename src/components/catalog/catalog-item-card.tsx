@@ -1,4 +1,4 @@
-import { CatalogItem } from '../../type/catalog-items';
+import { CatalogItem } from '../../type/catalog';
 import { Link } from 'react-router-dom';
 
 type Props = {

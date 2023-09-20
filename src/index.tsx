@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import router from './components/routes/routes';
 import { store } from './store';
-import { fetchCatalogDataAction } from './reducers/catalog-data';
+import {
+  fetchCatalogDataAction,
+  fetchPromoDataAction,
+} from './reducers/catalog-data';
 import { Provider } from 'react-redux';
 
 store.dispatch(fetchCatalogDataAction());
+store.dispatch(fetchPromoDataAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

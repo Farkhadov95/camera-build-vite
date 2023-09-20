@@ -17,7 +17,20 @@ export type CatalogItem = {
 
 export type CatalogItems = CatalogItem[];
 
+export type PromoItem = {
+    id: number;
+    name: string;
+    previewImg: string;
+    previewImg2x: string;
+    previewImgWebp: string;
+    previewImgWebp2x: string;
+}
+
+export type PromoItems = PromoItem[];
+
+
 export type CatalogData = {
     catalog: CatalogItems;
+    promos: PromoItems;
     isDataLoading: boolean;
 }
