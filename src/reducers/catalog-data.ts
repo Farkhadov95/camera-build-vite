@@ -8,7 +8,7 @@ const initialState: CatalogData = {
   isDataLoading: false,
 };
 
-export const fetchCatalogData = createAsyncThunk<CatalogItems, undefined, {
+export const fetchCatalogDataAction = createAsyncThunk<CatalogItems, undefined, {
     dispatch: AppDispatch;
     state: State;
     extra: AxiosInstance;
@@ -26,14 +26,14 @@ export const catalogData = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCatalogData.pending, (state) => {
+      .addCase(fetchCatalogDataAction.pending, (state) => {
         state.isDataLoading = true;
       })
-      .addCase(fetchCatalogData.fulfilled, (state, action) => {
+      .addCase(fetchCatalogDataAction.fulfilled, (state, action) => {
         state.catalog = action.payload;
         console.log(state.catalog);
       })
-      .addCase(fetchCatalogData.rejected, (state) => {
+      .addCase(fetchCatalogDataAction.rejected, (state) => {
         state.isDataLoading = false;
         console.log('rejected');
       });
