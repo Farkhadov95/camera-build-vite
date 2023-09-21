@@ -1,7 +1,7 @@
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
-import SimilarProducts from '../components/product/similar-products';
-import Reviews from '../components/product/product-reviews';
+import SimilarProducts from '../components/similar-products/similar-products';
+import Reviews from '../components/product-reviews/product-reviews';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import {
