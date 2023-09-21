@@ -3,7 +3,7 @@ import Footer from '../components/footer/footer';
 import SimilarProducts from '../components/similar-products/similar-products';
 import Reviews from '../components/product-reviews/product-reviews';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
   fetchSimilarProductsAction,
@@ -12,11 +12,15 @@ import { useAppDispatch } from '../type';
 import { useSelector } from 'react-redux';
 import NotFound from './not-found';
 import { productSelector } from '../selectors/catalog-selectors';
+import SpecsTab from '../components/product-tabs/specs-tab';
+import DescriptionTab from '../components/product-tabs/description-tab';
+import { Tabs } from '../const';
 
 const Product = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const product = useSelector(productSelector);
+  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   useEffect(() => {
     async function fetchData() {
@@ -133,41 +137,36 @@ const Product = () => {
                   </button>
                   <div className="tabs product__tabs">
                     <div className="tabs__controls product__tabs-controls">
-                      <button className="tabs__control" type="button">
+                      <button
+                        className={`tabs__control ${
+                          activeTab === Tabs.SPECS ? 'is-active' : ''
+                        }`}
+                        type="button"
+                        onClick={() => setActiveTab(Tabs.SPECS)}
+                      >
                         Характеристики
                       </button>
-                      <button className="tabs__control is-active" type="button">
+                      <button
+                        className={`tabs__control ${
+                          activeTab === Tabs.DESCRIPTION ? 'is-active' : ''
+                        }`}
+                        type="button"
+                        onClick={() => setActiveTab(Tabs.DESCRIPTION)}
+                      >
                         Описание
                       </button>
                     </div>
                     <div className="tabs__content">
-                      <div className="tabs__element">
-                        <ul className="product__tabs-list">
-                          <li className="item-list">
-                            <span className="item-list__title">Артикул:</span>
-                            <p className="item-list__text"> {vendorCode}</p>
-                          </li>
-                          <li className="item-list">
-                            <span className="item-list__title">Категория:</span>
-                            <p className="item-list__text">{category}</p>
-                          </li>
-                          <li className="item-list">
-                            <span className="item-list__title">
-                              Тип камеры:
-                            </span>
-                            <p className="item-list__text">{type}</p>
-                          </li>
-                          <li className="item-list">
-                            <span className="item-list__title">Уровень:</span>
-                            <p className="item-list__text">{level}</p>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="tabs__element is-active">
-                        <div className="product__tabs-text">
-                          <p>{description}</p>
-                        </div>
-                      </div>
+                      {activeTab === Tabs.SPECS ? (
+                        <SpecsTab
+                          vendorCode={vendorCode}
+                          type={type}
+                          category={category}
+                          level={level}
+                        />
+                      ) : (
+                        <DescriptionTab description={description} />
+                      )}
                     </div>
                   </div>
                 </div>
