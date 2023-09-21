@@ -1,3 +1,4 @@
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { similarProductsSelector } from '../../selectors/catalog-selectors';
 import { useAppSelector } from '../../type';
 import SimilarItem from './similar-item';
@@ -11,9 +12,22 @@ const SimilarProducts = () => {
         <h2 className="title title--h3">Похожие товары</h2>
         <div className="product-similar__slider">
           <div className="product-similar__slider-list">
-            {similarItems.slice(0, 3).map((item) => (
+            <Swiper
+              modules={[]}
+              slidesPerView={3}
+              navigation
+              pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
+            >
+              {similarItems.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <SimilarItem key={item.id} item={item} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            {/* {similarItems.slice(0, 3).map((item) => (
               <SimilarItem key={item.id} item={item} />
-            ))}
+            ))} */}
           </div>
           <button
             className="slider-controls slider-controls--prev"
