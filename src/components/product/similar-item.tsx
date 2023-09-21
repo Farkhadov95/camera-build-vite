@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { CatalogItem } from '../../type/catalog';
 
 type Props = {
@@ -6,6 +7,7 @@ type Props = {
 
 const SimilarItem = ({ item }: Props) => {
   const {
+    id,
     name,
     price,
     rating,
@@ -17,7 +19,6 @@ const SimilarItem = ({ item }: Props) => {
   } = item;
 
   return (
-    // <div className="product-card is-active">
     <div className="product-card is-active">
       <div className="product-card__img">
         <picture>
@@ -67,9 +68,9 @@ const SimilarItem = ({ item }: Props) => {
         <button className="btn btn--purple product-card__btn" type="button">
           Купить
         </button>
-        <a className="btn btn--transparent" href="#">
+        <Link className="btn btn--transparent" to={`/product/${id}`}>
           Подробнее
-        </a>
+        </Link>
       </div>
     </div>
   );

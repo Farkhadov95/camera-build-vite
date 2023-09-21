@@ -1,10 +1,24 @@
+import { useRef, useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore from 'swiper';
 import { similarProductsSelector } from '../../selectors/catalog-selectors';
 import { useAppSelector } from '../../type';
 import SimilarItem from './similar-item';
 
 const SimilarProducts = () => {
   const similarItems = useAppSelector(similarProductsSelector);
+  const swiperRef = useRef<SwiperCore | null>(null);
+  const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.on('slideChange', () => {
+        setIsPrevDisabled(swiperRef.current?.isBeginning || false);
+        setIsNextDisabled(swiperRef.current?.isEnd || false);
+      });
+    }
+  }, []);
 
   return (
     <section className="product-similar">
@@ -13,9 +27,16 @@ const SimilarProducts = () => {
         <div className="product-similar__slider">
           <div className="product-similar__slider-list">
             <Swiper
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              onSlideChange={() => {
+                // add this prop
+                setIsPrevDisabled(swiperRef.current?.isBeginning || false);
+                setIsNextDisabled(swiperRef.current?.isEnd || false);
+              }}
               modules={[]}
               slidesPerView={3}
-              navigation
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}
             >
@@ -25,15 +46,14 @@ const SimilarProducts = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            {/* {similarItems.slice(0, 3).map((item) => (
-              <SimilarItem key={item.id} item={item} />
-            ))} */}
           </div>
           <button
             className="slider-controls slider-controls--prev"
             type="button"
             aria-label="Предыдущий слайд"
-            disabled
+            disabled={isPrevDisabled}
+            onClick={() =>
+              swiperRef.current?.slidePrev && swiperRef.current.slidePrev()}
           >
             <svg width="7" height="12" aria-hidden="true">
               <use xlinkHref="#icon-arrow"></use>
@@ -43,6 +63,9 @@ const SimilarProducts = () => {
             className="slider-controls slider-controls--next"
             type="button"
             aria-label="Следующий слайд"
+            disabled={isNextDisabled}
+            onClick={() =>
+              swiperRef.current?.slideNext && swiperRef.current.slideNext()}
           >
             <svg width="7" height="12" aria-hidden="true">
               <use xlinkHref="#icon-arrow"></use>
