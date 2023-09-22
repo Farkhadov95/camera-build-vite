@@ -4,25 +4,81 @@ import CatalogItemCard from '../components/catalog/catalog-item-card';
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 import Banner from '../components/promo-banner/banner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PaginationItem from '../components/pagination/pagination';
+import { Category, Level, Type } from '../type/catalog';
 
 const Catalog = () => {
+  const initialFilters = {
+    price: '',
+    priceUp: '',
+    photocamera: false,
+    videocamera: false,
+    digital: false,
+    film: false,
+    snapshot: false,
+    collection: false,
+    zero: false,
+    nonProfessional: false,
+    professional: false,
+  };
+
   const catalogItems = useAppSelector(catalogItemsSelector);
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState(initialFilters);
   const perPage = 9;
-
-  const totalPages = Math.ceil(catalogItems.length / perPage);
-
-  const displayedItems = catalogItems.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, type, value, checked } = e.target;
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters(initialFilters);
+    setCurrentPage(1);
+  };
+
+  const filteredItems = catalogItems.filter(
+    (item) =>
+      // Price filters
+      (filters.price === '' || item.price >= Number(filters.price)) &&
+      (filters.priceUp === '' || item.price <= Number(filters.priceUp)) &&
+      // Category filters
+      ((filters.photocamera && item.category === Category.photocamera) ||
+        (filters.videocamera && item.category === Category.videocamera) ||
+        (!filters.photocamera && !filters.videocamera)) &&
+      // Type filters
+      ((filters.digital && item.type === Type.digital) ||
+        (filters.film && item.type === Type.film) ||
+        (filters.snapshot && item.type === Type.snapshot) ||
+        (filters.collection && item.type === Type.collection) ||
+        (!filters.digital &&
+          !filters.film &&
+          !filters.snapshot &&
+          !filters.collection)) &&
+      // Level filters
+      ((filters.zero && item.level === Level.zero) ||
+        (filters.nonProfessional && item.level === Level.nonProfessional) ||
+        (filters.professional && item.level === Level.professional) ||
+        (!filters.zero && !filters.nonProfessional && !filters.professional))
+  );
+
+  const totalPages = Math.ceil(filteredItems.length / perPage);
+  const displayedItems = filteredItems.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
 
   return (
     <>
@@ -66,6 +122,8 @@ const Catalog = () => {
                                 type="number"
                                 name="price"
                                 placeholder="от"
+                                value={filters.price}
+                                onChange={handleFilterChange}
                               />
                             </label>
                           </div>
@@ -75,6 +133,8 @@ const Catalog = () => {
                                 type="number"
                                 name="priceUp"
                                 placeholder="до"
+                                value={filters.priceUp}
+                                onChange={handleFilterChange}
                               />
                             </label>
                           </div>
@@ -84,7 +144,12 @@ const Catalog = () => {
                         <legend className="title title--h5">Категория</legend>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="photocamera" />
+                            <input
+                              type="checkbox"
+                              name="photocamera"
+                              checked={filters.photocamera}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Фотокамера
@@ -93,7 +158,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="videocamera" />
+                            <input
+                              type="checkbox"
+                              name="videocamera"
+                              onChange={handleFilterChange}
+                              checked={filters.videocamera}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Видеокамера
@@ -105,7 +175,12 @@ const Catalog = () => {
                         <legend className="title title--h5">Тип камеры</legend>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="digital" />
+                            <input
+                              type="checkbox"
+                              name="digital"
+                              checked={filters.digital}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Цифровая
@@ -114,7 +189,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="film" />
+                            <input
+                              type="checkbox"
+                              name="film"
+                              checked={filters.film}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Плёночная
@@ -123,7 +203,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="snapshot" />
+                            <input
+                              type="checkbox"
+                              name="snapshot"
+                              checked={filters.snapshot}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Моментальная
@@ -132,7 +217,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="collection" />
+                            <input
+                              type="checkbox"
+                              name="collection"
+                              checked={filters.collection}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Коллекционная
@@ -144,7 +234,12 @@ const Catalog = () => {
                         <legend className="title title--h5">Уровень</legend>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="zero" />
+                            <input
+                              type="checkbox"
+                              name="zero"
+                              checked={filters.zero}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Нулевой
@@ -153,7 +248,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="non-professional" />
+                            <input
+                              type="checkbox"
+                              name="nonProfessional"
+                              checked={filters.nonProfessional}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Любительский
@@ -162,7 +262,12 @@ const Catalog = () => {
                         </div>
                         <div className="custom-checkbox catalog-filter__item">
                           <label>
-                            <input type="checkbox" name="professional" />
+                            <input
+                              type="checkbox"
+                              name="professional"
+                              checked={filters.professional}
+                              onChange={handleFilterChange}
+                            />
                             <span className="custom-checkbox__icon"></span>
                             <span className="custom-checkbox__label">
                               Профессиональный
@@ -173,6 +278,7 @@ const Catalog = () => {
                       <button
                         className="btn catalog-filter__reset-btn"
                         type="reset"
+                        onClick={handleResetFilters}
                       >
                         Сбросить фильтры
                       </button>

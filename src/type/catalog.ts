@@ -1,11 +1,29 @@
+export enum Category {
+    videocamera = 'Видеокамера',
+    photocamera = 'Фотоаппарат',
+}
+
+export enum Type {
+    collection = 'Коллекционная',
+    digital = 'Цифровая',
+    film = 'Плёночная',
+    snapshot = 'Моментальная',
+}
+
+export enum Level {
+    zero = 'Нулевой',
+    nonProfessional = 'Любительский',
+    professional = 'Профессиональный',
+}
+
 export type CatalogItem = {
     id: number;
     name: string;
     vendorCode: string;
-    type: 'Коллекционная'|'Моментальная'|'Цифровая'|'Плёночная';
-    category: 'Видеокамера'|'Фотоаппарат';
+    type: Type;
+    category: Category;
     description: string;
-    level: 'Нулевой'|'Любительский'|'Профессиональный';
+    level: Level;
     price: number;
     rating: number;
     reviewCount: number;
