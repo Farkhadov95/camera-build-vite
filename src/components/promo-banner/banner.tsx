@@ -2,8 +2,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { promoItemsSelector } from '../../selectors/catalog-selectors';
-import { useAppSelector } from '../../type';
+import { promoItemsSelector } from '../../store/selectors/catalog-selectors';
+import { useAppSelector } from '../../hooks';
 import BannerItem from './banner-item';
 
 const Banner = () => {

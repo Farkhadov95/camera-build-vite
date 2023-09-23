@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AppDispatch, State } from '../type/state';
+import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
-import { CatalogData, CatalogItem, CatalogItems, Reviews } from '../type/catalog';
-import { PromoItems } from '../type/catalog';
+import { CatalogData, CatalogItem, CatalogItems, Reviews } from '../../type/catalog';
+import { PromoItems } from '../../type/catalog';
 
 const initialState: CatalogData = {
   catalog: [],
@@ -88,7 +88,6 @@ export const catalogData = createSlice({
       })
       .addCase(fetchCatalogDataAction.rejected, (state) => {
         state.isDataLoading = false;
-        console.log('rejected');
       })
       .addCase(fetchPromoDataAction.pending, (state) => {
         state.isDataLoading = true;
@@ -99,7 +98,6 @@ export const catalogData = createSlice({
       })
       .addCase(fetchPromoDataAction.rejected, (state) => {
         state.isDataLoading = false;
-        console.log('rejected');
       })
       .addCase(fetchProductAction.pending, (state) => {
         state.isDataLoading = true;
@@ -110,29 +108,25 @@ export const catalogData = createSlice({
       })
       .addCase(fetchProductAction.rejected, (state) => {
         state.isDataLoading = false;
-        console.log('rejected');
       })
       .addCase(fetchSimilarProductsAction.pending, (state) => {
         state.isDataLoading = true;
       })
       .addCase(fetchSimilarProductsAction.fulfilled, (state, action) => {
         state.similarProducts = action.payload;
-        // console.log(state.similarProducts);
       })
       .addCase(fetchSimilarProductsAction.rejected, (state) => {
         state.isDataLoading = false;
-        console.log('rejected');
       })
       .addCase(fetchProductReviewsAction.pending, (state) => {
         state.isDataLoading = true;
       })
       .addCase(fetchProductReviewsAction.fulfilled, (state, action) => {
         state.reviews = action.payload;
-        console.log(state.reviews);
+        // console.log(state.reviews);
       })
       .addCase(fetchProductReviewsAction.rejected, (state) => {
         state.isDataLoading = false;
-        console.log('rejected');
       });
   }
 });

@@ -1,5 +1,5 @@
-import { useAppSelector } from '../type';
-import { catalogItemsSelector } from '../selectors/catalog-selectors';
+import { useAppSelector } from '../hooks';
+import { catalogItemsSelector } from '../store/selectors/catalog-selectors';
 import CatalogItemCard from '../components/catalog/catalog-item-card';
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';

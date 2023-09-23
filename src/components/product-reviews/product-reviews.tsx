@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { reviewsSelector } from '../../selectors/catalog-selectors';
-import { useAppSelector } from '../../type';
+import { reviewsSelector } from '../../store/selectors/catalog-selectors';
+import { useAppSelector } from '../../hooks';
 import ReviewCard from './review-card';
 
 const REVIEWS_DISPLAY_STEP = 3;

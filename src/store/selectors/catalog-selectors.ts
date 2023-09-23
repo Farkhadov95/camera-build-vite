@@ -1,5 +1,5 @@
-import { CatalogItem, CatalogItems, PromoItems, Reviews } from '../type/catalog';
-import { State } from '../type/state';
+import { CatalogItem, CatalogItems, PromoItems, Reviews } from '../../type/catalog';
+import { State } from '../../type/state';
 
 export const catalogItemsSelector = (state: State): CatalogItems => state.catalog;
 export const promoItemsSelector = (state: State): PromoItems => state.promos;

@@ -8,11 +8,11 @@ import {
   fetchProductAction,
   fetchProductReviewsAction,
   fetchSimilarProductsAction,
-} from '../reducers/catalog-data';
-import { useAppDispatch } from '../type';
+} from '../store/reducers/catalog-data';
+import { useAppDispatch } from '../hooks';
 import { useSelector } from 'react-redux';
 import NotFound from './not-found';
-import { productSelector } from '../selectors/catalog-selectors';
+import { productSelector } from '../store/selectors/catalog-selectors';
 import SpecsTab from '../components/product-tabs/specs-tab';
 import DescriptionTab from '../components/product-tabs/description-tab';
 import { Tabs } from '../const';

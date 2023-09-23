@@ -6,7 +6,7 @@ import { store } from './store';
 import {
   fetchCatalogDataAction,
   fetchPromoDataAction,
-} from './reducers/catalog-data';
+} from './store/reducers/catalog-data';
 import { Provider } from 'react-redux';
 
 store.dispatch(fetchCatalogDataAction());
