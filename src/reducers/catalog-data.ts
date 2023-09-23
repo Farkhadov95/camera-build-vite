@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../type/state';
 import { AxiosInstance } from 'axios';
-import { CatalogData, CatalogItem, CatalogItems } from '../type/catalog';
+import { CatalogData, CatalogItem, CatalogItems, Reviews } from '../type/catalog';
 import { PromoItems } from '../type/catalog';
 
 const initialState: CatalogData = {
   catalog: [],
   product: null,
+  reviews: [],
   similarProducts: [],
   promos: [],
   isDataLoading: false,
@@ -48,6 +49,18 @@ export const fetchSimilarProductsAction = createAsyncThunk<CatalogItems, {id:num
     },
   );
 
+export const fetchProductReviewsAction = createAsyncThunk<Reviews, {id:number}, {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }>(
+    'data/fetchProductReviews',
+    async({id}, {extra: api}) => {
+      const {data} = await api.get<Reviews>(`/cameras/${id}/reviews`);
+      return data;
+    },
+  );
+
 export const fetchPromoDataAction = createAsyncThunk<PromoItems, undefined, {
     dispatch: AppDispatch;
     state: State;
@@ -71,7 +84,7 @@ export const catalogData = createSlice({
       })
       .addCase(fetchCatalogDataAction.fulfilled, (state, action) => {
         state.catalog = action.payload;
-        console.log(state.catalog);
+        // console.log(state.catalog);
       })
       .addCase(fetchCatalogDataAction.rejected, (state) => {
         state.isDataLoading = false;
@@ -82,7 +95,7 @@ export const catalogData = createSlice({
       })
       .addCase(fetchPromoDataAction.fulfilled, (state, action) => {
         state.promos = action.payload;
-        console.log(state.promos);
+        // console.log(state.promos);
       })
       .addCase(fetchPromoDataAction.rejected, (state) => {
         state.isDataLoading = false;
@@ -93,7 +106,7 @@ export const catalogData = createSlice({
       })
       .addCase(fetchProductAction.fulfilled, (state, action) => {
         state.product = action.payload;
-        console.log(state.product);
+        // console.log(state.product);
       })
       .addCase(fetchProductAction.rejected, (state) => {
         state.isDataLoading = false;
@@ -104,9 +117,20 @@ export const catalogData = createSlice({
       })
       .addCase(fetchSimilarProductsAction.fulfilled, (state, action) => {
         state.similarProducts = action.payload;
-        console.log(state.similarProducts);
+        // console.log(state.similarProducts);
       })
       .addCase(fetchSimilarProductsAction.rejected, (state) => {
+        state.isDataLoading = false;
+        console.log('rejected');
+      })
+      .addCase(fetchProductReviewsAction.pending, (state) => {
+        state.isDataLoading = true;
+      })
+      .addCase(fetchProductReviewsAction.fulfilled, (state, action) => {
+        state.reviews = action.payload;
+        console.log(state.reviews);
+      })
+      .addCase(fetchProductReviewsAction.rejected, (state) => {
         state.isDataLoading = false;
         console.log('rejected');
       });

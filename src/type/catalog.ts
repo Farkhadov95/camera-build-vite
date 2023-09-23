@@ -50,7 +50,21 @@ export type PromoItems = PromoItem[];
 export type CatalogData = {
     catalog: CatalogItems;
     product: CatalogItem | null;
+    reviews: Reviews;
     similarProducts: CatalogItems;
     promos: PromoItems;
     isDataLoading: boolean;
 }
+
+export type Review = {
+    id: string;
+    createAt: string;
+    cameraId: number;
+    userName: string;
+    advantage: string;
+    disadvantage: string;
+    review: string;
+    rating: number;
+}
+
+export type Reviews = Review[];

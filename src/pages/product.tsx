@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
+  fetchProductReviewsAction,
   fetchSimilarProductsAction,
 } from '../reducers/catalog-data';
 import { useAppDispatch } from '../type';
@@ -25,7 +26,7 @@ const Product = () => {
   useEffect(() => {
     async function fetchData() {
       dispatch(fetchProductAction({ id: Number(id) }));
-      // dispatch(fetchFilmReviewsAction(Number(id)));
+      dispatch(fetchProductReviewsAction({ id: Number(id) }));
       await dispatch(fetchSimilarProductsAction({ id: Number(id) }));
     }
     fetchData();
