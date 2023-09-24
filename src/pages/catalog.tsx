@@ -71,6 +71,7 @@ const Catalog = () => {
   );
 
   const totalPages = Math.ceil(filteredItems.length / perPage);
+  // const sortedItems = filteredItems;
   const displayedItems = filteredItems.slice(
     (currentPage - 1) * perPage,
     currentPage * perPage

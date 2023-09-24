@@ -1,5 +1,6 @@
 import { CatalogItem } from '../../type/catalog';
 import { Link } from 'react-router-dom';
+import Stars from '../rating-stars/stars';
 
 type Props = {
   item: CatalogItem;
@@ -37,21 +38,7 @@ const CatalogItemCard = ({ item }: Props) => {
       </div>
       <div className="product-card__info">
         <div className="rate product-card__rate">
-          <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-          <svg width="17" height="16" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
+          <Stars rating={rating} />
           <p className="visually-hidden">Рейтинг: {rating}</p>
           <p className="rate__count">
             <span className="visually-hidden">Всего оценок:</span>

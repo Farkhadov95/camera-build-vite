@@ -16,6 +16,7 @@ import { productSelector } from '../store/selectors/catalog-selectors';
 import SpecsTab from '../components/product-tabs/specs-tab';
 import DescriptionTab from '../components/product-tabs/description-tab';
 import { Tabs } from '../const';
+import Stars from '../components/rating-stars/stars';
 
 const Product = () => {
   const { id } = useParams();
@@ -105,21 +106,7 @@ const Product = () => {
                 <div className="product__content">
                   <h1 className="title title--h3">{name}</h1>
                   <div className="rate product__rate">
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-star"></use>
-                    </svg>
+                    <Stars rating={rating} />
                     <p className="visually-hidden">Рейтинг: {rating}</p>
                     <p className="rate__count">
                       <span className="visually-hidden">Всего оценок:</span>

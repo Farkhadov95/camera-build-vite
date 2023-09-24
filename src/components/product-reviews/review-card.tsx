@@ -1,5 +1,6 @@
 import { Review } from '../../type/catalog';
 import { convertDateFormat } from '../../utils';
+import Stars from '../rating-stars/stars';
 
 type Props = {
   item: Review;
@@ -17,21 +18,7 @@ const ReviewCard = ({ item }: Props) => {
         </time>
       </div>
       <div className="rate review-card__rate">
-        <svg width="17" height="16" aria-hidden="true">
-          <use xlinkHref="#icon-full-star"></use>
-        </svg>
-        <svg width="17" height="16" aria-hidden="true">
-          <use xlinkHref="#icon-full-star"></use>
-        </svg>
-        <svg width="17" height="16" aria-hidden="true">
-          <use xlinkHref="#icon-full-star"></use>
-        </svg>
-        <svg width="17" height="16" aria-hidden="true">
-          <use xlinkHref="#icon-full-star"></use>
-        </svg>
-        <svg width="17" height="16" aria-hidden="true">
-          <use xlinkHref="#icon-full-star"></use>
-        </svg>
+        <Stars rating={rating} />
         <p className="visually-hidden">Оценка: {rating}</p>
       </div>
       <ul className="review-card__list">
