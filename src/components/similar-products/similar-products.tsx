@@ -31,11 +31,9 @@ const SimilarProducts = () => {
                 swiperRef.current = swiper;
               }}
               onSlideChange={() => {
-                // add this prop
                 setIsPrevDisabled(swiperRef.current?.isBeginning || false);
                 setIsNextDisabled(swiperRef.current?.isEnd || false);
               }}
-              modules={[]}
               slidesPerView={3}
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}

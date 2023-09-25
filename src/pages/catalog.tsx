@@ -7,6 +7,7 @@ import Banner from '../components/promo-banner/banner';
 import { useEffect, useState } from 'react';
 import PaginationItem from '../components/pagination/pagination';
 import { Category, Level, Type } from '../type/catalog';
+import FilterItem from '../components/catalog/filter-item';
 
 const Catalog = () => {
   const initialFilters = {
@@ -143,138 +144,66 @@ const Catalog = () => {
                       </fieldset>
                       <fieldset className="catalog-filter__block">
                         <legend className="title title--h5">Категория</legend>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="photocamera"
-                              checked={filters.photocamera}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Фотокамера
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="videocamera"
-                              onChange={handleFilterChange}
-                              checked={filters.videocamera}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Видеокамера
-                            </span>
-                          </label>
-                        </div>
+                        <FilterItem
+                          name="photocamera"
+                          title="Фотокамера"
+                          onChecked={filters.photocamera}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="videocamera"
+                          title="Видеокамера"
+                          onChecked={filters.videocamera}
+                          onChange={handleFilterChange}
+                        />
                       </fieldset>
                       <fieldset className="catalog-filter__block">
                         <legend className="title title--h5">Тип камеры</legend>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="digital"
-                              checked={filters.digital}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Цифровая
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="film"
-                              checked={filters.film}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Плёночная
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="snapshot"
-                              checked={filters.snapshot}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Моментальная
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="collection"
-                              checked={filters.collection}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Коллекционная
-                            </span>
-                          </label>
-                        </div>
+                        <FilterItem
+                          name="digital"
+                          title="Цифровая"
+                          onChecked={filters.digital}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="film"
+                          title="Плёночная"
+                          onChecked={filters.film}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="snapshot"
+                          title="Моментальная"
+                          onChecked={filters.snapshot}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="collection"
+                          title="Коллекционная"
+                          onChecked={filters.collection}
+                          onChange={handleFilterChange}
+                        />
                       </fieldset>
                       <fieldset className="catalog-filter__block">
                         <legend className="title title--h5">Уровень</legend>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="zero"
-                              checked={filters.zero}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Нулевой
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="nonProfessional"
-                              checked={filters.nonProfessional}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Любительский
-                            </span>
-                          </label>
-                        </div>
-                        <div className="custom-checkbox catalog-filter__item">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="professional"
-                              checked={filters.professional}
-                              onChange={handleFilterChange}
-                            />
-                            <span className="custom-checkbox__icon"></span>
-                            <span className="custom-checkbox__label">
-                              Профессиональный
-                            </span>
-                          </label>
-                        </div>
+                        <FilterItem
+                          name="zero"
+                          title="Нулевой"
+                          onChecked={filters.zero}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="nonProfessional"
+                          title="Любительский"
+                          onChecked={filters.nonProfessional}
+                          onChange={handleFilterChange}
+                        />
+                        <FilterItem
+                          name="professional"
+                          title="Профессиональный"
+                          onChecked={filters.professional}
+                          onChange={handleFilterChange}
+                        />
                       </fieldset>
                       <button
                         className="btn catalog-filter__reset-btn"
