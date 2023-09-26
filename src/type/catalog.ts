@@ -54,6 +54,7 @@ export type CatalogData = {
     similarProducts: CatalogItems;
     promos: PromoItems;
     isDataLoading: boolean;
+    isReviewLoading: boolean;
 }
 
 export type Review = {
@@ -66,5 +67,15 @@ export type Review = {
     review: string;
     rating: number;
 }
+
+export type PostReview = {
+    cameraId: number;
+    userName: string;
+    advantage: string;
+    disadvantage: string;
+    review: string;
+    rating: number;
+}
+
 
 export type Reviews = Review[];

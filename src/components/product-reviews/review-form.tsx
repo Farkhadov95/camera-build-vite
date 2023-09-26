@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReviewStar from './review-star';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { postReviewAction } from '../../store/reducers/catalog-data';
+import { PostReview } from '../../type/catalog';
+import { useParams } from 'react-router-dom';
+import { isReviewLoadingSelector } from '../../store/selectors/catalog-selectors';
 
 type Props = {
-  onClose: () => void;
+  handleClose: () => void;
 };
 
-const ReviewForm = ({ onClose }: Props) => {
+const ReviewForm = ({ handleClose }: Props) => {
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const isReviewLoading = useAppSelector(isReviewLoadingSelector);
+  const [reviewInfo, setReviewInfo] = useState({
+    cameraId: Number(id),
+    userName: '',
+    advantage: '',
+    disadvantage: '',
+    review: '',
+    rating: 1,
+  });
+
   const starsValues = [
     {
       count: 5,
@@ -29,6 +46,31 @@ const ReviewForm = ({ onClose }: Props) => {
     },
   ];
 
+  const review: PostReview = {
+    cameraId: reviewInfo.cameraId,
+    userName: reviewInfo.userName,
+    advantage: reviewInfo.advantage,
+    disadvantage: reviewInfo.disadvantage,
+    review: reviewInfo.review,
+    rating: reviewInfo.rating,
+  };
+
+  const onChangeHandler = (
+    evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    evt.persist();
+    const { name, value } = evt.target;
+    setReviewInfo({ ...reviewInfo, [name]: value });
+  };
+
+  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    dispatch(postReviewAction({ review, cameraId: Number(id) }));
+    if (!isReviewLoading) {
+      handleClose();
+    }
+  };
+
   return (
     <div className="modal is-active">
       <div className="modal__wrapper">
@@ -36,7 +78,7 @@ const ReviewForm = ({ onClose }: Props) => {
         <div className="modal__content">
           <p className="title title--h4">Оставить отзыв</p>
           <div className="form-review">
-            <form method="post">
+            <form method="post" onSubmit={handleSubmit}>
               <div className="form-review__rate">
                 <fieldset className="rate form-review__item">
                   <legend className="rate__caption">
@@ -72,8 +114,9 @@ const ReviewForm = ({ onClose }: Props) => {
                     </span>
                     <input
                       type="text"
-                      name="user-name"
+                      name="userName"
                       placeholder="Введите ваше имя"
+                      onChange={onChangeHandler}
                       required
                     />
                   </label>
@@ -89,8 +132,9 @@ const ReviewForm = ({ onClose }: Props) => {
                     </span>
                     <input
                       type="text"
-                      name="user-plus"
+                      name="advantage"
                       placeholder="Основные преимущества товара"
+                      onChange={onChangeHandler}
                       required
                     />
                   </label>
@@ -108,8 +152,9 @@ const ReviewForm = ({ onClose }: Props) => {
                     </span>
                     <input
                       type="text"
-                      name="user-minus"
+                      name="disadvantage"
                       placeholder="Главные недостатки товара"
+                      onChange={onChangeHandler}
                       required
                     />
                   </label>
@@ -126,11 +171,11 @@ const ReviewForm = ({ onClose }: Props) => {
                       </svg>
                     </span>
                     <textarea
-                      name="user-comment"
+                      name="review"
                       minLength={5}
                       placeholder="Поделитесь своим опытом покупки"
-                    >
-                    </textarea>
+                      onChange={onChangeHandler}
+                    />
                   </label>
                   <div className="custom-textarea__error">
                     Нужно добавить комментарий
@@ -149,7 +194,7 @@ const ReviewForm = ({ onClose }: Props) => {
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>
