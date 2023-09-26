@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
-import { CatalogData, CatalogItem, CatalogItems, PostReview, Reviews } from '../../type/catalog';
+import { CatalogData, CatalogItem, CatalogItems, PostReview, Review, Reviews } from '../../type/catalog';
 import { PromoItems } from '../../type/catalog';
 
 const initialState: CatalogData = {
@@ -11,7 +11,8 @@ const initialState: CatalogData = {
   similarProducts: [],
   promos: [],
   isDataLoading: false,
-  isReviewLoading: false
+  isReviewLoading: false,
+  isPostReviewSuccess: false,
 };
 
 export const fetchCatalogDataAction = createAsyncThunk<CatalogItems, undefined, {
@@ -74,23 +75,27 @@ export const fetchPromoDataAction = createAsyncThunk<PromoItems, undefined, {
   },
 );
 
-export const postReviewAction = createAsyncThunk<void, { review: PostReview; cameraId: number }, {
+export const postReviewAction = createAsyncThunk<Review, { review: PostReview; cameraId: number }, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'data/postReview',
   async ({ review, cameraId }, { dispatch, extra: api }) => {
-    await api.post('/reviews', review);
+    const {data} = await api.post<Review>('/reviews', review);
     dispatch(fetchProductReviewsAction({ id: cameraId }));
+    return data;
   }
 );
-
 
 export const catalogData = createSlice({
   name: 'catalogData',
   initialState,
-  reducers: {},
+  reducers: {
+    setSuccessStatus: (state, action: {payload: boolean}) => {
+      state.isPostReviewSuccess = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCatalogDataAction.pending, (state) => {
@@ -151,6 +156,7 @@ export const catalogData = createSlice({
       })
       .addCase(postReviewAction.fulfilled, (state) => {
         state.isReviewLoading = false;
+        state.isPostReviewSuccess = true;
       })
       .addCase(postReviewAction.rejected, (state) => {
         state.isReviewLoading = false;
@@ -158,3 +164,5 @@ export const catalogData = createSlice({
 
   }
 });
+
+export const { setSuccessStatus } = catalogData.actions;

@@ -12,16 +12,21 @@ import {
 import { useAppDispatch } from '../hooks';
 import { useSelector } from 'react-redux';
 import NotFound from './not-found';
-import { productSelector } from '../store/selectors/catalog-selectors';
+import {
+  isPostReviewSuccessSelector,
+  productSelector,
+} from '../store/selectors/catalog-selectors';
 import SpecsTab from '../components/product-tabs/specs-tab';
 import DescriptionTab from '../components/product-tabs/description-tab';
 import { Tabs } from '../const';
 import Stars from '../components/rating-stars/stars';
+import ReviewSuccess from '../components/product-reviews/review-success';
 
 const Product = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const product = useSelector(productSelector);
+  const successStatus = useSelector(isPostReviewSuccessSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   useEffect(() => {
@@ -168,6 +173,7 @@ const Product = () => {
             <Reviews />
           </div>
         </div>
+        {successStatus && <ReviewSuccess />}
       </main>
       <Footer />
     </>

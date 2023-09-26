@@ -19,10 +19,6 @@ const Reviews = () => {
     setReviewsToShow(reviewsToShow + REVIEWS_DISPLAY_STEP);
   };
 
-  // useEffect(() => {
-  //   console.log(reviews);
-  // }, [reviews]);
-
   const reviewsCount = reviews.length;
 
   return (

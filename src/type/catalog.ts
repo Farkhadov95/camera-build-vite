@@ -55,6 +55,7 @@ export type CatalogData = {
     promos: PromoItems;
     isDataLoading: boolean;
     isReviewLoading: boolean;
+    isPostReviewSuccess: boolean;
 }
 
 export type Review = {

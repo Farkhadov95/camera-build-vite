@@ -8,3 +8,4 @@ export const similarProductsSelector = (state: State): CatalogItems => state.sim
 export const reviewsSelector = (state: State): Reviews => state.reviews;
 export const isLoadingSelector = (state: State): boolean => state.isDataLoading;
 export const isReviewLoadingSelector = (state: State): boolean => state.isReviewLoading;
+export const isPostReviewSuccessSelector = (state: State): boolean => state.isPostReviewSuccess;

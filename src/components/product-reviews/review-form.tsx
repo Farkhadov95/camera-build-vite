@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import ReviewStar from './review-star';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { postReviewAction } from '../../store/reducers/catalog-data';
+import {
+  postReviewAction,
+  setSuccessStatus,
+} from '../../store/reducers/catalog-data';
 import { PostReview } from '../../type/catalog';
 import { useParams } from 'react-router-dom';
 import { isReviewLoadingSelector } from '../../store/selectors/catalog-selectors';
+import { starsValues } from '../../const';
 
 type Props = {
   handleClose: () => void;
@@ -14,62 +18,39 @@ const ReviewForm = ({ handleClose }: Props) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const isReviewLoading = useAppSelector(isReviewLoadingSelector);
-  const [reviewInfo, setReviewInfo] = useState({
-    cameraId: Number(id),
-    userName: '',
-    advantage: '',
-    disadvantage: '',
-    review: '',
-    rating: 1,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PostReview>({
+    defaultValues: {
+      cameraId: Number(id),
+      userName: '',
+      advantage: '',
+      disadvantage: '',
+      review: '',
+      rating: 1,
+    },
   });
 
-  const starsValues = [
-    {
-      count: 5,
-      title: 'Отлично',
-    },
-    {
-      count: 4,
-      title: 'Хорошо',
-    },
-    {
-      count: 3,
-      title: 'Нормально',
-    },
-    {
-      count: 2,
-      title: 'Плохо',
-    },
-    {
-      count: 1,
-      title: 'Ужасно',
-    },
-  ];
+  const onSubmit = (data: PostReview) => {
+    data.rating = Number(data.rating);
 
-  const review: PostReview = {
-    cameraId: reviewInfo.cameraId,
-    userName: reviewInfo.userName,
-    advantage: reviewInfo.advantage,
-    disadvantage: reviewInfo.disadvantage,
-    review: reviewInfo.review,
-    rating: reviewInfo.rating,
+    dispatch(postReviewAction({ review: data, cameraId: Number(id) }))
+      .then(() => {
+        if (!isReviewLoading) {
+          handleClose();
+          dispatch(setSuccessStatus(true));
+        }
+      })
+      .catch((error) => {
+        // для ошибок диспатча
+      });
   };
 
-  const onChangeHandler = (
-    evt: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    evt.persist();
-    const { name, value } = evt.target;
-    setReviewInfo({ ...reviewInfo, [name]: value });
-  };
-
-  const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    dispatch(postReviewAction({ review, cameraId: Number(id) }));
-    if (!isReviewLoading) {
-      handleClose();
-    }
-  };
+  const ratingRegister = register('rating', {
+    required: 'Rating is required',
+  });
 
   return (
     <div className="modal is-active">
@@ -78,9 +59,19 @@ const ReviewForm = ({ handleClose }: Props) => {
         <div className="modal__content">
           <p className="title title--h4">Оставить отзыв</p>
           <div className="form-review">
-            <form method="post" onSubmit={handleSubmit}>
+            <form
+              method="post"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(onSubmit)();
+              }}
+            >
               <div className="form-review__rate">
-                <fieldset className="rate form-review__item">
+                <fieldset
+                  className={`rate form-review__item ${
+                    errors.rating?.message ? 'is-invalid' : ''
+                  }`}
+                >
                   <legend className="rate__caption">
                     Рейтинг
                     <svg width="9" height="9" aria-hidden="true">
@@ -94,6 +85,7 @@ const ReviewForm = ({ handleClose }: Props) => {
                           key={star.count}
                           count={star.count}
                           title={star.title}
+                          register={ratingRegister}
                         />
                       ))}
                     </div>
@@ -104,7 +96,11 @@ const ReviewForm = ({ handleClose }: Props) => {
                   </div>
                   <p className="rate__message">Нужно оценить товар</p>
                 </fieldset>
-                <div className="custom-input form-review__item">
+                <div
+                  className={`custom-input form-review__item ${
+                    errors.userName?.message ? 'is-invalid' : ''
+                  }`}
+                >
                   <label>
                     <span className="custom-input__label">
                       Ваше имя
@@ -113,16 +109,22 @@ const ReviewForm = ({ handleClose }: Props) => {
                       </svg>
                     </span>
                     <input
+                      {...register('userName', {
+                        required: 'Нужно указать имя',
+                      })}
                       type="text"
-                      name="userName"
                       placeholder="Введите ваше имя"
-                      onChange={onChangeHandler}
-                      required
                     />
                   </label>
-                  <p className="custom-input__error">Нужно указать имя</p>
+                  <p className="custom-input__error">
+                    {errors.userName?.message}
+                  </p>
                 </div>
-                <div className="custom-input form-review__item">
+                <div
+                  className={`custom-input form-review__item ${
+                    errors.advantage?.message ? 'is-invalid' : ''
+                  }`}
+                >
                   <label>
                     <span className="custom-input__label">
                       Достоинства
@@ -131,18 +133,22 @@ const ReviewForm = ({ handleClose }: Props) => {
                       </svg>
                     </span>
                     <input
+                      {...register('advantage', {
+                        required: 'Нужно указать достоинства',
+                      })}
                       type="text"
-                      name="advantage"
                       placeholder="Основные преимущества товара"
-                      onChange={onChangeHandler}
-                      required
                     />
                   </label>
                   <p className="custom-input__error">
-                    Нужно указать достоинства
+                    {errors.advantage?.message}
                   </p>
                 </div>
-                <div className="custom-input form-review__item">
+                <div
+                  className={`custom-input form-review__item ${
+                    errors.disadvantage?.message ? 'is-invalid' : ''
+                  }`}
+                >
                   <label>
                     <span className="custom-input__label">
                       Недостатки
@@ -151,18 +157,22 @@ const ReviewForm = ({ handleClose }: Props) => {
                       </svg>
                     </span>
                     <input
+                      {...register('disadvantage', {
+                        required: 'Нужно указать недостатки',
+                      })}
                       type="text"
-                      name="disadvantage"
                       placeholder="Главные недостатки товара"
-                      onChange={onChangeHandler}
-                      required
                     />
                   </label>
                   <p className="custom-input__error">
-                    Нужно указать недостатки
+                    {errors.disadvantage?.message}
                   </p>
                 </div>
-                <div className="custom-textarea form-review__item">
+                <div
+                  className={`custom-textarea form-review__item ${
+                    errors.review?.message ? 'is-invalid' : ''
+                  }`}
+                >
                   <label>
                     <span className="custom-textarea__label">
                       Комментарий
@@ -171,14 +181,22 @@ const ReviewForm = ({ handleClose }: Props) => {
                       </svg>
                     </span>
                     <textarea
-                      name="review"
-                      minLength={5}
+                      {...register('review', {
+                        required: 'Нужно добавить комментарий',
+                        minLength: {
+                          value: 5,
+                          message: 'Минимальная длина 5 символов',
+                        },
+                        maxLength: {
+                          value: 160,
+                          message: 'Максимальная длина 160 символов',
+                        },
+                      })}
                       placeholder="Поделитесь своим опытом покупки"
-                      onChange={onChangeHandler}
                     />
                   </label>
                   <div className="custom-textarea__error">
-                    Нужно добавить комментарий
+                    {errors.review?.message}
                   </div>
                 </div>
               </div>
