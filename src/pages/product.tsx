@@ -8,6 +8,7 @@ import {
   fetchProductAction,
   fetchProductReviewsAction,
   fetchSimilarProductsAction,
+  setBasketItem,
 } from '../store/reducers/catalog-data';
 import { useAppDispatch } from '../hooks';
 import { useSelector } from 'react-redux';
@@ -122,7 +123,11 @@ const Product = () => {
                     <span className="visually-hidden">Цена:</span>
                     {price} ₽
                   </p>
-                  <button className="btn btn--purple" type="button">
+                  <button
+                    className="btn btn--purple"
+                    type="button"
+                    onClick={() => dispatch(setBasketItem(product))}
+                  >
                     <svg width="24" height="16" aria-hidden="true">
                       <use xlinkHref="#icon-add-basket"></use>
                     </svg>

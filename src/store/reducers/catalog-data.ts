@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
-import { CatalogData, CatalogItem, CatalogItems, PostReview, Review, Reviews } from '../../type/catalog';
+import { BasketItems, CatalogData, CatalogItem, CatalogItems, PostReview, Review, Reviews } from '../../type/catalog';
 import { PromoItems } from '../../type/catalog';
+
+const persistedBasket = localStorage.getItem('basket');
 
 const initialState: CatalogData = {
   catalog: [],
   product: null,
+  basket: persistedBasket ? JSON.parse(persistedBasket) as BasketItems : [],
   reviews: [],
   similarProducts: [],
   promos: [],
@@ -94,8 +97,32 @@ export const catalogData = createSlice({
   reducers: {
     setSuccessStatus: (state, action: {payload: boolean}) => {
       state.isPostReviewSuccess = action.payload;
-    }
-  },
+    },
+    setBasketItem: (state, action: {payload: CatalogItem}) => {
+      const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.basket.push({
+          product: action.payload,
+          quantity: 1,
+        });
+      }
+      localStorage.setItem('basket', JSON.stringify(state.basket));
+    },
+    removeBasketItem: (state, action: {payload: CatalogItem}) => {
+      const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
+
+      if (existingItemIndex !== -1) {
+        if (state.basket[existingItemIndex].quantity > 1) {
+          state.basket[existingItemIndex].quantity -= 1;
+        } else {
+          state.basket.splice(existingItemIndex, 1);
+        }
+      }
+      localStorage.setItem('basket', JSON.stringify(state.basket));
+    }},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCatalogDataAction.pending, (state) => {
@@ -115,7 +142,6 @@ export const catalogData = createSlice({
       .addCase(fetchPromoDataAction.fulfilled, (state, action) => {
         state.promos = action.payload;
         state.isDataLoading = false;
-        // console.log(state.promos);
       })
       .addCase(fetchPromoDataAction.rejected, (state) => {
         state.isDataLoading = false;
@@ -126,7 +152,6 @@ export const catalogData = createSlice({
       .addCase(fetchProductAction.fulfilled, (state, action) => {
         state.product = action.payload;
         state.isDataLoading = false;
-        // console.log(state.product);
       })
       .addCase(fetchProductAction.rejected, (state) => {
         state.isDataLoading = false;
@@ -165,4 +190,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setSuccessStatus } = catalogData.actions;
+export const { setSuccessStatus, setBasketItem, removeBasketItem } = catalogData.actions;

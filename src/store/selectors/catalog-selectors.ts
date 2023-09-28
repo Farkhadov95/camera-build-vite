@@ -1,4 +1,4 @@
-import { CatalogItem, CatalogItems, PromoItems, Reviews } from '../../type/catalog';
+import { BasketItems, CatalogItem, CatalogItems, PromoItems, Reviews } from '../../type/catalog';
 import { State } from '../../type/state';
 
 export const catalogItemsSelector = (state: State): CatalogItems => state.catalog;
@@ -9,3 +9,4 @@ export const reviewsSelector = (state: State): Reviews => state.reviews;
 export const isLoadingSelector = (state: State): boolean => state.isDataLoading;
 export const isReviewLoadingSelector = (state: State): boolean => state.isReviewLoading;
 export const isPostReviewSuccessSelector = (state: State): boolean => state.isPostReviewSuccess;
+export const basketSelector = (state: State): BasketItems => state.basket;

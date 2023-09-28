@@ -46,10 +46,18 @@ export type PromoItem = {
 
 export type PromoItems = PromoItem[];
 
+export type BasketItem = {
+    quantity: number;
+    product: CatalogItem;
+}
+
+export type BasketItems = BasketItem[];
+
 
 export type CatalogData = {
     catalog: CatalogItems;
     product: CatalogItem | null;
+    basket: BasketItems;
     reviews: Reviews;
     similarProducts: CatalogItems;
     promos: PromoItems;
