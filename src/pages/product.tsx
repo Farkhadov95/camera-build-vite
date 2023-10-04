@@ -2,7 +2,7 @@ import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 import SimilarProducts from '../components/similar-products/similar-products';
 import Reviews from '../components/product-reviews/product-reviews';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
@@ -68,20 +68,20 @@ const Product = () => {
             <div className="container">
               <ul className="breadcrumbs__list">
                 <li className="breadcrumbs__item">
-                  <a className="breadcrumbs__link" href="index.html">
+                  <Link className="breadcrumbs__link" to="/">
                     Главная
                     <svg width="5" height="8" aria-hidden="true">
                       <use xlinkHref="#icon-arrow-mini"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="breadcrumbs__item">
-                  <a className="breadcrumbs__link" href="catalog.html">
+                  <Link className="breadcrumbs__link" to="/">
                     Каталог
                     <svg width="5" height="8" aria-hidden="true">
                       <use xlinkHref="#icon-arrow-mini"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="breadcrumbs__item">
                   <span className="breadcrumbs__link breadcrumbs__link--active">

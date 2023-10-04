@@ -184,12 +184,12 @@ const ReviewForm = ({ handleClose }: Props) => {
                       {...register('review', {
                         required: 'Нужно добавить комментарий',
                         minLength: {
-                          value: 5,
-                          message: 'Минимальная длина 5 символов',
+                          value: 2,
+                          message: 'Минимальная длина: 2 cимвoлa',
                         },
                         maxLength: {
                           value: 160,
-                          message: 'Максимальная длина 160 символов',
+                          message: 'Максимальная длина: 160 символов',
                         },
                       })}
                       placeholder="Поделитесь своим опытом покупки"

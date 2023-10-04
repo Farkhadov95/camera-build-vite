@@ -1,13 +1,17 @@
 import { useAppSelector } from '../hooks';
-import { catalogItemsSelector } from '../store/selectors/catalog-selectors';
+import {
+  catalogItemsSelector,
+  isLoadingSelector,
+} from '../store/selectors/catalog-selectors';
 import CatalogItemCard from '../components/catalog/catalog-item-card';
 import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 import Banner from '../components/promo-banner/banner';
 import { useEffect, useState } from 'react';
-import PaginationItem from '../components/pagination/pagination';
 import { Category, Level, Type } from '../type/catalog';
 import FilterItem from '../components/catalog/filter-item';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Pagination from '../components/pagination/pagination';
 
 const Catalog = () => {
   const initialFilters = {
@@ -24,13 +28,40 @@ const Catalog = () => {
     professional: false,
   };
 
+  const location = useLocation();
+  const navigate = useNavigate();
   const catalogItems = useAppSelector(catalogItemsSelector);
+  const isLoading = useAppSelector(isLoadingSelector);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(initialFilters);
-  const perPage = 9;
+  const ITEMS_PER_PAGE = 9;
+
+  const updatePageInURL = (pageNumber: number) => {
+    const currentParams = new URLSearchParams(location.search);
+    currentParams.set('page', pageNumber.toString());
+    navigate(`${location.pathname}?${currentParams.toString()}`);
+  };
+
+  const totalPages = Math.ceil(catalogItems.length / ITEMS_PER_PAGE);
+
+  const getPageFromURL = () => {
+    const query = new URLSearchParams(location.search);
+    const pageFromUrl = query.get('page');
+    const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
+
+    if (requiredPage < 1 || requiredPage > 5) {
+      //5 should be the total number of pages
+
+      updatePageInURL(1);
+      return 1;
+    }
+
+    return requiredPage;
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    updatePageInURL(page);
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,16 +102,14 @@ const Catalog = () => {
         (!filters.zero && !filters.nonProfessional && !filters.professional))
   );
 
-  const totalPages = Math.ceil(filteredItems.length / perPage);
-  // const sortedItems = filteredItems;
   const displayedItems = filteredItems.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [filters]);
+    setCurrentPage(getPageFromURL());
+  }, [filters, location.search, isLoading, catalogItems]);
 
   return (
     <>
@@ -262,29 +291,20 @@ const Catalog = () => {
                     </form>
                   </div>
                   <div className="cards catalog__cards">
-                    {displayedItems.map((item) => (
-                      <CatalogItemCard key={item.id} item={item} />
-                    ))}
+                    {isLoading && (
+                      <div className="cards__loader">loading...</div>
+                    )}
+                    {!isLoading &&
+                      displayedItems.map((item) => (
+                        <CatalogItemCard key={item.id} item={item} />
+                      ))}
                   </div>
                   <div className="pagination">
-                    <ul className="pagination__list">
-                      {Array.from({ length: totalPages }).map((_, index) => (
-                        <PaginationItem
-                          key={`page-${index + 1}`}
-                          currentPage={currentPage}
-                          index={index}
-                          handlePageChange={handlePageChange}
-                        />
-                      ))}
-                      <li className="pagination__item">
-                        <a
-                          className="pagination__link pagination__link--text"
-                          href="2"
-                        >
-                          Далее
-                        </a>
-                      </li>
-                    </ul>
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      handlePageChange={handlePageChange}
+                    />
                   </div>
                 </div>
               </div>

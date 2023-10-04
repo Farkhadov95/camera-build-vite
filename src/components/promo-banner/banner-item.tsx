@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { PromoItem } from '../../type/catalog';
 
 type Props = {
@@ -5,8 +6,15 @@ type Props = {
 };
 
 const BannerItem = ({ item }: Props) => {
-  const { name, previewImg, previewImg2x, previewImgWebp, previewImgWebp2x } =
-    item;
+  const {
+    id,
+    name,
+    previewImg,
+    previewImg2x,
+    previewImgWebp,
+    previewImgWebp2x,
+  } = item;
+
   return (
     <div className="banner">
       <picture>
@@ -28,9 +36,9 @@ const BannerItem = ({ item }: Props) => {
         <span className="banner__text">
           Профессиональная камера от&nbsp;известного производителя
         </span>
-        <a className="btn" href="#">
+        <Link className="btn" to={`/product/${id}`}>
           Подробнее
-        </a>
+        </Link>
       </p>
     </div>
   );

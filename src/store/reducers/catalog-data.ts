@@ -131,7 +131,6 @@ export const catalogData = createSlice({
       .addCase(fetchCatalogDataAction.fulfilled, (state, action) => {
         state.catalog = action.payload;
         state.isDataLoading = false;
-        // console.log(state.catalog);
       })
       .addCase(fetchCatalogDataAction.rejected, (state) => {
         state.isDataLoading = false;
