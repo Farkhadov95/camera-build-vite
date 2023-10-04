@@ -45,6 +45,8 @@ const ReviewForm = ({ handleClose }: Props) => {
       })
       .catch((error) => {
         // для ошибок диспатча
+        // eslint-disable-next-line no-console
+        console.log(error);
       });
   };
 
