@@ -12,8 +12,8 @@ import {
 } from '../store/reducers/catalog-data';
 import { useAppDispatch } from '../hooks';
 import { useSelector } from 'react-redux';
-import NotFound from './not-found';
 import {
+  isLoadingSelector,
   isPostReviewSuccessSelector,
   productSelector,
 } from '../store/selectors/catalog-selectors';
@@ -29,6 +29,7 @@ const Product = () => {
   const navigate = useNavigate();
   const product = useSelector(productSelector);
   const successStatus = useSelector(isPostReviewSuccessSelector);
+  const isLoading = useSelector(isLoadingSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   const updateTabInURL = (tab: Tabs) => {
@@ -65,8 +66,8 @@ const Product = () => {
     setActiveTab(getTabFromURL() as Tabs);
   }, [id]);
 
-  if (!product) {
-    return <NotFound />;
+  if (isLoading || !product) {
+    return <div>loading...</div>;
   }
 
   const {
