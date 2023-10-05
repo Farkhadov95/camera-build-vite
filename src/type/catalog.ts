@@ -64,6 +64,7 @@ export type CatalogData = {
     isDataLoading: boolean;
     isReviewLoading: boolean;
     isPostReviewSuccess: boolean;
+    isAddedToBasket: boolean;
 }
 
 export type Review = {

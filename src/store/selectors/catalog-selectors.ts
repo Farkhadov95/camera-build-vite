@@ -9,4 +9,5 @@ export const reviewsSelector = (state: State): Reviews => state.reviews;
 export const isLoadingSelector = (state: State): boolean => state.isDataLoading;
 export const isReviewLoadingSelector = (state: State): boolean => state.isReviewLoading;
 export const isPostReviewSuccessSelector = (state: State): boolean => state.isPostReviewSuccess;
+export const isAddedToBasketSelector = (state: State): boolean => state.isAddedToBasket;
 export const basketSelector = (state: State): BasketItems => state.basket;

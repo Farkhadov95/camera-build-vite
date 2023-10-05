@@ -1,6 +1,7 @@
 import { useAppSelector } from '../hooks';
 import {
   catalogItemsSelector,
+  isAddedToBasketSelector,
   isLoadingSelector,
 } from '../store/selectors/catalog-selectors';
 import CatalogItemCard from '../components/catalog/catalog-item-card';
@@ -12,6 +13,7 @@ import { Category, Level, Type } from '../type/catalog';
 import FilterItem from '../components/catalog/filter-item';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '../components/pagination/pagination';
+import BasketAddModal from '../components/basket/basket-add-modal';
 
 const Catalog = () => {
   const initialFilters = {
@@ -32,6 +34,7 @@ const Catalog = () => {
   const navigate = useNavigate();
   const catalogItems = useAppSelector(catalogItemsSelector);
   const isLoading = useAppSelector(isLoadingSelector);
+  const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(initialFilters);
   const ITEMS_PER_PAGE = 9;
@@ -296,7 +299,7 @@ const Catalog = () => {
                     )}
                     {!isLoading &&
                       displayedItems.map((item) => (
-                        <CatalogItemCard key={item.id} item={item} />
+                        <CatalogItemCard key={item.id} product={item} />
                       ))}
                   </div>
                   <div className="pagination">
@@ -311,6 +314,7 @@ const Catalog = () => {
             </div>
           </section>
         </div>
+        {isAddedToBasket && <BasketAddModal />}
       </main>
       <Footer />
     </>

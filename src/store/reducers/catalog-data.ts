@@ -16,6 +16,7 @@ const initialState: CatalogData = {
   isDataLoading: false,
   isReviewLoading: false,
   isPostReviewSuccess: false,
+  isAddedToBasket: false,
 };
 
 export const fetchCatalogDataAction = createAsyncThunk<CatalogItems, undefined, {
@@ -110,6 +111,7 @@ export const catalogData = createSlice({
         });
       }
       localStorage.setItem('basket', JSON.stringify(state.basket));
+      state.isAddedToBasket = true;
     },
     removeBasketItem: (state, action: {payload: CatalogItem}) => {
       const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
@@ -122,7 +124,11 @@ export const catalogData = createSlice({
         }
       }
       localStorage.setItem('basket', JSON.stringify(state.basket));
-    }},
+    },
+    removeAddedToBasketMessage: (state) => {
+      state.isAddedToBasket = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCatalogDataAction.pending, (state) => {
@@ -189,4 +195,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setSuccessStatus, setBasketItem, removeBasketItem } = catalogData.actions;
+export const { setSuccessStatus, setBasketItem, removeBasketItem, removeAddedToBasketMessage } = catalogData.actions;
