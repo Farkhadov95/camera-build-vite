@@ -2,7 +2,7 @@ import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
 import SimilarProducts from '../components/similar-products/similar-products';
 import Reviews from '../components/product-reviews/product-reviews';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
@@ -26,9 +26,31 @@ import ReviewSuccess from '../components/product-reviews/review-success';
 const Product = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const product = useSelector(productSelector);
   const successStatus = useSelector(isPostReviewSuccessSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
+
+  const updateTabInURL = (tab: Tabs) => {
+    const currentParams = new URLSearchParams(location.search);
+    currentParams.set('tab', tab);
+    navigate(`${location.pathname}?${currentParams.toString()}`);
+  };
+
+  const getTabFromURL = () => {
+    const query = new URLSearchParams(location.search);
+    const tabFromUrl = query.get('tab');
+
+    if (!tabFromUrl) {
+      return Tabs.DESCRIPTION;
+    }
+    return tabFromUrl;
+  };
+
+  const handleTabChange = (tab: Tabs) => {
+    updateTabInURL(tab);
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -37,6 +59,10 @@ const Product = () => {
       await dispatch(fetchSimilarProductsAction({ id: Number(id) }));
     }
     fetchData();
+  }, [id]);
+
+  useEffect(() => {
+    setActiveTab(getTabFromURL() as Tabs);
   }, [id]);
 
   if (!product) {
@@ -140,7 +166,7 @@ const Product = () => {
                           activeTab === Tabs.SPECS ? 'is-active' : ''
                         }`}
                         type="button"
-                        onClick={() => setActiveTab(Tabs.SPECS)}
+                        onClick={() => handleTabChange(Tabs.SPECS)}
                       >
                         Характеристики
                       </button>
@@ -149,7 +175,7 @@ const Product = () => {
                           activeTab === Tabs.DESCRIPTION ? 'is-active' : ''
                         }`}
                         type="button"
-                        onClick={() => setActiveTab(Tabs.DESCRIPTION)}
+                        onClick={() => handleTabChange(Tabs.DESCRIPTION)}
                       >
                         Описание
                       </button>
