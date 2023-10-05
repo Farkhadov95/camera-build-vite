@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import {
-  isReviewLoadingSelector,
-  reviewsSelector,
-} from '../../store/selectors/catalog-selectors';
+import {} from '../../store/selectors/catalog-selectors';
 import { useAppSelector } from '../../hooks';
 import ReviewCard from './review-card';
 import ReviewForm from './review-form';
+import {
+  isReviewUploading,
+  reviews,
+} from '../../store/selectors/reviews-selectors';
 
 const REVIEWS_DISPLAY_STEP = 3;
 
 const Reviews = () => {
-  const reviews = useAppSelector(reviewsSelector);
-  const isReviewLoading = useAppSelector(isReviewLoadingSelector);
+  const reviewsAvailable = useAppSelector(reviews);
+  const isReviewLoading = useAppSelector(isReviewUploading);
   const [reviewsToShow, setReviewsToShow] = useState(REVIEWS_DISPLAY_STEP);
   const [isFormVisible, setFormVisibility] = useState(false);
 
@@ -19,7 +20,7 @@ const Reviews = () => {
     setReviewsToShow(reviewsToShow + REVIEWS_DISPLAY_STEP);
   };
 
-  const reviewsCount = reviews.length;
+  const reviewsCount = reviewsAvailable.length;
 
   return (
     <>
@@ -39,7 +40,7 @@ const Reviews = () => {
             {isReviewLoading ? (
               <p>Loading...</p>
             ) : (
-              reviews
+              reviewsAvailable
                 .slice(0, reviewsToShow)
                 .map((review) => <ReviewCard key={review.id} item={review} />)
             )}

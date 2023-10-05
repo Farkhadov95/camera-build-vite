@@ -2,7 +2,7 @@ import { CatalogItem } from '../../type/catalog';
 import { Link } from 'react-router-dom';
 import Stars from '../rating-stars/stars';
 import { useAppDispatch } from '../../hooks';
-import { setBasketItem } from '../../store/reducers/catalog-data';
+import { setBasketItem } from '../../store/catalog-data/catalog-data';
 
 type Props = {
   product: CatalogItem;
@@ -10,6 +10,7 @@ type Props = {
 
 const CatalogItemCard = ({ product }: Props) => {
   const dispatch = useAppDispatch();
+  const handleAddToBasket = () => dispatch(setBasketItem(product));
   const {
     id,
     rating,
@@ -58,7 +59,7 @@ const CatalogItemCard = ({ product }: Props) => {
         <button
           className="btn btn--purple product-card__btn"
           type="button"
-          onClick={() => dispatch(setBasketItem(product))}
+          onClick={handleAddToBasket}
         >
           Купить
         </button>

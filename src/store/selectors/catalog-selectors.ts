@@ -1,13 +1,11 @@
-import { BasketItems, CatalogItem, CatalogItems, PromoItems, Reviews } from '../../type/catalog';
+import { NameSpace } from '../../const';
+import { BasketItems, CatalogItem, CatalogItems, PromoItems } from '../../type/catalog';
 import { State } from '../../type/state';
 
-export const catalogItemsSelector = (state: State): CatalogItems => state.catalog;
-export const promoItemsSelector = (state: State): PromoItems => state.promos;
-export const productSelector = (state: State): CatalogItem | null => state.product;
-export const similarProductsSelector = (state: State): CatalogItems => state.similarProducts;
-export const reviewsSelector = (state: State): Reviews => state.reviews;
-export const isLoadingSelector = (state: State): boolean => state.isDataLoading;
-export const isReviewLoadingSelector = (state: State): boolean => state.isReviewLoading;
-export const isPostReviewSuccessSelector = (state: State): boolean => state.isPostReviewSuccess;
-export const isAddedToBasketSelector = (state: State): boolean => state.isAddedToBasket;
-export const basketSelector = (state: State): BasketItems => state.basket;
+export const catalogItemsSelector = (state: State): CatalogItems => state[NameSpace.Products].catalog;
+export const promoItemsSelector = (state: State): PromoItems => state[NameSpace.Products].promos;
+export const productSelector = (state: State): CatalogItem | null => state[NameSpace.Products].product;
+export const similarProductsSelector = (state: State): CatalogItems => state[NameSpace.Products].similarProducts;
+export const isLoadingSelector = (state: State): boolean => state[NameSpace.Products].isDataLoading;
+export const isAddedToBasketSelector = (state: State): boolean => state[NameSpace.Products].isAddedToBasket;
+export const basketSelector = (state: State): BasketItems => state[NameSpace.Products].basket;

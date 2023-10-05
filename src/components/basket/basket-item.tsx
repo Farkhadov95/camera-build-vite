@@ -2,7 +2,7 @@ import { useAppDispatch } from '../../hooks';
 import {
   removeBasketItem,
   setBasketItem,
-} from '../../store/reducers/catalog-data';
+} from '../../store/catalog-data/catalog-data';
 import { CatalogItem } from '../../type/catalog';
 
 type Props = {

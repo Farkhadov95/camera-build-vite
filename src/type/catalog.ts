@@ -58,34 +58,8 @@ export type CatalogData = {
     catalog: CatalogItems;
     product: CatalogItem | null;
     basket: BasketItems;
-    reviews: Reviews;
     similarProducts: CatalogItems;
     promos: PromoItems;
     isDataLoading: boolean;
-    isReviewLoading: boolean;
-    isPostReviewSuccess: boolean;
     isAddedToBasket: boolean;
 }
-
-export type Review = {
-    id: string;
-    createAt: string;
-    cameraId: number;
-    userName: string;
-    advantage: string;
-    disadvantage: string;
-    review: string;
-    rating: number;
-}
-
-export type PostReview = {
-    cameraId: number;
-    userName: string;
-    advantage: string;
-    disadvantage: string;
-    review: string;
-    rating: number;
-}
-
-
-export type Reviews = Review[];

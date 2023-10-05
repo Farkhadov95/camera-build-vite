@@ -1,14 +1,12 @@
 import { useForm } from 'react-hook-form';
 import ReviewStar from './review-star';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import {
-  postReviewAction,
-  setSuccessStatus,
-} from '../../store/reducers/catalog-data';
-import { PostReview } from '../../type/catalog';
+import { setSuccessStatus } from '../../store/review-data/review-data';
 import { useParams } from 'react-router-dom';
-import { isReviewLoadingSelector } from '../../store/selectors/catalog-selectors';
 import { starsValues } from '../../const';
+import { isReviewUploading } from '../../store/selectors/reviews-selectors';
+import { PostReview } from '../../type/reviews';
+import { postReviewAction } from '../../store/review-data/review-data';
 
 type Props = {
   handleClose: () => void;
@@ -17,7 +15,7 @@ type Props = {
 const ReviewForm = ({ handleClose }: Props) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const isReviewLoading = useAppSelector(isReviewLoadingSelector);
+  const isReviewLoading = useAppSelector(isReviewUploading);
   const {
     register,
     handleSubmit,

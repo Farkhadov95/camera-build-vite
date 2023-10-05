@@ -1,4 +1,4 @@
-import { Review } from '../../type/catalog';
+import { Review } from '../../type/reviews';
 import { convertDateFormat } from '../../utils';
 import Stars from '../rating-stars/stars';
 

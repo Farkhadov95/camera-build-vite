@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
-import { BasketItems, CatalogData, CatalogItem, CatalogItems, PostReview, Review, Reviews } from '../../type/catalog';
+import { BasketItems, CatalogData, CatalogItem, CatalogItems} from '../../type/catalog';
 import { PromoItems } from '../../type/catalog';
+import { NameSpace } from '../../const';
 
 const persistedBasket = localStorage.getItem('basket');
 
@@ -10,12 +11,9 @@ const initialState: CatalogData = {
   catalog: [],
   product: null,
   basket: persistedBasket ? JSON.parse(persistedBasket) as BasketItems : [],
-  reviews: [],
   similarProducts: [],
   promos: [],
   isDataLoading: false,
-  isReviewLoading: false,
-  isPostReviewSuccess: false,
   isAddedToBasket: false,
 };
 
@@ -55,18 +53,6 @@ export const fetchSimilarProductsAction = createAsyncThunk<CatalogItems, {id:num
   },
 );
 
-export const fetchProductReviewsAction = createAsyncThunk<Reviews, {id:number}, {
-  dispatch: AppDispatch;
-  state: State;
-  extra: AxiosInstance;
-}>(
-  'data/fetchProductReviews',
-  async({id}, {extra: api}) => {
-    const {data} = await api.get<Reviews>(`/cameras/${id}/reviews`);
-    return data;
-  },
-);
-
 export const fetchPromoDataAction = createAsyncThunk<PromoItems, undefined, {
   dispatch: AppDispatch;
   state: State;
@@ -79,26 +65,10 @@ export const fetchPromoDataAction = createAsyncThunk<PromoItems, undefined, {
   },
 );
 
-export const postReviewAction = createAsyncThunk<Review, { review: PostReview; cameraId: number }, {
-  dispatch: AppDispatch;
-  state: State;
-  extra: AxiosInstance;
-}>(
-  'data/postReview',
-  async ({ review, cameraId }, { dispatch, extra: api }) => {
-    const {data} = await api.post<Review>('/reviews', review);
-    dispatch(fetchProductReviewsAction({ id: cameraId }));
-    return data;
-  }
-);
-
 export const catalogData = createSlice({
-  name: 'catalogData',
+  name: NameSpace.Products,
   initialState,
   reducers: {
-    setSuccessStatus: (state, action: {payload: boolean}) => {
-      state.isPostReviewSuccess = action.payload;
-    },
     setBasketItem: (state, action: {payload: CatalogItem}) => {
       const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
 
@@ -170,29 +140,8 @@ export const catalogData = createSlice({
       })
       .addCase(fetchSimilarProductsAction.rejected, (state) => {
         state.isDataLoading = false;
-      })
-      .addCase(fetchProductReviewsAction.pending, (state) => {
-        state.isDataLoading = true;
-      })
-      .addCase(fetchProductReviewsAction.fulfilled, (state, action) => {
-        state.reviews = action.payload;
-        state.isDataLoading = false;
-      })
-      .addCase(fetchProductReviewsAction.rejected, (state) => {
-        state.isDataLoading = false;
-      })
-      .addCase(postReviewAction.pending, (state) => {
-        state.isReviewLoading = true;
-      })
-      .addCase(postReviewAction.fulfilled, (state) => {
-        state.isReviewLoading = false;
-        state.isPostReviewSuccess = true;
-      })
-      .addCase(postReviewAction.rejected, (state) => {
-        state.isReviewLoading = false;
       });
-
   }
 });
 
-export const { setSuccessStatus, setBasketItem, removeBasketItem, removeAddedToBasketMessage } = catalogData.actions;
+export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage } = catalogData.actions;

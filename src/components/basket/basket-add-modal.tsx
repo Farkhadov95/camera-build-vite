@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
-import { removeAddedToBasketMessage } from '../../store/reducers/catalog-data';
+import { removeAddedToBasketMessage } from '../../store/catalog-data/catalog-data';
 
 const BasketAddModal = () => {
   const dispatch = useAppDispatch();

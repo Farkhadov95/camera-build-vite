@@ -6,15 +6,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
-  fetchProductReviewsAction,
   fetchSimilarProductsAction,
   setBasketItem,
-} from '../store/reducers/catalog-data';
-import { useAppDispatch } from '../hooks';
+} from '../store/catalog-data/catalog-data';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { useSelector } from 'react-redux';
 import {
+  isAddedToBasketSelector,
   isLoadingSelector,
-  isPostReviewSuccessSelector,
   productSelector,
 } from '../store/selectors/catalog-selectors';
 import SpecsTab from '../components/product-tabs/specs-tab';
@@ -22,14 +21,18 @@ import DescriptionTab from '../components/product-tabs/description-tab';
 import { Tabs } from '../const';
 import Stars from '../components/rating-stars/stars';
 import ReviewSuccess from '../components/product-reviews/review-success';
+import { fetchReviewsAction } from '../store/review-data/review-data';
+import { isPostReviewSuccess } from '../store/selectors/reviews-selectors';
+import BasketAddModal from '../components/basket/basket-add-modal';
 
 const Product = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const product = useSelector(productSelector);
-  const successStatus = useSelector(isPostReviewSuccessSelector);
+  const successStatus = useSelector(isPostReviewSuccess);
   const isLoading = useSelector(isLoadingSelector);
+  const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   const updateTabInURL = (tab: Tabs) => {
@@ -56,7 +59,7 @@ const Product = () => {
   useEffect(() => {
     async function fetchData() {
       dispatch(fetchProductAction({ id: Number(id) }));
-      dispatch(fetchProductReviewsAction({ id: Number(id) }));
+      dispatch(fetchReviewsAction({ id: Number(id) }));
       await dispatch(fetchSimilarProductsAction({ id: Number(id) }));
     }
     fetchData();
@@ -69,6 +72,8 @@ const Product = () => {
   if (isLoading || !product) {
     return <div>loading...</div>;
   }
+
+  const handleAddToBasket = () => dispatch(setBasketItem(product));
 
   const {
     name,
@@ -153,7 +158,7 @@ const Product = () => {
                   <button
                     className="btn btn--purple"
                     type="button"
-                    onClick={() => dispatch(setBasketItem(product))}
+                    onClick={handleAddToBasket}
                   >
                     <svg width="24" height="16" aria-hidden="true">
                       <use xlinkHref="#icon-add-basket"></use>
@@ -206,6 +211,7 @@ const Product = () => {
           </div>
         </div>
         {successStatus && <ReviewSuccess />}
+        {isAddedToBasket && <BasketAddModal />}
       </main>
       <Footer />
     </>

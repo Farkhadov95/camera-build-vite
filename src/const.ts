@@ -1,7 +1,12 @@
 export enum Tabs {
     SPECS = 'specs',
     DESCRIPTION = 'description',
-  }
+}
+
+export enum NameSpace {
+  Products = 'PRODUCTS',
+  Reviews = 'REVIEWS',
+}
 
 export const starsValues = [
   {

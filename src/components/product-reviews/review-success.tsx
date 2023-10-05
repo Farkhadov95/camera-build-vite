@@ -1,5 +1,5 @@
 import { useAppDispatch } from '../../hooks';
-import { setSuccessStatus } from '../../store/reducers/catalog-data';
+import { setSuccessStatus } from '../../store/review-data/review-data';
 
 const ReviewSuccess = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +26,7 @@ const ReviewSuccess = () => {
             <button
               className="btn btn--purple modal__btn modal__btn--fit-width"
               type="button"
-              onClick={closeHandler}
+              onClick={() => closeHandler()}
             >
               Вернуться к покупкам
             </button>
@@ -35,7 +35,7 @@ const ReviewSuccess = () => {
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"
-            onClick={closeHandler}
+            onClick={() => closeHandler()}
           >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>
