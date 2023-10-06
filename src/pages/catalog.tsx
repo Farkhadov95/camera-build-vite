@@ -10,7 +10,7 @@ import Footer from '../components/footer/footer';
 import Banner from '../components/promo-banner/banner';
 import { useEffect, useState } from 'react';
 import { Category, Level, Type } from '../type/catalog';
-import FilterItem from '../components/catalog/filter-item';
+import FilterItem from '../components/filters/filter-item';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '../components/pagination/pagination';
 import BasketAddModal from '../components/basket/basket-add-modal';
@@ -53,7 +53,7 @@ const Catalog = () => {
     const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
 
     if (requiredPage < 1 || requiredPage > 5) {
-      //5 should be the total number of pages
+      //5 - should be the total number of pages
 
       updatePageInURL(1);
       return 1;
