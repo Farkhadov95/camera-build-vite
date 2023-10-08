@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx",
     "preview": "vite preview",
-    "test": "vitest --passWithNoTests"
+    "test": "vitest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "1.9.5",
@@ -26,14 +26,15 @@
   },
   "devDependencies": {
     "@jedmao/redux-mock-store": "3.0.5",
-    "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "14.0.0",
-    "@testing-library/user-event": "14.4.3",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.1",
     "@types/faker": "5.5.9",
     "@types/leaflet": "1.9.3",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@types/react-redux": "7.1.25",
+    "@types/sinon": "^10.0.19",
     "@types/testing-library__jest-dom": "5.14.6",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.57.1",
@@ -44,10 +45,9 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.1",
     "faker": "5.5.3",
-    "jsdom": "22.1.0",
     "typescript": "5.0.4",
     "vite": "4.3.9",
-    "vitest": "0.32.2"
+    "vitest": "^0.32.2"
   },
   "browserslist": {
     "production": [

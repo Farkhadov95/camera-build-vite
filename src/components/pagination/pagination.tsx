@@ -21,7 +21,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
   return (
     <ul className="pagination__list">
       {currentPage > 2 && (
-        <li className="pagination__item">
+        <li className="pagination__item pagination__item--prev">
           <a
             className="pagination__link pagination__link--text"
             href="#"
@@ -43,7 +43,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
         />
       ))}
       {currentPage + 1 < totalPages && (
-        <li className="pagination__item">
+        <li className="pagination__item pagination__item--next">
           <a
             className="pagination__link pagination__link--text"
             href="#"
