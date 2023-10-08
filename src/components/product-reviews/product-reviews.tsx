@@ -4,7 +4,7 @@ import { useAppSelector } from '../../hooks';
 import ReviewCard from './review-card';
 import ReviewForm from './review-form';
 import {
-  isReviewUploading,
+  areReviewsLoading,
   reviews,
 } from '../../store/selectors/reviews-selectors';
 
@@ -12,7 +12,7 @@ const REVIEWS_DISPLAY_STEP = 3;
 
 const Reviews = () => {
   const reviewsAvailable = useAppSelector(reviews);
-  const isReviewLoading = useAppSelector(isReviewUploading);
+  const isReviewLoading = useAppSelector(areReviewsLoading);
   const [reviewsToShow, setReviewsToShow] = useState(REVIEWS_DISPLAY_STEP);
   const [isFormVisible, setFormVisibility] = useState(false);
 
@@ -21,6 +21,8 @@ const Reviews = () => {
   };
 
   const reviewsCount = reviewsAvailable.length;
+  const showForm = () => setFormVisibility(true);
+  const hideForm = () => setFormVisibility(false);
 
   return (
     <>
@@ -28,11 +30,7 @@ const Reviews = () => {
         <div className="container">
           <div className="page-content__headed">
             <h2 className="title title--h3">Отзывы</h2>
-            <button
-              className="btn"
-              type="button"
-              onClick={() => setFormVisibility(true)}
-            >
+            <button className="btn" type="button" onClick={showForm}>
               Оставить свой отзыв
             </button>
           </div>
@@ -58,9 +56,7 @@ const Reviews = () => {
           </div>
         </div>
       </section>
-      {isFormVisible && (
-        <ReviewForm handleClose={() => setFormVisibility(false)} />
-      )}
+      {isFormVisible && <ReviewForm handleClose={hideForm} />}
     </>
   );
 };
