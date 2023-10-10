@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { CatalogItem } from '../../type/catalog';
-import Stars from '../rating-stars/stars';
+import { CatalogItem } from '../../../type/catalog';
+import Stars from '../../rating-stars/stars';
 
 type Props = {
   item: CatalogItem;

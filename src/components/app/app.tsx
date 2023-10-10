@@ -1,5 +1,5 @@
-import Catalog from '../../pages/catalog';
+// import Catalog from '../../pages/catalog';
 
-const App = () => <Catalog />;
+// const App = () => <Catalog />;
 
-export default App;
+// export default App;

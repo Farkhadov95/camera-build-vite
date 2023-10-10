@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Provider } from 'react-redux';
 import Reviews from './product-reviews';
-import { NameSpace } from '../../const';
-import { reviewsMocks } from '../../mocks';
+import { NameSpace } from '../../../const';
+import { reviewsMocks } from '../../../mocks';
 
 const mockStore = configureMockStore();
 

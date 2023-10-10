@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import {} from '../../store/selectors/catalog-selectors';
-import { useAppSelector } from '../../hooks';
-import ReviewCard from './review-card';
-import ReviewForm from './review-form';
+import {} from '../../../store/selectors/catalog-selectors';
+import { useAppSelector } from '../../../hooks';
+import ReviewCard from '../product-card/review-card';
+import ReviewForm from '../product-form/review-form';
 import {
   areReviewsLoading,
   reviews,
-} from '../../store/selectors/reviews-selectors';
+} from '../../../store/selectors/reviews-selectors';
 
 const REVIEWS_DISPLAY_STEP = 3;
 

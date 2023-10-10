@@ -1,6 +1,6 @@
-import { Review } from '../../type/reviews';
-import { convertDateFormat } from '../../utils';
-import Stars from '../rating-stars/stars';
+import { Review } from '../../../type/reviews';
+import { convertDateFormat } from '../../../utils';
+import Stars from '../../rating-stars/stars';
 
 type Props = {
   item: Review;

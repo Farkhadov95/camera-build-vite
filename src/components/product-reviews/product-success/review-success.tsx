@@ -1,5 +1,5 @@
-import { useAppDispatch } from '../../hooks';
-import { setSuccessStatus } from '../../store/review-data/review-data';
+import { useAppDispatch } from '../../../hooks';
+import { setSuccessStatus } from '../../../store/review-data/review-data';
 
 const ReviewSuccess = () => {
   const dispatch = useAppDispatch();

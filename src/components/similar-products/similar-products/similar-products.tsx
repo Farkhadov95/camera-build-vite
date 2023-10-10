@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { similarProductsSelector } from '../../store/selectors/catalog-selectors';
-import { useAppSelector } from '../../hooks';
-import SimilarItem from './similar-item';
+import { similarProductsSelector } from '../../../store/selectors/catalog-selectors';
+import { useAppSelector } from '../../../hooks';
+import SimilarItem from '../similar-item/similar-item';
 
 const SimilarProducts = () => {
   const similarItems = useAppSelector(similarProductsSelector);

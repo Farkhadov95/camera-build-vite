@@ -13,6 +13,7 @@ const ReviewStar = ({ count, title, register }: Props) => (
       id={`star-${count}`}
       type="radio"
       value={count}
+      data-testid={`star-${count}`}
       {...register}
     />
     <label className="rate__label" htmlFor={`star-${count}`} title={title} />

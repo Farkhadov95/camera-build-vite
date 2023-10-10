@@ -1,29 +1,29 @@
-import Header from '../components/header/header';
-import Footer from '../components/footer/footer';
-import SimilarProducts from '../components/similar-products/similar-products';
-import Reviews from '../components/product-reviews/product-reviews';
+import Header from '../../components/header/header';
+import Footer from '../../components/footer/footer';
+import SimilarProducts from '../../components/similar-products/similar-products/similar-products';
+import Reviews from '../../components/product-reviews/product-reviews/product-reviews';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
   fetchSimilarProductsAction,
   setBasketItem,
-} from '../store/catalog-data/catalog-data';
-import { useAppDispatch, useAppSelector } from '../hooks';
+} from '../../store/catalog-data/catalog-data';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useSelector } from 'react-redux';
 import {
   isAddedToBasketSelector,
   isLoadingSelector,
   productSelector,
-} from '../store/selectors/catalog-selectors';
-import SpecsTab from '../components/product-tabs/specs-tab';
-import DescriptionTab from '../components/product-tabs/description-tab';
-import { Tabs } from '../const';
-import Stars from '../components/rating-stars/stars';
-import ReviewSuccess from '../components/product-reviews/review-success';
-import { fetchReviewsAction } from '../store/review-data/review-data';
-import { isPostReviewSuccess } from '../store/selectors/reviews-selectors';
-import BasketAddModal from '../components/basket/basket-add-modal';
+} from '../../store/selectors/catalog-selectors';
+import SpecsTab from '../../components/product-tabs/specs-tab';
+import DescriptionTab from '../../components/product-tabs/description-tab';
+import { Tabs } from '../../const';
+import Stars from '../../components/rating-stars/stars';
+import ReviewSuccess from '../../components/product-reviews/product-success/review-success';
+import { fetchReviewsAction } from '../../store/review-data/review-data';
+import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
+import BasketAddModal from '../../components/basket/basket-add-modal';
 
 const Product = () => {
   const { id } = useParams();

@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form';
-import ReviewStar from './review-star';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setSuccessStatus } from '../../store/review-data/review-data';
+import ReviewStar from '../review-star';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { setSuccessStatus } from '../../../store/review-data/review-data';
 import { useParams } from 'react-router-dom';
-import { starsValues } from '../../const';
-import { isReviewUploading } from '../../store/selectors/reviews-selectors';
-import { PostReview } from '../../type/reviews';
-import { postReviewAction } from '../../store/review-data/review-data';
+import { starsValues } from '../../../const';
+import { isReviewUploading } from '../../../store/selectors/reviews-selectors';
+import { PostReview } from '../../../type/reviews';
+import { postReviewAction } from '../../../store/review-data/review-data';
 
 type Props = {
   handleClose: () => void;

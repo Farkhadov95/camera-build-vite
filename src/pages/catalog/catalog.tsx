@@ -1,19 +1,19 @@
-import { useAppSelector } from '../hooks';
+import { useAppSelector } from '../../hooks';
 import {
   catalogItemsSelector,
   isAddedToBasketSelector,
   isLoadingSelector,
-} from '../store/selectors/catalog-selectors';
-import CatalogItemCard from '../components/catalog/catalog-item-card';
-import Header from '../components/header/header';
-import Footer from '../components/footer/footer';
-import Banner from '../components/promo-banner/banner';
+} from '../../store/selectors/catalog-selectors';
+import CatalogItemCard from '../../components/catalog/catalog-item-card';
+import Header from '../../components/header/header';
+import Footer from '../../components/footer/footer';
+import Banner from '../../components/promo-banner/banner';
 import { useEffect, useState } from 'react';
-import { Category, Level, Type } from '../type/catalog';
-import FilterItem from '../components/filters/filter-item';
+import { Category, Level, Type } from '../../type/catalog';
+import FilterItem from '../../components/filters/filter-item';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Pagination from '../components/pagination/pagination';
-import BasketAddModal from '../components/basket/basket-add-modal';
+import Pagination from '../../components/pagination/pagination';
+import BasketAddModal from '../../components/basket/basket-add-modal';
 
 const Catalog = () => {
   const initialFilters = {
