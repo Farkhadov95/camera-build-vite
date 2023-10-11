@@ -62,7 +62,6 @@ const BasketItem = ({ product, quantity }: Props) => {
           min="1"
           max="99"
           aria-label="количество товара"
-          onChange={() => console.log('')}
         />
         <button
           className="btn-icon btn-icon--next"

@@ -8,7 +8,7 @@ import CatalogItemCard from '../../components/catalog/catalog-item-card';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import Banner from '../../components/promo-banner/banner';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Category, Level, Type } from '../../type/catalog';
 import FilterItem from '../../components/filters/filter-item';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,28 +39,16 @@ const Catalog = () => {
   const [filters, setFilters] = useState(initialFilters);
   const ITEMS_PER_PAGE = 9;
 
-  const updatePageInURL = (pageNumber: number) => {
-    const currentParams = new URLSearchParams(location.search);
-    currentParams.set('page', pageNumber.toString());
-    navigate(`${location.pathname}?${currentParams.toString()}`);
-  };
+  const updatePageInURL = useCallback(
+    (pageNumber: number) => {
+      const currentParams = new URLSearchParams(location.search);
+      currentParams.set('page', pageNumber.toString());
+      navigate(`${location.pathname}?${currentParams.toString()}`);
+    },
+    [location.search, location.pathname, navigate]
+  );
 
   const totalPages = Math.ceil(catalogItems.length / ITEMS_PER_PAGE);
-
-  const getPageFromURL = () => {
-    const query = new URLSearchParams(location.search);
-    const pageFromUrl = query.get('page');
-    const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
-
-    if (requiredPage < 1 || requiredPage > 5) {
-      //5 - should be the total number of pages
-
-      updatePageInURL(1);
-      return 1;
-    }
-
-    return requiredPage;
-  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -111,8 +99,23 @@ const Catalog = () => {
   );
 
   useEffect(() => {
+    const getPageFromURL = () => {
+      const query = new URLSearchParams(location.search);
+      const pageFromUrl = query.get('page');
+      const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
+
+      if (requiredPage < 1 || requiredPage > 5) {
+        //5 - should be the total number of pages
+
+        updatePageInURL(1);
+        return 1;
+      }
+
+      return requiredPage;
+    };
+
     setCurrentPage(getPageFromURL());
-  }, [filters, location.search, isLoading, catalogItems]);
+  }, [filters, location.search, updatePageInURL]);
 
   return (
     <>

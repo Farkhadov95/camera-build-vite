@@ -63,7 +63,7 @@ const Product = () => {
       await dispatch(fetchSimilarProductsAction({ id: Number(id) }));
     }
     fetchData();
-  }, [id]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     setActiveTab(getTabFromURL() as Tabs);
