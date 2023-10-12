@@ -3656,4 +3656,10 @@ button,
   .tabs__control:active {
     background-color: #f4f4fc;
   }
+
+  .not-found {
+    text-align: center;
+    font-size: 40px;
+    padding: 30vh 0;
+  }
 }
