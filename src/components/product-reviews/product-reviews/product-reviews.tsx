@@ -20,6 +20,10 @@ const Reviews = () => {
     setReviewsToShow(reviewsToShow + REVIEWS_DISPLAY_STEP);
   };
 
+  const sortedReviews = [...reviewsAvailable].sort(
+    (a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  );
+
   const reviewsCount = reviewsAvailable.length;
   const showForm = () => setFormVisibility(true);
   const hideForm = () => setFormVisibility(false);
@@ -38,7 +42,7 @@ const Reviews = () => {
             {isReviewLoading ? (
               <p>Loading...</p>
             ) : (
-              reviewsAvailable
+              sortedReviews
                 .slice(0, reviewsToShow)
                 .map((review) => <ReviewCard key={review.id} item={review} />)
             )}
