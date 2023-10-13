@@ -24,7 +24,7 @@ import Stars from '../../components/rating-stars/stars';
 import ReviewSuccess from '../../components/product-reviews/product-success/review-success';
 import { fetchReviewsAction } from '../../store/review-data/review-data';
 import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
-import BasketAddModal from '../../components/basket/basket-add-success';
+import BasketAddSuccess from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 
 const Product = () => {
@@ -225,7 +225,7 @@ const Product = () => {
           </div>
         </div>
         {successStatus && <ReviewSuccess />}
-        {isAddedToBasket && <BasketAddModal />}
+        {isAddedToBasket && <BasketAddSuccess />}
         {productToAdd !== null && <BasketAdd />}
       </main>
       <Footer />

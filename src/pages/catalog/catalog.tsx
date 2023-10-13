@@ -121,16 +121,12 @@ const Catalog = () => {
   }, [filters, location.search, updatePageInURL]);
 
   useEffect(() => {
-    // Check if any modal is open
     if (isAddedToBasket || productToAdd !== null) {
-      // Prevent scrolling when a modal is open
       document.body.classList.add('no-scroll');
     } else {
-      // Re-enable scrolling when all modals are closed
       document.body.classList.remove('no-scroll');
     }
 
-    // Cleanup function: re-enable scrolling when component is unmounted
     return () => {
       document.body.classList.remove('no-scroll');
     };

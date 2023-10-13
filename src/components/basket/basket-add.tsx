@@ -49,8 +49,8 @@ const BasketAdd = () => {
   return (
     <div className="modal is-active">
       <div className="modal__wrapper">
-        <div className="modal__overlay"></div>
-        <div className="modal__content">
+        <div className="modal__overlay" onClick={handleClose}></div>
+        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
           <p className="title title--h4">Добавить товар в корзину</p>
           <div className="basket-item basket-item--short">
             <div className="basket-item__img">

@@ -25,8 +25,8 @@ const ReviewSuccess = () => {
   return (
     <div className="modal is-active modal--narrow">
       <div className="modal__wrapper">
-        <div className="modal__overlay"></div>
-        <div className="modal__content">
+        <div className="modal__overlay" onClick={handleClose}></div>
+        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
           <p className="title title--h4">Спасибо за отзыв</p>
           <svg
             className="modal__icon"
