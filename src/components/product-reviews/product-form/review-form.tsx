@@ -7,7 +7,7 @@ import { starsValues } from '../../../const';
 import { isReviewUploading } from '../../../store/selectors/reviews-selectors';
 import { PostReview } from '../../../type/reviews';
 import { postReviewAction } from '../../../store/review-data/review-data';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 type Props = {
   handleClose: () => void;
@@ -17,6 +17,8 @@ const ReviewForm = ({ handleClose }: Props) => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const isReviewLoading = useAppSelector(isReviewUploading);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const {
     register,
     handleSubmit,
@@ -31,6 +33,12 @@ const ReviewForm = ({ handleClose }: Props) => {
       rating: 1,
     },
   });
+
+  const setFocusOnNameInput = (el: HTMLInputElement | null) => {
+    if (el) {
+      el.focus();
+    }
+  };
 
   const onSubmit = (data: PostReview) => {
     data.rating = Number(data.rating);
@@ -54,6 +62,8 @@ const ReviewForm = ({ handleClose }: Props) => {
   }, [handleClose]);
 
   useEffect(() => {
+    nameInputRef.current?.focus();
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -126,9 +136,12 @@ const ReviewForm = ({ handleClose }: Props) => {
                       </svg>
                     </span>
                     <input
-                      {...register('userName', {
-                        required: 'Нужно указать имя',
-                      })}
+                      ref={(el) => {
+                        setFocusOnNameInput(el);
+                        register('userName', {
+                          required: 'Нужно указать имя',
+                        }).ref(el);
+                      }}
                       type="text"
                       placeholder="Введите ваше имя"
                     />

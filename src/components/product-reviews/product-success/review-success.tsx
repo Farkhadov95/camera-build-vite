@@ -1,9 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../../hooks';
 import { setSuccessStatus } from '../../../store/review-data/review-data';
 
 const ReviewSuccess = () => {
   const dispatch = useAppDispatch();
+  const returnBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = useCallback(() => {
     // Dispatch an action to set successStatus to false
@@ -11,6 +12,8 @@ const ReviewSuccess = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    returnBtnRef.current?.focus();
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -38,6 +41,7 @@ const ReviewSuccess = () => {
           </svg>
           <div className="modal__buttons">
             <button
+              ref={returnBtnRef}
               className="btn btn--purple modal__btn modal__btn--fit-width"
               type="button"
               onClick={() => handleClose()}

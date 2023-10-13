@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   removeProductToAdd,
@@ -9,12 +9,15 @@ import { productToAddSelector } from '../../store/selectors/catalog-selectors';
 const BasketAdd = () => {
   const dispatch = useAppDispatch();
   const product = useAppSelector(productToAddSelector);
+  const addBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = useCallback(() => {
     dispatch(removeProductToAdd());
   }, [dispatch]);
 
   useEffect(() => {
+    addBtnRef.current?.focus();
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -86,6 +89,7 @@ const BasketAdd = () => {
           </div>
           <div className="modal__buttons">
             <button
+              ref={addBtnRef}
               className="btn btn--purple modal__btn modal__btn--fit-width"
               type="button"
               onClick={handleAddToBasket}

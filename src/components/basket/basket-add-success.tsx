@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { removeAddedToBasketMessage } from '../../store/catalog-data/catalog-data';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const BasketAddSuccess = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +10,11 @@ const BasketAddSuccess = () => {
     dispatch(removeAddedToBasketMessage());
   }, [dispatch]);
 
+  const continueShoppingBtnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
+    continueShoppingBtnRef.current?.focus();
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -38,6 +42,7 @@ const BasketAddSuccess = () => {
           </svg>
           <div className="modal__buttons">
             <button
+              ref={continueShoppingBtnRef}
               className="btn btn--transparent modal__btn"
               onClick={() => handleClose()}
             >
