@@ -7,6 +7,7 @@ import { starsValues } from '../../../const';
 import { isReviewUploading } from '../../../store/selectors/reviews-selectors';
 import { PostReview } from '../../../type/reviews';
 import { postReviewAction } from '../../../store/review-data/review-data';
+import { useCallback, useEffect } from 'react';
 
 type Props = {
   handleClose: () => void;
@@ -47,6 +48,22 @@ const ReviewForm = ({ handleClose }: Props) => {
         console.log(error);
       });
   };
+
+  const onClose = useCallback(() => {
+    handleClose();
+  }, [handleClose]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [dispatch, handleClose]);
 
   const ratingRegister = register('rating', {
     required: 'Rating is required',
@@ -212,7 +229,7 @@ const ReviewForm = ({ handleClose }: Props) => {
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"
-            onClick={handleClose}
+            onClick={onClose}
           >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>

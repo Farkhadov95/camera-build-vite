@@ -1,12 +1,26 @@
+import { useCallback, useEffect } from 'react';
 import { useAppDispatch } from '../../../hooks';
 import { setSuccessStatus } from '../../../store/review-data/review-data';
 
 const ReviewSuccess = () => {
   const dispatch = useAppDispatch();
 
-  const closeHandler = () => {
+  const handleClose = useCallback(() => {
+    // Dispatch an action to set successStatus to false
     dispatch(setSuccessStatus(false));
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [handleClose]);
 
   return (
     <div className="modal is-active modal--narrow">
@@ -26,7 +40,7 @@ const ReviewSuccess = () => {
             <button
               className="btn btn--purple modal__btn modal__btn--fit-width"
               type="button"
-              onClick={() => closeHandler()}
+              onClick={() => handleClose()}
             >
               Вернуться к покупкам
             </button>
@@ -35,7 +49,7 @@ const ReviewSuccess = () => {
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"
-            onClick={() => closeHandler()}
+            onClick={() => handleClose()}
           >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>

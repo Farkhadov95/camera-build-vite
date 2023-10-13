@@ -3,7 +3,7 @@ import Footer from '../../components/footer/footer';
 import SimilarProducts from '../../components/similar-products/similar-products/similar-products';
 import Reviews from '../../components/product-reviews/product-reviews/product-reviews';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
   fetchSimilarProductsAction,

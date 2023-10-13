@@ -1,12 +1,27 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { removeAddedToBasketMessage } from '../../store/catalog-data/catalog-data';
+import { useCallback, useEffect } from 'react';
 
 const BasketAddSuccess = () => {
   const dispatch = useAppDispatch();
-  const handleClose = () => {
+
+  const handleClose = useCallback(() => {
     dispatch(removeAddedToBasketMessage());
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [dispatch, handleClose]);
+
   return (
     <div className="modal is-active modal--narrow">
       <div className="modal__wrapper">
