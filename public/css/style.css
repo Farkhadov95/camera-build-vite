@@ -2457,6 +2457,12 @@ button,
   line-height: 32px;
 }
 
+.product-card--wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 7px;
+}
+
 .pagination {
   width: 100%;
   margin: 40px 0 0;

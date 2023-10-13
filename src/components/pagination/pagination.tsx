@@ -17,6 +17,22 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
     }
   };
 
+  const handlePageForward = () => {
+    if (currentPage === 1) {
+      handlePageChange(currentPage + 3);
+    } else {
+      handlePageChange(currentPage + 2);
+    }
+  };
+
+  const handlePageBackward = () => {
+    if (currentPage === totalPages) {
+      handlePageChange(currentPage - 3);
+    } else {
+      handlePageChange(currentPage - 2);
+    }
+  };
+
   const visiblePages = getVisiblePages();
   return (
     <ul className="pagination__list">
@@ -27,7 +43,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              handlePageChange(currentPage - 2);
+              handlePageBackward();
             }}
           >
             Назад
@@ -49,7 +65,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              handlePageChange(currentPage + 2);
+              handlePageForward();
             }}
           >
             Далее

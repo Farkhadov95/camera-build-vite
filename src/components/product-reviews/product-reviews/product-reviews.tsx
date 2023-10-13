@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {} from '../../../store/selectors/catalog-selectors';
 import { useAppSelector } from '../../../hooks';
-import ReviewCard from '../product-card/review-card';
+import ReviewCard from '../review-card/review-card';
 import ReviewForm from '../product-form/review-form';
 import {
   areReviewsLoading,

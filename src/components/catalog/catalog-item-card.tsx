@@ -44,16 +44,19 @@ const CatalogItemCard = ({ product }: Props) => {
         <div className="rate product-card__rate">
           <Stars rating={rating} />
           <p className="visually-hidden">Рейтинг: {rating}</p>
+
           <p className="rate__count">
             <span className="visually-hidden">Всего оценок:</span>
             {reviewCount}
           </p>
         </div>
-        <p className="product-card__title">{name}</p>
-        <p className="product-card__price">
-          <span className="visually-hidden">Цена:</span>
-          {price} ₽
-        </p>
+        <div className="product-card--wrapper">
+          <p className="product-card__title">{name}</p>
+          <p className="product-card__price">
+            <span className="visually-hidden">Цена: </span>
+            {price} ₽
+          </p>
+        </div>
       </div>
       <div className="product-card__buttons">
         <button
