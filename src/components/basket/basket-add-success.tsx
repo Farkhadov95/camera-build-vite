@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { removeAddedToBasketMessage } from '../../store/catalog-data/catalog-data';
 
-const BasketAddModal = () => {
+const BasketAddSuccess = () => {
   const dispatch = useAppDispatch();
   const handleClose = () => {
     dispatch(removeAddedToBasketMessage());
@@ -52,4 +52,4 @@ const BasketAddModal = () => {
   );
 };
 
-export default BasketAddModal;
+export default BasketAddSuccess;

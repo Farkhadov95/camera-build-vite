@@ -7,7 +7,7 @@ describe('Component: SimilarItem', () => {
   it('Should be rendered correctly', () => {
     render(
       <MemoryRouter initialEntries={['/catalog']}>
-        <SimilarItem item={catalogItemMock} />
+        <SimilarItem product={catalogItemMock} />
       </MemoryRouter>
     );
 

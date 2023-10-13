@@ -40,7 +40,7 @@ const SimilarProducts = () => {
             >
               {similarItems.map((item) => (
                 <SwiperSlide key={item.id}>
-                  <SimilarItem key={item.id} item={item} />
+                  <SimilarItem key={item.id} product={item} />
                 </SwiperSlide>
               ))}
             </Swiper>

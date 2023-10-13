@@ -33,7 +33,7 @@ const Header = () => (
         </ul>
       </nav>
       <div className="form-search">
-        <form>
+        <form name="form-seatch">
           <label>
             <svg
               className="form-search__icon"

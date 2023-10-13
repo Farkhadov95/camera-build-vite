@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import {
   fetchProductAction,
   fetchSimilarProductsAction,
-  setBasketItem,
+  setProductToAdd,
 } from '../../store/catalog-data/catalog-data';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import {
   isAddedToBasketSelector,
   isLoadingSelector,
   productSelector,
+  productToAddSelector,
 } from '../../store/selectors/catalog-selectors';
 import SpecsTab from '../../components/product-tabs/specs-tab';
 import DescriptionTab from '../../components/product-tabs/description-tab';
@@ -23,7 +24,8 @@ import Stars from '../../components/rating-stars/stars';
 import ReviewSuccess from '../../components/product-reviews/product-success/review-success';
 import { fetchReviewsAction } from '../../store/review-data/review-data';
 import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
-import BasketAddModal from '../../components/basket/basket-add-modal';
+import BasketAddModal from '../../components/basket/basket-add-success';
+import BasketAdd from '../../components/basket/basket-add';
 
 const Product = () => {
   const { id } = useParams();
@@ -33,6 +35,7 @@ const Product = () => {
   const successStatus = useSelector(isPostReviewSuccess);
   const isLoading = useSelector(isLoadingSelector);
   const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
+  const productToAdd = useAppSelector(productToAddSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   const updateTabInURL = (tab: Tabs) => {
@@ -73,7 +76,7 @@ const Product = () => {
     return <div>loading...</div>;
   }
 
-  const handleAddToBasket = () => dispatch(setBasketItem(product));
+  const handleAddToBasket = () => dispatch(setProductToAdd(product));
 
   const {
     name,
@@ -212,6 +215,7 @@ const Product = () => {
         </div>
         {successStatus && <ReviewSuccess />}
         {isAddedToBasket && <BasketAddModal />}
+        {productToAdd !== null && <BasketAdd />}
       </main>
       <Footer />
     </>

@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { CatalogItem } from '../../../type/catalog';
 import Stars from '../../rating-stars/stars';
+import { useAppDispatch } from '../../../hooks';
+import { setProductToAdd } from '../../../store/catalog-data/catalog-data';
 
 type Props = {
-  item: CatalogItem;
+  product: CatalogItem;
 };
 
-const SimilarItem = ({ item }: Props) => {
+const SimilarItem = ({ product }: Props) => {
   const {
     id,
     name,
@@ -17,7 +19,10 @@ const SimilarItem = ({ item }: Props) => {
     previewImg2x,
     previewImgWebp,
     previewImgWebp2x,
-  } = item;
+  } = product;
+
+  const dispatch = useAppDispatch();
+  const handleAddToBasket = () => dispatch(setProductToAdd(product));
 
   return (
     <div className="product-card is-active">
@@ -52,7 +57,11 @@ const SimilarItem = ({ item }: Props) => {
         </p>
       </div>
       <div className="product-card__buttons">
-        <button className="btn btn--purple product-card__btn" type="button">
+        <button
+          className="btn btn--purple product-card__btn"
+          type="button"
+          onClick={handleAddToBasket}
+        >
           Купить
         </button>
         <Link className="btn btn--transparent" to={`/product/${id}`}>

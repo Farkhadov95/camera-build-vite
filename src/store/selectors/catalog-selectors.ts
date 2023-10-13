@@ -9,3 +9,4 @@ export const similarProductsSelector = (state: State): CatalogItems => state[Nam
 export const isLoadingSelector = (state: State): boolean => state[NameSpace.Products].isDataLoading;
 export const isAddedToBasketSelector = (state: State): boolean => state[NameSpace.Products].isAddedToBasket;
 export const basketSelector = (state: State): BasketItems => state[NameSpace.Products].basket;
+export const productToAddSelector = (state: State): CatalogItem | null => state[NameSpace.Products].productToAdd;

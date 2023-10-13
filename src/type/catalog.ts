@@ -62,4 +62,5 @@ export type CatalogData = {
     promos: PromoItems;
     isDataLoading: boolean;
     isAddedToBasket: boolean;
+    productToAdd: CatalogItem | null;
 }

@@ -15,6 +15,7 @@ const initialState: CatalogData = {
   promos: [],
   isDataLoading: false,
   isAddedToBasket: false,
+  productToAdd: null
 };
 
 export const fetchCatalogDataAction = createAsyncThunk<CatalogItems, undefined, {
@@ -82,6 +83,7 @@ export const catalogData = createSlice({
       }
       localStorage.setItem('basket', JSON.stringify(state.basket));
       state.isAddedToBasket = true;
+      state.productToAdd = null;
     },
     removeBasketItem: (state, action: {payload: CatalogItem}) => {
       const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
@@ -97,6 +99,13 @@ export const catalogData = createSlice({
     },
     removeAddedToBasketMessage: (state) => {
       state.isAddedToBasket = false;
+      state.productToAdd = null;
+    },
+    setProductToAdd: (state, action: {payload: CatalogItem}) => {
+      state.productToAdd = action.payload;
+    },
+    removeProductToAdd: (state) => {
+      state.productToAdd = null;
     },
   },
   extraReducers: (builder) => {
@@ -144,4 +153,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage } = catalogData.actions;
+export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd } = catalogData.actions;
