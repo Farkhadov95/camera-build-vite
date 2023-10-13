@@ -33,7 +33,7 @@ const Header = () => (
         </ul>
       </nav>
       <div className="form-search">
-        <form name="form-seatch">
+        <form>
           <label>
             <svg
               className="form-search__icon"
@@ -48,6 +48,7 @@ const Header = () => (
               type="text"
               autoComplete="off"
               placeholder="Поиск по сайту"
+              name="form-search__input"
             />
           </label>
           <ul className="form-search__select-list">

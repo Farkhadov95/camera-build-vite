@@ -3668,4 +3668,9 @@ button,
     font-size: 40px;
     padding: 30vh 0;
   }
+
+  .no-scroll {
+    overflow: hidden;
+    height: 100%;
+  }
 }

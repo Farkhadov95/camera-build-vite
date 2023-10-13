@@ -3,7 +3,7 @@ import Footer from '../../components/footer/footer';
 import SimilarProducts from '../../components/similar-products/similar-products/similar-products';
 import Reviews from '../../components/product-reviews/product-reviews/product-reviews';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   fetchProductAction,
   fetchSimilarProductsAction,
@@ -72,11 +72,20 @@ const Product = () => {
     setActiveTab(getTabFromURL() as Tabs);
   }, [id]);
 
+  useEffect(() => {
+    if (isAddedToBasket || productToAdd !== null || successStatus === true) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isAddedToBasket, productToAdd, successStatus]);
+
   if (isLoading || !product) {
     return <div>loading...</div>;
   }
-
-  const handleAddToBasket = () => dispatch(setProductToAdd(product));
 
   const {
     name,
@@ -93,6 +102,8 @@ const Product = () => {
     previewImgWebp,
     previewImgWebp2x,
   } = product;
+
+  const handleAddToBasket = () => dispatch(setProductToAdd(product));
 
   return (
     <>

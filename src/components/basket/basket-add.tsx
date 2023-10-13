@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   removeProductToAdd,
@@ -8,6 +9,23 @@ import { productToAddSelector } from '../../store/selectors/catalog-selectors';
 const BasketAdd = () => {
   const dispatch = useAppDispatch();
   const product = useAppSelector(productToAddSelector);
+
+  const handleClose = useCallback(() => {
+    dispatch(removeProductToAdd());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [dispatch, handleClose]);
+
   if (product === null) {
     return null;
   }
@@ -23,10 +41,10 @@ const BasketAdd = () => {
     previewImg2x,
   } = product;
 
-  console.log(product);
-
-  const handleAddToBasket = () => dispatch(setBasketItem(product));
-  const handleClose = () => dispatch(removeProductToAdd());
+  const handleAddToBasket = () => {
+    dispatch(setBasketItem(product));
+    handleClose();
+  };
 
   return (
     <div className="modal is-active">
@@ -39,11 +57,11 @@ const BasketAdd = () => {
               <picture>
                 <source
                   type="image/webp"
-                  srcSet={`${previewImgWebp}, ${previewImgWebp2x}, 2x`}
+                  srcSet={`/${previewImgWebp}, /${previewImgWebp2x}, 2x`}
                 />
                 <img
-                  src={previewImg}
-                  srcSet={`${previewImg2x} 2x`}
+                  src={`/${previewImg}`}
+                  srcSet={`/${previewImg2x} 2x`}
                   width="140"
                   height="120"
                   alt={name}
