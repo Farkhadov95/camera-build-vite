@@ -107,7 +107,7 @@ const Product = () => {
   const handleAddToBasket = () => dispatch(setProductToAdd(product));
 
   return (
-    <>
+    <div className="wrapper">
       <Header />
       <main>
         <div className="page-content">
@@ -231,7 +231,7 @@ const Product = () => {
       </main>
       <ButtonUp />
       <Footer />
-    </>
+    </div>
   );
 };
 

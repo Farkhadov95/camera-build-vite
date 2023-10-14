@@ -133,7 +133,7 @@ const Catalog = () => {
   }, [isAddedToBasket, productToAdd]);
 
   return (
-    <>
+    <div className="wrapper">
       <Header />
       <main>
         <Banner />
@@ -336,7 +336,7 @@ const Catalog = () => {
         {productToAdd !== null && <BasketAdd />}
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
