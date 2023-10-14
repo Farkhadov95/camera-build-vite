@@ -3677,6 +3677,7 @@ button,
   .swiper-pagination {
     text-align: end !important;
     padding-right: 40px !important;
+    bottom: 18px !important;
   }
 
  .swiper-pagination-bullet {
@@ -3684,12 +3685,9 @@ button,
   background-color: white !important;
   width: 16px !important;
   height: 16px !important;
-  bottom: 22px !important;
  }
 
  .swiper-pagination-bullet-active {
   background-color: #7575E2 !important;
  }
-  
-  
 }
