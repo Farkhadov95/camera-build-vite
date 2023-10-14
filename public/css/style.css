@@ -3426,7 +3426,7 @@ button,
 .up-btn {
   position: absolute;
   right: 22px;
-  bottom: -1120px;
+  bottom: 330px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
