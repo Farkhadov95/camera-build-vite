@@ -1,23 +1,21 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   removeProductToAdd,
   setBasketItem,
 } from '../../store/catalog-data/catalog-data';
 import { productToAddSelector } from '../../store/selectors/catalog-selectors';
+import FocusTrap from 'focus-trap-react';
 
 const BasketAdd = () => {
   const dispatch = useAppDispatch();
   const product = useAppSelector(productToAddSelector);
-  const addBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = useCallback(() => {
     dispatch(removeProductToAdd());
   }, [dispatch]);
 
   useEffect(() => {
-    addBtnRef.current?.focus();
-
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -50,69 +48,71 @@ const BasketAdd = () => {
   };
 
   return (
-    <div className="modal is-active">
-      <div className="modal__wrapper">
-        <div className="modal__overlay" onClick={handleClose}></div>
-        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-          <p className="title title--h4">Добавить товар в корзину</p>
-          <div className="basket-item basket-item--short">
-            <div className="basket-item__img">
-              <picture>
-                <source
-                  type="image/webp"
-                  srcSet={`/${previewImgWebp}, /${previewImgWebp2x}, 2x`}
-                />
-                <img
-                  src={`/${previewImg}`}
-                  srcSet={`/${previewImg2x} 2x`}
-                  width="140"
-                  height="120"
-                  alt={name}
-                />
-              </picture>
+    <FocusTrap focusTrapOptions={{ initialFocus: '#addBtn' }}>
+      <div className="modal is-active">
+        <div className="modal__wrapper">
+          <div className="modal__overlay" onClick={handleClose}></div>
+          <div className="modal__content" onClick={(e) => e.stopPropagation()}>
+            <p className="title title--h4">Добавить товар в корзину</p>
+            <div className="basket-item basket-item--short">
+              <div className="basket-item__img">
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet={`/${previewImgWebp}, /${previewImgWebp2x}, 2x`}
+                  />
+                  <img
+                    src={`/${previewImg}`}
+                    srcSet={`/${previewImg2x} 2x`}
+                    width="140"
+                    height="120"
+                    alt={name}
+                  />
+                </picture>
+              </div>
+              <div className="basket-item__description">
+                <p className="basket-item__title">{name}</p>
+                <ul className="basket-item__list">
+                  <li className="basket-item__list-item">
+                    <span className="basket-item__article">Артикул:</span>{' '}
+                    <span className="basket-item__number">{vendorCode}</span>
+                  </li>
+                  <li className="basket-item__list-item">{type} фотокамера</li>
+                  <li className="basket-item__list-item">{level} уровень</li>
+                </ul>
+                <p className="basket-item__price">
+                  <span className="visually-hidden">Цена:</span>
+                  {price} ₽
+                </p>
+              </div>
             </div>
-            <div className="basket-item__description">
-              <p className="basket-item__title">{name}</p>
-              <ul className="basket-item__list">
-                <li className="basket-item__list-item">
-                  <span className="basket-item__article">Артикул:</span>{' '}
-                  <span className="basket-item__number">{vendorCode}</span>
-                </li>
-                <li className="basket-item__list-item">{type} фотокамера</li>
-                <li className="basket-item__list-item">{level} уровень</li>
-              </ul>
-              <p className="basket-item__price">
-                <span className="visually-hidden">Цена:</span>
-                {price} ₽
-              </p>
+            <div className="modal__buttons">
+              <button
+                id="addBtn"
+                className="btn btn--purple modal__btn modal__btn--fit-width"
+                type="button"
+                onClick={handleAddToBasket}
+              >
+                <svg width="24" height="16" aria-hidden="true">
+                  <use xlinkHref="#icon-add-basket"></use>
+                </svg>
+                Добавить в корзину
+              </button>
             </div>
-          </div>
-          <div className="modal__buttons">
             <button
-              ref={addBtnRef}
-              className="btn btn--purple modal__btn modal__btn--fit-width"
+              className="cross-btn"
               type="button"
-              onClick={handleAddToBasket}
+              aria-label="Закрыть попап"
+              onClick={() => handleClose()}
             >
-              <svg width="24" height="16" aria-hidden="true">
-                <use xlinkHref="#icon-add-basket"></use>
+              <svg width="10" height="10" aria-hidden="true">
+                <use xlinkHref="#icon-close"></use>
               </svg>
-              Добавить в корзину
             </button>
           </div>
-          <button
-            className="cross-btn"
-            type="button"
-            aria-label="Закрыть попап"
-            onClick={() => handleClose()}
-          >
-            <svg width="10" height="10" aria-hidden="true">
-              <use xlinkHref="#icon-close"></use>
-            </svg>
-          </button>
         </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 };
 

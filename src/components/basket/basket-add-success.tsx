@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { removeAddedToBasketMessage } from '../../store/catalog-data/catalog-data';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
 
 const BasketAddSuccess = () => {
   const dispatch = useAppDispatch();
@@ -10,11 +11,7 @@ const BasketAddSuccess = () => {
     dispatch(removeAddedToBasketMessage());
   }, [dispatch]);
 
-  const continueShoppingBtnRef = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
-    continueShoppingBtnRef.current?.focus();
-
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleClose();
@@ -27,48 +24,50 @@ const BasketAddSuccess = () => {
   }, [dispatch, handleClose]);
 
   return (
-    <div className="modal is-active modal--narrow">
-      <div className="modal__wrapper">
-        <div className="modal__overlay" onClick={handleClose}></div>
-        <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-          <p className="title title--h4">Товар успешно добавлен в корзину</p>
-          <svg
-            className="modal__icon"
-            width="86"
-            height="80"
-            aria-hidden="true"
-          >
-            <use xlinkHref="#icon-success"></use>
-          </svg>
-          <div className="modal__buttons">
-            <button
-              ref={continueShoppingBtnRef}
-              className="btn btn--transparent modal__btn"
-              onClick={() => handleClose()}
+    <FocusTrap focusTrapOptions={{ initialFocus: '#continueShoppingBtn' }}>
+      <div className="modal is-active modal--narrow">
+        <div className="modal__wrapper">
+          <div className="modal__overlay" onClick={handleClose}></div>
+          <div className="modal__content" onClick={(e) => e.stopPropagation()}>
+            <p className="title title--h4">Товар успешно добавлен в корзину</p>
+            <svg
+              className="modal__icon"
+              width="86"
+              height="80"
+              aria-hidden="true"
             >
-              Продолжить покупки
-            </button>
-            <Link
-              className="btn btn--purple modal__btn modal__btn--fit-width"
-              to="/basket"
-              onClick={() => handleClose()}
-            >
-              Перейти в корзину
-            </Link>
-          </div>
-          <button
-            className="cross-btn"
-            type="button"
-            aria-label="Закрыть попап"
-            onClick={() => handleClose()}
-          >
-            <svg width="10" height="10" aria-hidden="true">
-              <use xlinkHref="#icon-close"></use>
+              <use xlinkHref="#icon-success"></use>
             </svg>
-          </button>
+            <div className="modal__buttons">
+              <button
+                id="continueShoppingBtn"
+                className="btn btn--transparent modal__btn"
+                onClick={() => handleClose()}
+              >
+                Продолжить покупки
+              </button>
+              <Link
+                className="btn btn--purple modal__btn modal__btn--fit-width"
+                to="/basket"
+                onClick={() => handleClose()}
+              >
+                Перейти в корзину
+              </Link>
+            </div>
+            <button
+              className="cross-btn"
+              type="button"
+              aria-label="Закрыть попап"
+              onClick={() => handleClose()}
+            >
+              <svg width="10" height="10" aria-hidden="true">
+                <use xlinkHref="#icon-close"></use>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 };
 
