@@ -3673,4 +3673,23 @@ button,
     overflow: hidden;
     height: 100%;
   }
+
+  .swiper-pagination {
+    text-align: end !important;
+    padding-right: 40px !important;
+  }
+
+ .swiper-pagination-bullet {
+  opacity: 1 !important;
+  background-color: white !important;
+  width: 16px !important;
+  height: 16px !important;
+  bottom: 22px !important;
+ }
+
+ .swiper-pagination-bullet-active {
+  background-color: #7575E2 !important;
+ }
+  
+  
 }

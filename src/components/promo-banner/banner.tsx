@@ -22,6 +22,9 @@ const Banner = () => {
       modules={[Autoplay, Pagination]}
       spaceBetween={50}
       slidesPerView={1}
+      pagination={{
+        clickable: true,
+      }}
       autoplay={{ delay: 3000, disableOnInteraction: false }}
       loop
     >
