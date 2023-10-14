@@ -26,6 +26,7 @@ import { fetchReviewsAction } from '../../store/review-data/review-data';
 import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
 import BasketAddSuccess from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
+import ButtonUp from '../../components/button-up/button-up';
 
 const Product = () => {
   const { id } = useParams();
@@ -228,6 +229,7 @@ const Product = () => {
         {isAddedToBasket && <BasketAddSuccess />}
         {productToAdd !== null && <BasketAdd />}
       </main>
+      <ButtonUp />
       <Footer />
     </>
   );

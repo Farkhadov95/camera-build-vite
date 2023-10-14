@@ -1,13 +1,15 @@
 import { useRef, useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
+import { Swiper as SwiperType } from 'swiper';
+import { Navigation } from 'swiper/modules';
 import { similarProductsSelector } from '../../../store/selectors/catalog-selectors';
 import { useAppSelector } from '../../../hooks';
 import SimilarItem from '../similar-item/similar-item';
+import 'swiper/css';
 
 const SimilarProducts = () => {
   const similarItems = useAppSelector(similarProductsSelector);
-  const swiperRef = useRef<SwiperCore | null>(null);
+  const swiperRef = useRef<SwiperType>();
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
@@ -27,6 +29,11 @@ const SimilarProducts = () => {
         <div className="product-similar__slider">
           <div className="product-similar__slider-list">
             <Swiper
+              modules={[Navigation]}
+              navigation={{
+                nextEl: '.slider-controls--next',
+                prevEl: '.slider-controls--prev',
+              }}
               onSwiper={(swiper) => {
                 swiperRef.current = swiper;
               }}
@@ -46,24 +53,22 @@ const SimilarProducts = () => {
             </Swiper>
           </div>
           <button
-            className="slider-controls slider-controls--prev"
+            className="slider-controls-buttons slider-controls--prev"
             type="button"
             aria-label="Предыдущий слайд"
             disabled={isPrevDisabled}
-            onClick={() =>
-              swiperRef.current?.slidePrev && swiperRef.current.slidePrev()}
+            onClick={() => swiperRef.current?.slidePrev()}
           >
             <svg width="7" height="12" aria-hidden="true">
               <use xlinkHref="#icon-arrow"></use>
             </svg>
           </button>
           <button
-            className="slider-controls slider-controls--next"
+            className="slider-controls-buttons slider-controls--next"
             type="button"
             aria-label="Следующий слайд"
             disabled={isNextDisabled}
-            onClick={() =>
-              swiperRef.current?.slideNext && swiperRef.current.slideNext()}
+            onClick={() => swiperRef.current?.slideNext()}
           >
             <svg width="7" height="12" aria-hidden="true">
               <use xlinkHref="#icon-arrow"></use>

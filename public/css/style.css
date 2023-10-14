@@ -3112,6 +3112,35 @@ button,
   margin-right: 0;
 }
 
+.slider-controls-buttons {
+  position: absolute;
+  top: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: #7575e2;
+  background-color: #f4f4fc;
+  border: none;
+  border-radius: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  cursor: pointer;
+  -webkit-transition: opacity 0.3s ease;
+  -o-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+
+/* Causes bug - replaced with slider-controls-buttons */
 .slider-controls {
   position: absolute;
   top: 50%;
@@ -3140,18 +3169,12 @@ button,
   transition: opacity 0.3s ease;
 }
 
-.slider-controls svg {
+.slider-controls-buttons svg {
   width: 7px;
   height: 12px;
 }
 
-.slider-controls:disabled {
-  color: #dddddd;
-  background-color: #f8f8f8;
-  pointer-events: none;
-}
-
-.slider-controls.disabled {
+.slider-controls-buttons:disabled {
   color: #dddddd;
   background-color: #f8f8f8;
   pointer-events: none;
@@ -3403,7 +3426,7 @@ button,
 .up-btn {
   position: absolute;
   right: 22px;
-  bottom: 330px;
+  bottom: -1120px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
