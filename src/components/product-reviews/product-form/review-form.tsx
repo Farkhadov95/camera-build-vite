@@ -42,6 +42,7 @@ const ReviewForm = ({ handleClose }: Props) => {
         if (!isReviewLoading) {
           handleClose();
           dispatch(setSuccessStatus(true));
+          document.body.classList.remove('no-scroll');
         }
       })
       .catch((error) => {
@@ -62,6 +63,7 @@ const ReviewForm = ({ handleClose }: Props) => {
       }
     };
     window.addEventListener('keydown', handleEsc);
+    document.body.classList.add('no-scroll');
     return () => {
       window.removeEventListener('keydown', handleEsc);
     };
@@ -75,8 +77,8 @@ const ReviewForm = ({ handleClose }: Props) => {
     <FocusTrap focusTrapOptions={{ initialFocus: '#userNameInput' }}>
       <div className="modal is-active">
         <div className="modal__wrapper">
-          <div className="modal__overlay"></div>
-          <div className="modal__content">
+          <div className="modal__overlay" onClick={handleClose}></div>
+          <div className="modal__content" onClick={(e) => e.stopPropagation()}>
             <p className="title title--h4">Оставить отзыв</p>
             <div className="form-review">
               <form
