@@ -30,3 +30,5 @@ export const starsValues = [
     title: 'Ужасно',
   },
 ];
+
+export const PAGES_LIST_SIZE = 3;

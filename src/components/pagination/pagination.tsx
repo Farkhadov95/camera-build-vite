@@ -1,4 +1,6 @@
 import PaginationItem from './paginationItem';
+import { splitIntoChunks } from '../../utils';
+import { PAGES_LIST_SIZE } from '../../const';
 
 type Props = {
   currentPage: number;
@@ -8,35 +10,27 @@ type Props = {
 
 const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
   const getVisiblePages = () => {
-    if (currentPage === 1) {
-      return [1, 2, 3];
-    } else if (currentPage === totalPages) {
-      return [totalPages - 2, totalPages - 1, totalPages];
-    } else {
-      return [currentPage - 1, currentPage, currentPage + 1];
-    }
+    const arrayOfPages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const pagesOfPages = splitIntoChunks(arrayOfPages, PAGES_LIST_SIZE);
+    const pagesToShow = pagesOfPages.filter((subArray) =>
+      subArray.includes(currentPage)
+    );
+    return pagesToShow;
   };
 
   const handlePageForward = () => {
-    if (currentPage === 1) {
-      handlePageChange(currentPage + 3);
-    } else {
-      handlePageChange(currentPage + 2);
-    }
+    handlePageChange(currentPage + 1);
   };
 
   const handlePageBackward = () => {
-    if (currentPage === totalPages) {
-      handlePageChange(currentPage - 3);
-    } else {
-      handlePageChange(currentPage - 2);
-    }
+    handlePageChange(currentPage - 1);
   };
 
   const visiblePages = getVisiblePages();
+
   return (
     <ul className="pagination__list">
-      {currentPage > 2 && (
+      {currentPage > 3 && (
         <li className="pagination__item pagination__item--prev">
           <a
             className="pagination__link pagination__link--text"
@@ -50,7 +44,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
           </a>
         </li>
       )}
-      {visiblePages.map((pageNumber) => (
+      {visiblePages[0]?.map((pageNumber) => (
         <PaginationItem
           key={`page-${pageNumber + 1}`}
           currentPage={currentPage}
