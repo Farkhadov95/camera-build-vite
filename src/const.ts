@@ -32,3 +32,4 @@ export const starsValues = [
 ];
 
 export const PAGES_LIST_SIZE = 3;
+export const ITEMS_PER_PAGE = 9;

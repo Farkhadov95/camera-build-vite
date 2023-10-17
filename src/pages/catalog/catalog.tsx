@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '../../components/pagination/pagination';
 import BasketAddModal from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
+import { ITEMS_PER_PAGE } from '../../const';
 
 const Catalog = () => {
   const initialFilters = {
@@ -32,6 +33,16 @@ const Catalog = () => {
     professional: false,
   };
 
+  enum SortType {
+    price = 'price',
+    reviewCount = 'reviewCount',
+  }
+
+  enum SortOrder {
+    ascending = 'ascending',
+    descending = 'descending',
+  }
+
   const location = useLocation();
   const navigate = useNavigate();
   const catalogItems = useAppSelector(catalogItemsSelector);
@@ -40,7 +51,9 @@ const Catalog = () => {
   const productToAdd = useAppSelector(productToAddSelector);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(initialFilters);
-  const ITEMS_PER_PAGE = 9;
+
+  const [sortType, setSortType] = useState<SortType>(SortType.price);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
 
   const updatePageInURL = useCallback(
     (pageNumber: number) => {
@@ -96,7 +109,12 @@ const Catalog = () => {
         (!filters.zero && !filters.nonProfessional && !filters.professional))
   );
 
-  const displayedItems = filteredItems.slice(
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    const diff = a[sortType] - b[sortType];
+    return sortOrder === SortOrder.ascending ? diff : -diff;
+  });
+
+  const displayedItems = sortedItems.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -109,11 +127,9 @@ const Catalog = () => {
 
       if (requiredPage < 1 || requiredPage > 5) {
         //5 - should be the total number of pages
-
         updatePageInURL(1);
         return 1;
       }
-
       return requiredPage;
     };
 
@@ -126,7 +142,6 @@ const Catalog = () => {
     } else {
       document.body.classList.remove('no-scroll');
     }
-
     return () => {
       document.body.classList.remove('no-scroll');
     };
@@ -272,11 +287,23 @@ const Catalog = () => {
                         <p className="title title--h5">Сортировать:</p>
                         <div className="catalog-sort__type">
                           <div className="catalog-sort__btn-text">
-                            <input type="radio" id="sortPrice" name="sort" />
+                            <input
+                              type="radio"
+                              id="sortPrice"
+                              name="sort"
+                              checked={sortType === SortType.price}
+                              onChange={() => setSortType(SortType.price)}
+                            />
                             <label htmlFor="sortPrice">по цене</label>
                           </div>
                           <div className="catalog-sort__btn-text">
-                            <input type="radio" id="sortPopular" name="sort" />
+                            <input
+                              type="radio"
+                              id="sortPopular"
+                              name="sort"
+                              checked={sortType === SortType.reviewCount}
+                              onChange={() => setSortType(SortType.reviewCount)}
+                            />
                             <label htmlFor="sortPopular">по популярности</label>
                           </div>
                         </div>
@@ -287,6 +314,8 @@ const Catalog = () => {
                               id="up"
                               name="sort-icon"
                               aria-label="По возрастанию"
+                              checked={sortOrder === SortOrder.ascending}
+                              onChange={() => setSortOrder(SortOrder.ascending)}
                             />
                             <label htmlFor="up">
                               <svg width="16" height="14" aria-hidden="true">
@@ -300,6 +329,9 @@ const Catalog = () => {
                               id="down"
                               name="sort-icon"
                               aria-label="По убыванию"
+                              checked={sortOrder === SortOrder.descending}
+                              onChange={() =>
+                                setSortOrder(SortOrder.descending)}
                             />
                             <label htmlFor="down">
                               <svg width="16" height="14" aria-hidden="true">
