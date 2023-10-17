@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import SearchForm from '../search-form/search-form';
 
 const Header = () => (
   <header className="header" id="header">
@@ -32,7 +33,7 @@ const Header = () => (
           </li>
         </ul>
       </nav>
-      <div className="form-search">
+      {/* <div className="form-search list-opened">
         <form>
           <label>
             <svg
@@ -75,7 +76,8 @@ const Header = () => (
           </svg>
           <span className="visually-hidden">Сбросить поиск</span>
         </button>
-      </div>
+      </div> */}
+      <SearchForm />
       <Link className="header__basket-link" to="/basket">
         <svg width="16" height="16" aria-hidden="true">
           <use xlinkHref="#icon-basket"></use>
