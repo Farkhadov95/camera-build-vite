@@ -10,7 +10,7 @@ import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import Banner from '../../components/promo-banner/banner';
 import { useCallback, useEffect, useState } from 'react';
-import { Category, Level, Type } from '../../type/catalog';
+import { CatalogItems, Category, Level, Type } from '../../type/catalog';
 import FilterItem from '../../components/filters/filter-item';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Pagination from '../../components/pagination/pagination';
@@ -34,11 +34,13 @@ const Catalog = () => {
   };
 
   enum SortType {
+    none = 'none',
     price = 'price',
     reviewCount = 'reviewCount',
   }
 
   enum SortOrder {
+    none = 'none',
     ascending = 'ascending',
     descending = 'descending',
   }
@@ -52,8 +54,8 @@ const Catalog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(initialFilters);
 
-  const [sortType, setSortType] = useState<SortType>(SortType.price);
-  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.descending);
+  const [sortType, setSortType] = useState<SortType>(SortType.none);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.none);
 
   const updatePageInURL = useCallback(
     (pageNumber: number) => {
@@ -109,15 +111,34 @@ const Catalog = () => {
         (!filters.zero && !filters.nonProfessional && !filters.professional))
   );
 
-  const sortedItems = [...filteredItems].sort((a, b) => {
-    const diff = a[sortType] - b[sortType];
-    return sortOrder === SortOrder.ascending ? diff : -diff;
-  });
+  const sortedByType = (items: CatalogItems, type: SortType) => {
+    if (type === SortType.none) {
+      return [...items]; // returns a shallow copy without modification
+    }
+    return [...items].sort((a, b) => a[type] - b[type]);
+  };
 
-  const displayedItems = sortedItems.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const sortByOrder = (items: CatalogItems, order: SortOrder) => {
+    if (order === SortOrder.none) {
+      return [...items]; // returns a shallow copy without modification
+    }
+    return order === SortOrder.ascending ? [...items] : [...items].reverse();
+  };
+
+  const modifiedCatalogList = () => {
+    if (sortType === SortType.none && sortOrder !== SortOrder.none) {
+      setSortType(SortType.price);
+      return sortByOrder(sortedByType(filteredItems, sortType), sortOrder);
+    } else {
+      return sortByOrder(sortedByType(filteredItems, sortType), sortOrder);
+    }
+  };
+
+  const productsToDisplay = (items: CatalogItems) =>
+    items.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+    );
 
   useEffect(() => {
     const getPageFromURL = () => {
@@ -348,7 +369,7 @@ const Catalog = () => {
                       <div className="cards__loader">loading...</div>
                     )}
                     {!isLoading &&
-                      displayedItems.map((item) => (
+                      productsToDisplay(modifiedCatalogList()).map((item) => (
                         <CatalogItemCard key={item.id} product={item} />
                       ))}
                   </div>
