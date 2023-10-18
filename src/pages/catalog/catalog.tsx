@@ -198,7 +198,7 @@ const Catalog = () => {
     setCurrentPage(pageNumber);
     setSortType(sortValue as SortType);
     setSortOrder(orderValue as SortOrder);
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (isAddedToBasket || productToAdd !== null) {
