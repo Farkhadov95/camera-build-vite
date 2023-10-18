@@ -8,6 +8,18 @@ export enum NameSpace {
   Reviews = 'REVIEWS',
 }
 
+export enum SortType {
+  none = 'none',
+  price = 'price',
+  reviewCount = 'reviewCount',
+}
+
+export enum SortOrder {
+  none = 'none',
+  ascending = 'ascending',
+  descending = 'descending',
+}
+
 export const starsValues = [
   {
     count: 5,
