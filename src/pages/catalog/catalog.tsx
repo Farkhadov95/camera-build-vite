@@ -67,10 +67,24 @@ const Catalog = () => {
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, value, checked } = e.target;
-    setFilters((prevState) => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    if (name === 'photocamera') {
+      setFilters((prevState) => ({
+        ...prevState,
+        photocamera: true,
+        videocamera: false,
+      }));
+    } else if (name === 'videocamera') {
+      setFilters((prevState) => ({
+        ...prevState,
+        photocamera: false,
+        videocamera: true,
+      }));
+    } else {
+      setFilters((prevState) => ({
+        ...prevState,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
   };
 
   const handleResetFilters = () => {
@@ -149,14 +163,10 @@ const Catalog = () => {
     return order === SortOrder.ascending ? [...items] : [...items].reverse();
   };
 
-  const modifiedCatalogList = () => {
-    if (sortType === SortType.none && sortOrder !== SortOrder.none) {
-      setSortType(SortType.price);
-      return sortByOrder(sortedByType(filteredProducts, sortType), sortOrder);
-    } else {
-      return sortByOrder(sortedByType(filteredProducts, sortType), sortOrder);
-    }
-  };
+  const modifiedCatalogList = useMemo(
+    () => sortByOrder(sortedByType(filteredProducts, sortType), sortOrder),
+    [filteredProducts, sortOrder, sortType]
+  );
 
   const productsToDisplay = (items: CatalogItems) =>
     items.slice(
@@ -164,13 +174,56 @@ const Catalog = () => {
       currentPage * ITEMS_PER_PAGE
     );
 
+  const productsToShow = productsToDisplay(modifiedCatalogList);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      setSearchParams((prevParams) => {
+        const currentParams = Object.fromEntries(prevParams);
+        currentParams.page = page.toString();
+        return currentParams;
+      });
+    },
+    [setSearchParams]
+  );
+
+  const handleSortTypeChange = useCallback(
+    (type: SortType) => {
+      setSortType(type);
+      setSearchParams((prevParams) => {
+        const currentParams = Object.fromEntries(prevParams);
+        currentParams.sort = type;
+        return currentParams;
+      });
+    },
+    [setSearchParams]
+  );
+
+  const handleSortOrderChange = useCallback(
+    (order: SortOrder) => {
+      setSortOrder(order);
+      setSearchParams((prevParams) => {
+        const currentParams = Object.fromEntries(prevParams);
+        currentParams.order = order;
+        return currentParams;
+      });
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    if (sortType === SortType.none && sortOrder !== SortOrder.none) {
+      handleSortTypeChange(SortType.price);
+    }
+  }, [sortType, sortOrder, handleSortTypeChange]);
+
   useEffect(() => {
     setTotalPages(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
   }, [filteredProducts]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-
     const getPageFromURL = (): number => {
       const pageFromUrl = query.get('page');
       const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
@@ -218,33 +271,6 @@ const Catalog = () => {
     currentPage,
   ]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    setSearchParams((prevParams) => {
-      const currentParams = Object.fromEntries(prevParams);
-      currentParams.page = page.toString();
-      return currentParams;
-    });
-  };
-
-  const handleSortTypeChange = (type: SortType) => {
-    setSortType(type);
-    setSearchParams((prevParams) => {
-      const currentParams = Object.fromEntries(prevParams);
-      currentParams.sort = type;
-      return currentParams;
-    });
-  };
-
-  const handleSortOrderChange = (order: SortOrder) => {
-    setSortOrder(order);
-    setSearchParams((prevParams) => {
-      const currentParams = Object.fromEntries(prevParams);
-      currentParams.order = order;
-      return currentParams;
-    });
-  };
-
   useEffect(() => {
     const pageValue = searchParams.get('page');
     const pageNumber = pageValue ? parseInt(pageValue, 10) : 1;
@@ -253,8 +279,8 @@ const Catalog = () => {
     const orderValue = searchParams.get('order');
 
     setCurrentPage(pageNumber);
-    setSortType(sortValue as SortType);
-    setSortOrder(orderValue as SortOrder);
+    setSortType((sortValue as SortType) || SortType.none);
+    setSortOrder((orderValue as SortOrder) || SortOrder.none);
   }, [searchParams]);
 
   useEffect(() => {
@@ -335,12 +361,14 @@ const Catalog = () => {
                           title="Фотокамера"
                           onChecked={filters.photocamera}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                         <FilterItem
                           name="videocamera"
                           title="Видеокамера"
                           onChecked={filters.videocamera}
                           onChange={handleFilterChange}
+                          disabled={filters.film || filters.snapshot}
                         />
                       </fieldset>
                       <fieldset className="catalog-filter__block">
@@ -350,24 +378,28 @@ const Catalog = () => {
                           title="Цифровая"
                           onChecked={filters.digital}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                         <FilterItem
                           name="film"
                           title="Плёночная"
                           onChecked={filters.film}
                           onChange={handleFilterChange}
+                          disabled={filters.videocamera}
                         />
                         <FilterItem
                           name="snapshot"
                           title="Моментальная"
                           onChecked={filters.snapshot}
                           onChange={handleFilterChange}
+                          disabled={filters.videocamera}
                         />
                         <FilterItem
                           name="collection"
                           title="Коллекционная"
                           onChecked={filters.collection}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                       </fieldset>
                       <fieldset className="catalog-filter__block">
@@ -377,18 +409,21 @@ const Catalog = () => {
                           title="Нулевой"
                           onChecked={filters.zero}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                         <FilterItem
                           name="nonProfessional"
                           title="Любительский"
                           onChecked={filters.nonProfessional}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                         <FilterItem
                           name="professional"
                           title="Профессиональный"
                           onChecked={filters.professional}
                           onChange={handleFilterChange}
+                          disabled={false}
                         />
                       </fieldset>
                       <button
@@ -468,7 +503,7 @@ const Catalog = () => {
                     </form>
                   </div>
 
-                  {productsToDisplay(modifiedCatalogList()).length === 0 ? (
+                  {productsToShow.length === 0 ? (
                     <p className="empty-list-message">
                       Нет соответсвующих товаров
                     </p>
@@ -478,8 +513,8 @@ const Catalog = () => {
                         <div className="cards__loader">loading...</div>
                       )}
                       {!isLoading &&
-                        productsToDisplay(modifiedCatalogList()).length > 0 &&
-                        productsToDisplay(modifiedCatalogList()).map((item) => (
+                        productsToShow.length > 0 &&
+                        productsToShow.map((item) => (
                           <CatalogItemCard key={item.id} product={item} />
                         ))}
                     </div>
