@@ -3713,4 +3713,11 @@ button,
  .swiper-pagination-bullet-active {
   background-color: #7575E2 !important;
  }
+
+ .empty-list-message {
+  padding: 200px 0;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+ }
 }

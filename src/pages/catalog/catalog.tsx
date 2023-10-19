@@ -5,13 +5,19 @@ import {
   isLoadingSelector,
   productToAddSelector,
 } from '../../store/selectors/catalog-selectors';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import CatalogItemCard from '../../components/catalog/catalog-item-card';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import Banner from '../../components/promo-banner/banner';
-import { CatalogItems } from '../../type/catalog';
+import {
+  CatalogItem,
+  CatalogItems,
+  Category,
+  Level,
+  Type,
+} from '../../type/catalog';
 import FilterItem from '../../components/filters/filter-item';
 import Pagination from '../../components/pagination/pagination';
 import BasketAddModal from '../../components/basket/basket-add-success';
@@ -40,6 +46,7 @@ const Catalog = () => {
   const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
   const productToAdd = useAppSelector(productToAddSelector);
 
+  const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState(initialFilters);
 
@@ -58,8 +65,6 @@ const Catalog = () => {
     [location.search, location.pathname, navigate]
   );
 
-  const totalPages = Math.ceil(catalogItems.length / ITEMS_PER_PAGE);
-
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, value, checked } = e.target;
     setFilters((prevState) => ({
@@ -73,30 +78,62 @@ const Catalog = () => {
     setCurrentPage(1);
   };
 
-  // const filteredItems = catalogItems.filter(
-  //   (item) =>
-  //     // Price filters
-  //     (filters.price === '' || item.price >= Number(filters.price)) &&
-  //     (filters.priceUp === '' || item.price <= Number(filters.priceUp)) &&
-  //     // Category filters
-  //     ((filters.photocamera && item.category === Category.photocamera) ||
-  //       (filters.videocamera && item.category === Category.videocamera) ||
-  //       (!filters.photocamera && !filters.videocamera)) &&
-  //     // Type filters
-  //     ((filters.digital && item.type === Type.digital) ||
-  //       (filters.film && item.type === Type.film) ||
-  //       (filters.snapshot && item.type === Type.snapshot) ||
-  //       (filters.collection && item.type === Type.collection) ||
-  //       (!filters.digital &&
-  //         !filters.film &&
-  //         !filters.snapshot &&
-  //         !filters.collection)) &&
-  //     // Level filters
-  //     ((filters.zero && item.level === Level.zero) ||
-  //       (filters.nonProfessional && item.level === Level.nonProfessional) ||
-  //       (filters.professional && item.level === Level.professional) ||
-  //       (!filters.zero && !filters.nonProfessional && !filters.professional))
-  // );
+  const filteredProducts = useMemo(() => {
+    const catalogProducts = catalogItems;
+    // Filter by price range
+    const filterByPrice = (item: CatalogItem) =>
+      (filters.price === '' || item.price >= Number(filters.price)) &&
+      (filters.priceUp === '' || item.price <= Number(filters.priceUp));
+
+    // Filter by category
+    const filterByCategory = (item: CatalogItem) =>
+      (filters.photocamera && item.category === Category.photocamera) ||
+      (filters.videocamera && item.category === Category.videocamera) ||
+      (!filters.photocamera && !filters.videocamera);
+
+    // Filter by type
+    const filterByType = (item: CatalogItem) =>
+      (filters.digital && item.type === Type.digital) ||
+      (filters.film && item.type === Type.film) ||
+      (filters.snapshot && item.type === Type.snapshot) ||
+      (filters.collection && item.type === Type.collection) ||
+      (!filters.digital &&
+        !filters.film &&
+        !filters.snapshot &&
+        !filters.collection);
+
+    // Filter by level
+    const filterByLevel = (item: CatalogItem) =>
+      (filters.zero && item.level === Level.zero) ||
+      (filters.nonProfessional && item.level === Level.nonProfessional) ||
+      (filters.professional && item.level === Level.professional) ||
+      (!filters.zero && !filters.nonProfessional && !filters.professional);
+
+    // Main filter function
+
+    const filteredItems = catalogProducts.filter(
+      (item) =>
+        filterByPrice(item) &&
+        filterByCategory(item) &&
+        filterByType(item) &&
+        filterByLevel(item)
+    );
+
+    return filteredItems;
+  }, [
+    catalogItems,
+    filters.collection,
+    filters.digital,
+    filters.film,
+    filters.nonProfessional,
+    filters.photocamera,
+    filters.price,
+    filters.priceUp,
+    filters.professional,
+    filters.snapshot,
+    filters.videocamera,
+    filters.zero,
+  ]);
 
   const sortedByType = (items: CatalogItems, type: SortType) => {
     if (type === SortType.none) {
@@ -115,9 +152,9 @@ const Catalog = () => {
   const modifiedCatalogList = () => {
     if (sortType === SortType.none && sortOrder !== SortOrder.none) {
       setSortType(SortType.price);
-      return sortByOrder(sortedByType(catalogItems, sortType), sortOrder);
+      return sortByOrder(sortedByType(filteredProducts, sortType), sortOrder);
     } else {
-      return sortByOrder(sortedByType(catalogItems, sortType), sortOrder);
+      return sortByOrder(sortedByType(filteredProducts, sortType), sortOrder);
     }
   };
 
@@ -128,38 +165,58 @@ const Catalog = () => {
     );
 
   useEffect(() => {
-    const getPageFromURL = () => {
-      const query = new URLSearchParams(location.search);
-      const pageFromUrl = query.get('page');
+    setTotalPages(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+  }, [filteredProducts]);
 
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+
+    const getPageFromURL = (): number => {
+      const pageFromUrl = query.get('page');
       const requiredPage = pageFromUrl ? parseInt(pageFromUrl, 10) : 1;
 
-      if (requiredPage < 1 || requiredPage > 5) {
-        //5 - should be the total number of pages
-        updateURL(1, sortType, sortOrder);
+      if (requiredPage < 1 || requiredPage > totalPages) {
         return 1;
       }
       return requiredPage;
     };
 
-    const getSortTypeFromURL = () => {
-      const query = new URLSearchParams(location.search);
+    const getSortTypeFromURL = (): SortType => {
       const sortTypeFromUrl = query.get('sort') as SortType;
-      const requiredSortType = sortTypeFromUrl ? sortTypeFromUrl : sortType;
-      return requiredSortType;
+      return sortTypeFromUrl || sortType;
     };
 
-    const getSortOrderFromURL = () => {
-      const query = new URLSearchParams(location.search);
+    const getSortOrderFromURL = (): SortOrder => {
       const sortOrderFromUrl = query.get('order') as SortOrder;
-      const requiredSortOrder = sortOrderFromUrl ? sortOrderFromUrl : sortOrder;
-      return requiredSortOrder;
+      return sortOrderFromUrl || sortOrder;
     };
 
-    setCurrentPage(getPageFromURL());
-    setSortType(getSortTypeFromURL());
-    setSortOrder(getSortOrderFromURL());
-  }, [filters, location.search, sortOrder, sortType, updateURL]);
+    const newPage = getPageFromURL();
+    const newSortType = getSortTypeFromURL();
+    const newSortOrder = getSortOrderFromURL();
+
+    if (
+      currentPage !== newPage ||
+      sortType !== newSortType ||
+      sortOrder !== newSortOrder
+    ) {
+      setCurrentPage(newPage);
+      setSortType(newSortType);
+      setSortOrder(newSortOrder);
+
+      if (newPage < 1 || newPage > totalPages) {
+        updateURL(1, newSortType, newSortOrder);
+      }
+    }
+  }, [
+    filters,
+    location.search,
+    sortOrder,
+    sortType,
+    totalPages,
+    updateURL,
+    currentPage,
+  ]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -410,15 +467,23 @@ const Catalog = () => {
                       </div>
                     </form>
                   </div>
-                  <div className="cards catalog__cards">
-                    {isLoading && (
-                      <div className="cards__loader">loading...</div>
-                    )}
-                    {!isLoading &&
-                      productsToDisplay(modifiedCatalogList()).map((item) => (
-                        <CatalogItemCard key={item.id} product={item} />
-                      ))}
-                  </div>
+
+                  {productsToDisplay(modifiedCatalogList()).length === 0 ? (
+                    <p className="empty-list-message">
+                      Нет соответсвующих товаров
+                    </p>
+                  ) : (
+                    <div className="cards catalog__cards">
+                      {isLoading && (
+                        <div className="cards__loader">loading...</div>
+                      )}
+                      {!isLoading &&
+                        productsToDisplay(modifiedCatalogList()).length > 0 &&
+                        productsToDisplay(modifiedCatalogList()).map((item) => (
+                          <CatalogItemCard key={item.id} product={item} />
+                        ))}
+                    </div>
+                  )}
                   <div className="pagination">
                     <Pagination
                       currentPage={currentPage}

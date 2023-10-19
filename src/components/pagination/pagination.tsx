@@ -27,10 +27,11 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
   };
 
   const visiblePages = getVisiblePages();
+  const totalVisiblePages = getVisiblePages()[0]?.length;
 
   return (
     <ul className="pagination__list">
-      {currentPage > 3 && (
+      {currentPage > 3 && totalVisiblePages > 1 && (
         <li className="pagination__item pagination__item--prev">
           <a
             className="pagination__link pagination__link--text"
@@ -52,7 +53,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
           handlePageChange={handlePageChange}
         />
       ))}
-      {currentPage + 1 < totalPages && (
+      {currentPage + 1 < totalPages && totalVisiblePages > 3 && (
         <li className="pagination__item pagination__item--next">
           <a
             className="pagination__link pagination__link--text"
