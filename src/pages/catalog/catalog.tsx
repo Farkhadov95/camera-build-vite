@@ -449,8 +449,7 @@ const Catalog = () => {
                               name="sort"
                               checked={sortType === SortType.price}
                               onChange={() =>
-                                handleSortTypeChange(SortType.price)
-                              }
+                                handleSortTypeChange(SortType.price)}
                             />
                             <label htmlFor="sortPrice">по цене</label>
                           </div>
@@ -461,8 +460,7 @@ const Catalog = () => {
                               name="sort"
                               checked={sortType === SortType.reviewCount}
                               onChange={() =>
-                                handleSortTypeChange(SortType.reviewCount)
-                              }
+                                handleSortTypeChange(SortType.reviewCount)}
                             />
                             <label htmlFor="sortPopular">по популярности</label>
                           </div>
@@ -476,8 +474,7 @@ const Catalog = () => {
                               aria-label="По возрастанию"
                               checked={sortOrder === SortOrder.ascending}
                               onChange={() =>
-                                handleSortOrderChange(SortOrder.ascending)
-                              }
+                                handleSortOrderChange(SortOrder.ascending)}
                             />
                             <label htmlFor="up">
                               <svg width="16" height="14" aria-hidden="true">
@@ -493,8 +490,7 @@ const Catalog = () => {
                               aria-label="По убыванию"
                               checked={sortOrder === SortOrder.descending}
                               onChange={() =>
-                                handleSortOrderChange(SortOrder.descending)
-                              }
+                                handleSortOrderChange(SortOrder.descending)}
                             />
                             <label htmlFor="down">
                               <svg width="16" height="14" aria-hidden="true">
