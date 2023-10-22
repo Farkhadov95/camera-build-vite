@@ -25,19 +25,22 @@ import BasketAdd from '../../components/basket/basket-add';
 import { ITEMS_PER_PAGE, SortOrder, SortType } from '../../const';
 
 const Catalog = () => {
-  const initialFilters = {
-    price: '',
-    priceUp: '',
-    photocamera: false,
-    videocamera: false,
-    digital: false,
-    film: false,
-    snapshot: false,
-    collection: false,
-    zero: false,
-    nonProfessional: false,
-    professional: false,
-  };
+  const initialFilters = useMemo(
+    () => ({
+      price: '',
+      priceUp: '',
+      photocamera: false,
+      videocamera: false,
+      digital: false,
+      film: false,
+      snapshot: false,
+      collection: false,
+      zero: false,
+      nonProfessional: false,
+      professional: false,
+    }),
+    []
+  );
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -55,41 +58,66 @@ const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateURL = useCallback(
-    (pageNumber: number, sort: SortType, order: SortOrder) => {
+    (
+      pageNumber: number,
+      sort: SortType,
+      order: SortOrder,
+      updatedFilters: typeof initialFilters
+    ) => {
       const currentParams = new URLSearchParams(location.search);
+
+      // setting sorting params
       currentParams.set('page', pageNumber.toString());
       currentParams.set('sort', sort);
       currentParams.set('order', order);
+
+      // setting filter params
+      Object.entries(updatedFilters).forEach(([k, value]) => {
+        const key = k as keyof typeof initialFilters;
+        if (value !== initialFilters[key]) {
+          currentParams.set(key, value.toString());
+        } else {
+          currentParams.delete(key);
+        }
+      });
+
       navigate(`${location.pathname}?${currentParams.toString()}`);
     },
-    [location.search, location.pathname, navigate]
+    [location.search, location.pathname, navigate, initialFilters]
   );
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, value, checked } = e.target;
+
+    let updatedFilters;
+
     if (name === 'photocamera') {
-      setFilters((prevState) => ({
-        ...prevState,
+      updatedFilters = {
+        ...filters,
         photocamera: checked,
-        videocamera: checked ? false : prevState.videocamera,
-      }));
+        videocamera: checked ? false : filters.videocamera,
+      };
     } else if (name === 'videocamera') {
-      setFilters((prevState) => ({
-        ...prevState,
+      updatedFilters = {
+        ...filters,
         videocamera: checked,
-        photocamera: checked ? false : prevState.photocamera,
-      }));
+        photocamera: checked ? false : filters.photocamera,
+      };
     } else {
-      setFilters((prevState) => ({
-        ...prevState,
+      updatedFilters = {
+        ...filters,
         [name]: type === 'checkbox' ? checked : value,
-      }));
+      };
     }
+
+    setFilters(updatedFilters);
+    updateURL(currentPage, sortType, sortOrder, updatedFilters);
   };
 
   const handleResetFilters = () => {
     setFilters(initialFilters);
     setCurrentPage(1);
+    updateURL(1, SortType.none, SortOrder.none, initialFilters);
   };
 
   const filteredProducts = useMemo(() => {
@@ -258,7 +286,7 @@ const Catalog = () => {
       setSortOrder(newSortOrder);
 
       if (newPage < 1 || newPage > totalPages) {
-        updateURL(1, newSortType, newSortOrder);
+        updateURL(1, newSortType, newSortOrder, filters);
       }
     }
   }, [
