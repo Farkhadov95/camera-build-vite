@@ -9,6 +9,7 @@ const persistedBasket = localStorage.getItem('basket');
 
 const initialState: CatalogData = {
   catalog: [],
+  visibleCatalog: [],
   product: null,
   basket: persistedBasket ? JSON.parse(persistedBasket) as BasketItems : [],
   similarProducts: [],
@@ -70,6 +71,12 @@ export const catalogData = createSlice({
   name: NameSpace.Products,
   initialState,
   reducers: {
+    setVisibleItems: (state, action: {payload: CatalogItems}) => {
+      state.visibleCatalog = action.payload;
+    },
+    removeVisibleItems: (state) => {
+      state.visibleCatalog = [];
+    },
     setBasketItem: (state, action: {payload: CatalogItem}) => {
       const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
 
@@ -115,6 +122,7 @@ export const catalogData = createSlice({
       })
       .addCase(fetchCatalogDataAction.fulfilled, (state, action) => {
         state.catalog = action.payload;
+        state.visibleCatalog = action.payload;
         state.isDataLoading = false;
       })
       .addCase(fetchCatalogDataAction.rejected, (state) => {
@@ -153,4 +161,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd } = catalogData.actions;
+export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd, setVisibleItems, removeVisibleItems } = catalogData.actions;

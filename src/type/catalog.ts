@@ -56,6 +56,7 @@ export type BasketItems = BasketItem[];
 
 export type CatalogData = {
     catalog: CatalogItems;
+    visibleCatalog: CatalogItems;
     product: CatalogItem | null;
     basket: BasketItems;
     similarProducts: CatalogItems;
@@ -63,4 +64,18 @@ export type CatalogData = {
     isDataLoading: boolean;
     isAddedToBasket: boolean;
     productToAdd: CatalogItem | null;
+}
+
+export type Filters = {
+    price: string;
+    priceUp: string;
+    photocamera: boolean;
+    videocamera: boolean;
+    digital: boolean;
+    film: boolean;
+    snapshot: boolean;
+    collection: boolean;
+    zero: boolean;
+    nonProfessional: boolean;
+    professional: boolean;
 }

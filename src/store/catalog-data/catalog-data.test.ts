@@ -5,6 +5,7 @@ describe('Reducer: CatalogData', () => {
   it('should return the initial state', () => {
     expect(catalogData.reducer(void 0, { type: 'unknown' })).toEqual({
       catalog: [],
+      visibleCatalog: [],
       product: null,
       basket: [],
       similarProducts: [],
@@ -18,6 +19,7 @@ describe('Reducer: CatalogData', () => {
   it('should add item to the basket', () => {
     const state = {
       catalog: [],
+      visibleCatalog: [],
       product: null,
       basket: [],
       similarProducts: [],
@@ -41,6 +43,7 @@ describe('Reducer: CatalogData', () => {
   it('should remove item from the basket', () => {
     const state = {
       catalog: [],
+      visibleCatalog: [],
       product: null,
       basket: [{
         product: catalogItemMock,
@@ -63,6 +66,7 @@ describe('Reducer: CatalogData', () => {
   it('should remove Added-To-Basket Message', () => {
     const state = {
       catalog: [],
+      visibleCatalog: [],
       product: null,
       basket: [],
       similarProducts: [],

@@ -53,7 +53,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }: Props) => {
           handlePageChange={handlePageChange}
         />
       ))}
-      {currentPage + 1 < totalPages && totalVisiblePages > 3 && (
+      {currentPage + 1 < totalPages && totalPages > 3 && (
         <li className="pagination__item pagination__item--next">
           <a
             className="pagination__link pagination__link--text"

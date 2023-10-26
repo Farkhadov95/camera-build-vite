@@ -15,6 +15,7 @@ import {
   CatalogItem,
   CatalogItems,
   Category,
+  Filters,
   Level,
   Type,
 } from '../../type/catalog';
@@ -23,8 +24,10 @@ import Pagination from '../../components/pagination/pagination';
 import BasketAddModal from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import { ITEMS_PER_PAGE, SortOrder, SortType } from '../../const';
+import queryString from 'query-string';
 
 const Catalog = () => {
+  const FIRST_PAGE = 1;
   const initialFilters = useMemo(
     () => ({
       price: '',
@@ -56,6 +59,22 @@ const Catalog = () => {
   const [sortType, setSortType] = useState<SortType>(SortType.none);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.none);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const parseQueryToFilters = (
+    query: Record<string, string | undefined>
+  ): Filters => ({
+    price: query.price || '',
+    priceUp: query.priceUp || '',
+    photocamera: query.photocamera === 'true',
+    videocamera: query.videocamera === 'true',
+    digital: query.digital === 'true',
+    film: query.film === 'true',
+    snapshot: query.snapshot === 'true',
+    collection: query.collection === 'true',
+    zero: query.zero === 'true',
+    nonProfessional: query.nonProfessional === 'true',
+    professional: query.professional === 'true',
+  });
 
   const updateURL = useCallback(
     (
@@ -111,7 +130,7 @@ const Catalog = () => {
     }
 
     setFilters(updatedFilters);
-    updateURL(currentPage, sortType, sortOrder, updatedFilters);
+    updateURL(FIRST_PAGE, sortType, sortOrder, updatedFilters);
   };
 
   const handleResetFilters = () => {
@@ -272,32 +291,36 @@ const Catalog = () => {
       return sortOrderFromUrl || sortOrder;
     };
 
+    const getFiltersFromURL = () => {
+      const queryObject = queryString.parse(location.search) as Record<
+        string,
+        string | undefined
+      >;
+      const filtersFromURL = parseQueryToFilters(queryObject);
+      return filtersFromURL || initialFilters;
+    };
+
     const newPage = getPageFromURL();
     const newSortType = getSortTypeFromURL();
     const newSortOrder = getSortOrderFromURL();
+    const newFilters = getFiltersFromURL();
 
     if (
       currentPage !== newPage ||
       sortType !== newSortType ||
-      sortOrder !== newSortOrder
+      sortOrder !== newSortOrder ||
+      filters !== newFilters
     ) {
       setCurrentPage(newPage);
       setSortType(newSortType);
       setSortOrder(newSortOrder);
+      setFilters(newFilters);
 
       if (newPage < 1 || newPage > totalPages) {
-        updateURL(1, newSortType, newSortOrder, filters);
+        updateURL(FIRST_PAGE, newSortType, newSortOrder, newFilters);
       }
     }
-  }, [
-    filters,
-    location.search,
-    sortOrder,
-    sortType,
-    totalPages,
-    updateURL,
-    currentPage,
-  ]);
+  }, [location.search]);
 
   useEffect(() => {
     const pageValue = searchParams.get('page');
