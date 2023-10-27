@@ -25,6 +25,7 @@ import BasketAddModal from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import { ITEMS_PER_PAGE, SortOrder, SortType } from '../../const';
 import queryString from 'query-string';
+import { getPriceRange } from '../../utils';
 
 const Catalog = () => {
   const FIRST_PAGE = 1;
@@ -58,13 +59,14 @@ const Catalog = () => {
 
   const [sortType, setSortType] = useState<SortType>(SortType.none);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.none);
+  const [priceRange, setPriceRange] = useState([0, 0]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const parseQueryToFilters = (
     query: Record<string, string | undefined>
   ): Filters => ({
-    price: query.price || '',
-    priceUp: query.priceUp || '',
+    price: query.price_gte || '',
+    priceUp: query.price_lte || '',
     photocamera: query.photocamera === 'true',
     videocamera: query.videocamera === 'true',
     digital: query.digital === 'true',
@@ -91,12 +93,27 @@ const Catalog = () => {
       currentParams.set('order', order);
 
       // setting filter params
-      Object.entries(updatedFilters).forEach(([k, value]) => {
-        const key = k as keyof typeof initialFilters;
-        if (value !== initialFilters[key]) {
-          currentParams.set(key, value.toString());
+      Object.entries(updatedFilters).forEach(([key, value]) => {
+        const filterKey = key as keyof typeof initialFilters;
+
+        if (filterKey === 'price') {
+          if (value) {
+            currentParams.set('price_gte', value.toString());
+          } else {
+            currentParams.delete('price_gte');
+          }
+        } else if (filterKey === 'priceUp') {
+          if (value) {
+            currentParams.set('price_lte', value.toString());
+          } else {
+            currentParams.delete('price_lte');
+          }
         } else {
-          currentParams.delete(key);
+          if (value !== initialFilters[filterKey]) {
+            currentParams.set(key, value.toString());
+          } else {
+            currentParams.delete(key);
+          }
         }
       });
 
@@ -121,6 +138,32 @@ const Catalog = () => {
         ...filters,
         videocamera: checked,
         photocamera: checked ? false : filters.photocamera,
+      };
+    } else if (name === 'price') {
+      updatedFilters = {
+        ...filters,
+        price:
+          parseInt(value, 10) < priceRange[0]
+            ? priceRange[0].toString()
+            : value,
+      };
+    } else if (name === 'priceUp') {
+      const getPriceUp = (input: string) => {
+        const intValue = parseInt(input, 10);
+        if (intValue > priceRange[1]) {
+          return priceRange[1].toString();
+        } else if (intValue < 0) {
+          return priceRange[0].toString();
+        } else if (intValue < priceRange[0]) {
+          return priceRange[0].toString();
+        } else {
+          return input.toString();
+        }
+      };
+
+      updatedFilters = {
+        ...filters,
+        priceUp: getPriceUp(value),
       };
     } else {
       updatedFilters = {
@@ -266,8 +309,22 @@ const Catalog = () => {
   }, [sortType, sortOrder, handleSortTypeChange]);
 
   useEffect(() => {
+    const isAnyCheckboxFilterApplied = () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { price, priceUp, ...checkboxFilters } = filters;
+      return Object.values(checkboxFilters).some((value) => value !== false);
+    };
+
+    const datasetForPriceRange = isAnyCheckboxFilterApplied()
+      ? filteredProducts
+      : catalogItems;
+
     setTotalPages(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
-  }, [filteredProducts]);
+    if (filteredProducts.length !== 0) {
+      const priceRangeAvailable = getPriceRange(datasetForPriceRange);
+      setPriceRange(priceRangeAvailable);
+    }
+  }, [catalogItems, filteredProducts, filters]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -385,9 +442,9 @@ const Catalog = () => {
                             <label>
                               <input
                                 type="number"
-                                name="price"
-                                placeholder="от"
+                                placeholder={priceRange[0].toString()}
                                 value={filters.price}
+                                name="price"
                                 onChange={handleFilterChange}
                               />
                             </label>
@@ -396,9 +453,9 @@ const Catalog = () => {
                             <label>
                               <input
                                 type="number"
-                                name="priceUp"
-                                placeholder="до"
+                                placeholder={priceRange[1].toString()}
                                 value={filters.priceUp}
+                                name="priceUp"
                                 onChange={handleFilterChange}
                               />
                             </label>
@@ -556,7 +613,7 @@ const Catalog = () => {
 
                   {productsToShow.length === 0 ? (
                     <p className="empty-list-message">
-                      Нет соответсвующих товаров
+                      по вашему запросу ничего не найдено
                     </p>
                   ) : (
                     <div className="cards catalog__cards">
