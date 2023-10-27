@@ -3,6 +3,7 @@ export type ReviewsData = {
     areReviewsLoading: boolean;
     isReviewUploading: boolean;
     isPostReviewSuccess: boolean;
+    reviewsError: string | null;
 }
 
 export type Review = {

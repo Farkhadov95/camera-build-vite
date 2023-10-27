@@ -1,12 +1,16 @@
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   catalogItemsSelector,
+  errorSelector,
   isAddedToBasketSelector,
   isLoadingSelector,
   productToAddSelector,
 } from '../../store/selectors/catalog-selectors';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import queryString from 'query-string';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CatalogItemCard from '../../components/catalog/catalog-item-card';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
@@ -24,8 +28,8 @@ import Pagination from '../../components/pagination/pagination';
 import BasketAddModal from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import { ITEMS_PER_PAGE, SortOrder, SortType } from '../../const';
-import queryString from 'query-string';
 import { getPriceRange } from '../../utils';
+import { clearErrors } from '../../store/catalog-data/catalog-data';
 
 const Catalog = () => {
   const FIRST_PAGE = 1;
@@ -48,10 +52,12 @@ const Catalog = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const catalogItems = useAppSelector(catalogItemsSelector);
   const isLoading = useAppSelector(isLoadingSelector);
   const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
   const productToAdd = useAppSelector(productToAddSelector);
+  const error = useAppSelector(errorSelector);
 
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
@@ -402,8 +408,27 @@ const Catalog = () => {
     };
   }, [isAddedToBasket, productToAdd]);
 
+  useEffect(() => {
+    if (error) {
+      toast(error);
+      dispatch(clearErrors());
+    }
+  }, [error, dispatch]);
+
   return (
     <div className="wrapper">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Header />
       <main>
         <Banner />

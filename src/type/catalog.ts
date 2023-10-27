@@ -64,6 +64,7 @@ export type CatalogData = {
     isDataLoading: boolean;
     isAddedToBasket: boolean;
     productToAdd: CatalogItem | null;
+    error: string | null;
 }
 
 export type Filters = {

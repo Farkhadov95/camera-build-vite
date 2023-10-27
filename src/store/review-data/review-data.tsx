@@ -2,13 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { PostReview, Review, Reviews, ReviewsData } from '../../type/reviews';
 import { AxiosInstance } from 'axios';
 import { AppDispatch, State } from '../../type/state';
-import { NameSpace } from '../../const';
+import { ErrorMessages, NameSpace } from '../../const';
 
 const initialState: ReviewsData = {
   reviews: [],
   areReviewsLoading: false,
   isReviewUploading: false,
   isPostReviewSuccess: false,
+  reviewsError: null,
 };
 
 export const fetchReviewsAction = createAsyncThunk<
@@ -45,11 +46,15 @@ export const reviewData = createSlice({
     setSuccessStatus: (state, action: { payload: boolean }) => {
       state.isPostReviewSuccess = action.payload;
     },
+    clearReviewErrors: (state) => {
+      state.reviewsError = null;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchReviewsAction.pending, (state) => {
         state.areReviewsLoading = true;
+        state.reviewsError = null;
       })
       .addCase(fetchReviewsAction.fulfilled, (state, action) => {
         state.reviews = action.payload;
@@ -57,9 +62,11 @@ export const reviewData = createSlice({
       })
       .addCase(fetchReviewsAction.rejected, (state) => {
         state.areReviewsLoading = false;
+        state.reviewsError = ErrorMessages.REVIEWS_LOAD;
       })
       .addCase(postReviewAction.pending, (state) => {
         state.isReviewUploading = true;
+        state.reviewsError = null;
       })
       .addCase(postReviewAction.fulfilled, (state) => {
         state.isReviewUploading = false;
@@ -67,8 +74,9 @@ export const reviewData = createSlice({
       })
       .addCase(postReviewAction.rejected, (state) => {
         state.isReviewUploading = false;
+        state.reviewsError = ErrorMessages.REVIEW_UPLOAD;
       });
   },
 });
 
-export const { setSuccessStatus } = reviewData.actions;
+export const { setSuccessStatus, clearReviewErrors } = reviewData.actions;

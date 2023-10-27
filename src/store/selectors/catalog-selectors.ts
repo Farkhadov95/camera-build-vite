@@ -11,3 +11,5 @@ export const isLoadingSelector = (state: State): boolean => state[NameSpace.Prod
 export const isAddedToBasketSelector = (state: State): boolean => state[NameSpace.Products].isAddedToBasket;
 export const basketSelector = (state: State): BasketItems => state[NameSpace.Products].basket;
 export const productToAddSelector = (state: State): CatalogItem | null => state[NameSpace.Products].productToAdd;
+export const errorSelector = (state: State): string | null => state[NameSpace.Products].error;
+export const reviewsErrorSelector = (state: State): string | null => state[NameSpace.Reviews].reviewsError;

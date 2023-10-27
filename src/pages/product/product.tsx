@@ -5,24 +5,32 @@ import Reviews from '../../components/product-reviews/product-reviews/product-re
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
+  clearErrors,
   fetchProductAction,
   fetchSimilarProductsAction,
   setProductToAdd,
 } from '../../store/catalog-data/catalog-data';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
+  errorSelector,
   isAddedToBasketSelector,
   isLoadingSelector,
   productSelector,
   productToAddSelector,
+  reviewsErrorSelector,
 } from '../../store/selectors/catalog-selectors';
 import SpecsTab from '../../components/product-tabs/specs-tab';
 import DescriptionTab from '../../components/product-tabs/description-tab';
 import { Tabs } from '../../const';
 import Stars from '../../components/rating-stars/stars';
 import ReviewSuccess from '../../components/product-reviews/product-success/review-success';
-import { fetchReviewsAction } from '../../store/review-data/review-data';
+import {
+  clearReviewErrors,
+  fetchReviewsAction,
+} from '../../store/review-data/review-data';
 import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
 import BasketAddSuccess from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
@@ -37,6 +45,8 @@ const Product = () => {
   const isLoading = useSelector(isLoadingSelector);
   const isAddedToBasket = useAppSelector(isAddedToBasketSelector);
   const productToAdd = useAppSelector(productToAddSelector);
+  const reviewsError = useAppSelector(reviewsErrorSelector);
+  const error = useAppSelector(errorSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   const updateTabInURL = (tab: Tabs) => {
@@ -84,6 +94,15 @@ const Product = () => {
     };
   }, [isAddedToBasket, productToAdd, successStatus]);
 
+  useEffect(() => {
+    if (error) {
+      toast(error);
+      toast(reviewsError);
+      dispatch(clearErrors());
+      dispatch(clearReviewErrors());
+    }
+  }, [error, dispatch, reviewsError]);
+
   if (isLoading || !product) {
     return <div>loading...</div>;
   }
@@ -108,6 +127,18 @@ const Product = () => {
 
   return (
     <div className="wrapper">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Header />
       <main>
         <div className="page-content">

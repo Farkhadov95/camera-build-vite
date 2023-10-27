@@ -3,7 +3,7 @@ import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
 import { BasketItems, CatalogData, CatalogItem, CatalogItems} from '../../type/catalog';
 import { PromoItems } from '../../type/catalog';
-import { NameSpace } from '../../const';
+import { ErrorMessages, NameSpace } from '../../const';
 
 const persistedBasket = localStorage.getItem('basket');
 
@@ -16,7 +16,8 @@ const initialState: CatalogData = {
   promos: [],
   isDataLoading: false,
   isAddedToBasket: false,
-  productToAdd: null
+  productToAdd: null,
+  error: null,
 };
 
 export const fetchCatalogDataAction = createAsyncThunk<CatalogItems, undefined, {
@@ -114,11 +115,15 @@ export const catalogData = createSlice({
     removeProductToAdd: (state) => {
       state.productToAdd = null;
     },
+    clearErrors: (state) => {
+      state.error = null;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCatalogDataAction.pending, (state) => {
         state.isDataLoading = true;
+        state.error = null;
       })
       .addCase(fetchCatalogDataAction.fulfilled, (state, action) => {
         state.catalog = action.payload;
@@ -127,9 +132,11 @@ export const catalogData = createSlice({
       })
       .addCase(fetchCatalogDataAction.rejected, (state) => {
         state.isDataLoading = false;
+        state.error = ErrorMessages.CATALOG_ITEMS_LOAD;
       })
       .addCase(fetchPromoDataAction.pending, (state) => {
         state.isDataLoading = true;
+        state.error = null;
       })
       .addCase(fetchPromoDataAction.fulfilled, (state, action) => {
         state.promos = action.payload;
@@ -137,9 +144,11 @@ export const catalogData = createSlice({
       })
       .addCase(fetchPromoDataAction.rejected, (state) => {
         state.isDataLoading = false;
+        state.error = ErrorMessages.PROMO_LOAD;
       })
       .addCase(fetchProductAction.pending, (state) => {
         state.isDataLoading = true;
+        state.error = null;
       })
       .addCase(fetchProductAction.fulfilled, (state, action) => {
         state.product = action.payload;
@@ -147,9 +156,11 @@ export const catalogData = createSlice({
       })
       .addCase(fetchProductAction.rejected, (state) => {
         state.isDataLoading = false;
+        state.error = ErrorMessages.PRODUCT_LOAD;
       })
       .addCase(fetchSimilarProductsAction.pending, (state) => {
         state.isDataLoading = true;
+        state.error = null;
       })
       .addCase(fetchSimilarProductsAction.fulfilled, (state, action) => {
         state.similarProducts = action.payload;
@@ -157,8 +168,9 @@ export const catalogData = createSlice({
       })
       .addCase(fetchSimilarProductsAction.rejected, (state) => {
         state.isDataLoading = false;
+        state.error = ErrorMessages.SIMILAR_ITEMS_LOAD;
       });
   }
 });
 
-export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd, setVisibleItems, removeVisibleItems } = catalogData.actions;
+export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd, setVisibleItems, removeVisibleItems, clearErrors } = catalogData.actions;

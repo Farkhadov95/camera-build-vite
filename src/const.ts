@@ -43,5 +43,14 @@ export const starsValues = [
   },
 ];
 
+export enum ErrorMessages {
+  PROMO_LOAD = 'Ошибка загрузки промо',
+  CATALOG_ITEMS_LOAD = 'Ошибка загрузки каталога',
+  PRODUCT_LOAD = 'Ошибка загрузки товара',
+  SIMILAR_ITEMS_LOAD = 'Ошибка загрузки похожих товаров',
+  REVIEWS_LOAD = 'Ошибка загрузки отзывов',
+  REVIEW_UPLOAD = 'Ошибка отправки отзыва',
+}
+
 export const PAGES_LIST_SIZE = 3;
 export const ITEMS_PER_PAGE = 9;
