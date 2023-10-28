@@ -14,6 +14,7 @@ describe('Page: Catalog', () => {
         catalog: catalogItemsMock,
         similarProducts: catalogItemsMock,
         promos: [],
+        productToAdd: catalogItemsMock[0],
       },
     });
     render(

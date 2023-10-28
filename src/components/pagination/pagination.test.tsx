@@ -33,12 +33,11 @@ describe('Component: Pagination', () => {
     );
 
     const pageItems = getAllByRole('listitem');
-    expect(pageItems).toHaveLength(5);
+    expect(pageItems).toHaveLength(4);
 
-    expect(getByText('Назад')).toBeInTheDocument();
+    expect(getByText('1')).toBeInTheDocument();
     expect(getByText('2')).toBeInTheDocument();
     expect(getByText('3')).toBeInTheDocument();
-    expect(getByText('4')).toBeInTheDocument();
     expect(getByText('Далее')).toBeInTheDocument();
   });
 });

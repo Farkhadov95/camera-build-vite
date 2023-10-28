@@ -13,6 +13,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      error: null,
     });
   });
 
@@ -27,6 +28,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      error: null,
     };
     const action = setBasketItem(catalogItemMock);
     const newState = catalogData.reducer(state, action);
@@ -54,6 +56,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      error: null,
     };
     const action = removeBasketItem(catalogItemMock);
     const newState = catalogData.reducer(state, action);
@@ -74,6 +77,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: true,
       productToAdd: null,
+      error: null,
     };
     const action = removeAddedToBasketMessage();
     const newState = catalogData.reducer(state, action);

@@ -48,7 +48,14 @@ const BasketAdd = () => {
   };
 
   return (
-    <FocusTrap focusTrapOptions={{ initialFocus: '#addBtn' }}>
+    <FocusTrap
+      focusTrapOptions={{
+        initialFocus: '#addBtn',
+        tabbableOptions: {
+          displayCheck: 'none',
+        },
+      }}
+    >
       <div className="modal is-active">
         <div className="modal__wrapper">
           <div className="modal__overlay" onClick={handleClose}></div>

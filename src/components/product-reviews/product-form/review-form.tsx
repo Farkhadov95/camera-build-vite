@@ -74,7 +74,14 @@ const ReviewForm = ({ handleClose }: Props) => {
   });
 
   return (
-    <FocusTrap focusTrapOptions={{ initialFocus: '#userNameInput' }}>
+    <FocusTrap
+      focusTrapOptions={{
+        initialFocus: '#userNameInput',
+        tabbableOptions: {
+          displayCheck: 'none',
+        },
+      }}
+    >
       <div className="modal is-active">
         <div className="modal__wrapper">
           <div className="modal__overlay" onClick={handleClose}></div>

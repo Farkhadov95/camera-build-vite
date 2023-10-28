@@ -7,6 +7,7 @@ describe('Reducer: ReviewData', () => {
       areReviewsLoading: false,
       isReviewUploading: false,
       isPostReviewSuccess: false,
+      reviewsError: null,
     };
 
     const action = setSuccessStatus(true);

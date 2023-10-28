@@ -19,6 +19,7 @@ describe('Page: Product', () => {
         similarProducts: catalogItemsMock,
         isDataLoading: false,
         promos: [],
+        productToAdd: catalogItemsMock[0],
       },
       [NameSpace.Reviews]: {
         reviews: reviewsMocks,
@@ -32,7 +33,10 @@ describe('Page: Product', () => {
       </Provider>
     );
 
-    expect(screen.getByText(/Добавить в корзину/i)).toBeInTheDocument();
+    const allAddToBasketBtns = screen.getAllByText(/Добавить в корзину/i);
+    allAddToBasketBtns.forEach((button) => {
+      expect(button).toBeInTheDocument();
+    });
     expect(screen.getByText(/Характеристики/i)).toBeInTheDocument();
     expect(screen.getByText(/Описание/i)).toBeInTheDocument();
   });

@@ -1,13 +1,25 @@
 import { render, screen } from '@testing-library/react';
 import SimilarItem from './similar-item';
-import { catalogItemMock } from '../../../mocks';
+import { catalogItemMock, catalogItemsMock } from '../../../mocks';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureMockStore } from '@jedmao/redux-mock-store';
+import { NameSpace } from '../../../const';
 
 describe('Component: SimilarItem', () => {
   it('Should be rendered correctly', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      [NameSpace.Products]: {
+        similarProducts: catalogItemsMock,
+      },
+    });
+
     render(
       <MemoryRouter initialEntries={['/catalog']}>
-        <SimilarItem product={catalogItemMock} />
+        <Provider store={store}>
+          <SimilarItem product={catalogItemMock} />
+        </Provider>
       </MemoryRouter>
     );
 

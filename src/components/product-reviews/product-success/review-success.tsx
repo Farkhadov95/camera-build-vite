@@ -23,7 +23,14 @@ const ReviewSuccess = () => {
   }, [handleClose]);
 
   return (
-    <FocusTrap focusTrapOptions={{ initialFocus: '#returnBtn' }}>
+    <FocusTrap
+      focusTrapOptions={{
+        initialFocus: '#returnBtn',
+        tabbableOptions: {
+          displayCheck: 'none',
+        },
+      }}
+    >
       <div className="modal is-active modal--narrow">
         <div className="modal__wrapper">
           <div className="modal__overlay" onClick={handleClose}></div>
