@@ -286,14 +286,24 @@ const Catalog = () => {
 
   const handleSortTypeChange = useCallback(
     (type: SortType) => {
+      const isFirstLaunch =
+        type === SortType.price && sortOrder === SortOrder.none;
       setSortType(type);
+      if (isFirstLaunch) {
+        setSortOrder(SortOrder.ascending);
+      }
       setSearchParams((prevParams) => {
         const currentParams = Object.fromEntries(prevParams);
         currentParams.sort = type;
+        if (isFirstLaunch) {
+          currentParams.order = SortOrder.ascending;
+        } else {
+          currentParams.order = sortOrder;
+        }
         return currentParams;
       });
     },
-    [setSearchParams]
+    [setSearchParams, sortOrder]
   );
 
   const handleSortOrderChange = useCallback(
@@ -307,12 +317,6 @@ const Catalog = () => {
     },
     [setSearchParams]
   );
-
-  useEffect(() => {
-    if (sortType === SortType.none && sortOrder !== SortOrder.none) {
-      handleSortTypeChange(SortType.price);
-    }
-  }, [sortType, sortOrder, handleSortTypeChange]);
 
   useEffect(() => {
     const isAnyCheckboxFilterApplied = () => {
