@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { NameSpace } from '../../const';
 import { catalogItemsMock } from '../../mocks';
-import userEvent from '@testing-library/user-event';
 
 describe('Page: Catalog', () => {
   it('should render the page correctrly', () => {
@@ -61,9 +60,9 @@ describe('Page: Catalog', () => {
     await waitFor(
       () => {
         const allItems = screen.getAllByText(/₽/i);
-        allItems.forEach((item, index) => {
+        allItems.forEach((item) => {
           expect(item).toBeInTheDocument();
-          console.log(`Item ${index}:`, item.textContent);
+          // console.log(`Item ${index}:`, item.textContent);
         });
       },
       {
