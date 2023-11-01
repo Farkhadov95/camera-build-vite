@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { catalogItemsSelector } from '../../store/selectors/catalog-selectors';
-import { CatalogItems } from '../../type/catalog';
+import { CatalogItem, CatalogItems } from '../../type/catalog';
 import { useNavigate } from 'react-router-dom';
 
 const SearchForm = () => {
   const navigate = useNavigate();
   const products = useSelector(catalogItemsSelector);
   const [isListOpen, setListOpen] = useState(false);
+  const [isDropList, setDropList] = useState(false);
   const [foundProducts, setFoundProducts] = useState<CatalogItems>([]);
   const searchFormRef = useRef<HTMLFormElement>(null);
 
@@ -24,10 +25,23 @@ const SearchForm = () => {
     const enteredValue = e.target.value;
     const matchedProducts = findProducts(enteredValue);
 
-    if (enteredValue.length >= 3 && matchedProducts.length !== 0) {
+    if (enteredValue.length > 0) {
       setListOpen(true);
+    }
+
+    if (enteredValue.length >= 3 && matchedProducts.length !== 0) {
+      setDropList(true);
     } else {
-      setListOpen(false);
+      setDropList(false);
+    }
+  };
+
+  const handleKeyPress = (
+    product: CatalogItem,
+    event: React.KeyboardEvent<HTMLLIElement>
+  ) => {
+    if (event.key === 'Enter') {
+      navigate(`/product/${product.id}`);
     }
   };
 
@@ -58,18 +72,21 @@ const SearchForm = () => {
             onChange={handleSearch}
           />
         </label>
-        <ul className="form-search__select-list">
-          {foundProducts?.map((product) => (
-            <li
-              className="form-search__select-item"
-              tabIndex={0}
-              key={product.id}
-              onClick={() => navigate(`/product/${product.id}`)}
-            >
-              {product.name}
-            </li>
-          ))}
-        </ul>
+        {isDropList && (
+          <ul className="form-search__select-list">
+            {foundProducts?.map((product) => (
+              <li
+                className="form-search__select-item"
+                tabIndex={0}
+                key={product.id}
+                onClick={() => navigate(`/product/${product.id}`)}
+                onKeyDown={(event) => handleKeyPress(product, event)}
+              >
+                {product.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </form>
       <button className="form-search__reset" type="reset" onClick={resetForm}>
         <svg width="10" height="10" aria-hidden="true">

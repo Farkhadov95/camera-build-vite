@@ -68,6 +68,11 @@ const Catalog = () => {
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // const {
+  //   register,
+  //   formState: { errors },
+  // } = useForm<Filters>();
+
   const parseQueryToFilters = (
     query: Record<string, string | undefined>
   ): Filters => ({
@@ -128,6 +133,30 @@ const Catalog = () => {
     [location.search, location.pathname, navigate, initialFilters]
   );
 
+  const getPrice = (input: string) => {
+    const intValue = Math.abs(Number(input));
+    if (intValue < 0) {
+      return '0';
+    } else if (intValue > priceRange[1]) {
+      return priceRange[1].toString();
+    } else if (intValue > parseInt(filters.priceUp, 10)) {
+      return filters.priceUp;
+    } else {
+      return intValue.toString();
+    }
+  };
+
+  const getPriceUp = (input: string) => {
+    const intValue = Math.abs(Number(input));
+    if (intValue < 0) {
+      return '0';
+    } else if (intValue > priceRange[1]) {
+      return priceRange[1].toString();
+    } else {
+      return intValue.toString();
+    }
+  };
+
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, value, checked } = e.target;
 
@@ -148,25 +177,9 @@ const Catalog = () => {
     } else if (name === 'price') {
       updatedFilters = {
         ...filters,
-        price:
-          parseInt(value, 10) < priceRange[0]
-            ? priceRange[0].toString()
-            : value,
+        price: getPrice(value),
       };
     } else if (name === 'priceUp') {
-      const getPriceUp = (input: string) => {
-        const intValue = parseInt(input, 10);
-        if (intValue > priceRange[1]) {
-          return priceRange[1].toString();
-        } else if (intValue < 0) {
-          return priceRange[0].toString();
-        } else if (intValue < priceRange[0]) {
-          return priceRange[0].toString();
-        } else {
-          return input.toString();
-        }
-      };
-
       updatedFilters = {
         ...filters,
         priceUp: getPriceUp(value),
@@ -256,6 +269,7 @@ const Catalog = () => {
     if (order === SortOrder.none) {
       return [...items]; // returns original
     }
+
     return order === SortOrder.ascending ? [...items] : [...items].reverse();
   };
 
@@ -308,14 +322,24 @@ const Catalog = () => {
 
   const handleSortOrderChange = useCallback(
     (order: SortOrder) => {
+      const isFirstLaunch =
+        order !== SortOrder.none && sortType === SortType.none;
       setSortOrder(order);
+      if (isFirstLaunch) {
+        setSortType(SortType.price);
+      }
       setSearchParams((prevParams) => {
         const currentParams = Object.fromEntries(prevParams);
         currentParams.order = order;
+        if (isFirstLaunch) {
+          currentParams.sort = SortType.price;
+        } else {
+          currentParams.sort = sortType;
+        }
         return currentParams;
       });
     },
-    [setSearchParams]
+    [setSearchParams, sortType]
   );
 
   useEffect(() => {
@@ -474,7 +498,7 @@ const Catalog = () => {
                                 placeholder={priceRange[0].toString()}
                                 value={filters.price}
                                 name="price"
-                                onChange={handleFilterChange}
+                                onInput={handleFilterChange}
                               />
                             </label>
                           </div>
@@ -485,7 +509,7 @@ const Catalog = () => {
                                 placeholder={priceRange[1].toString()}
                                 value={filters.priceUp}
                                 name="priceUp"
-                                onChange={handleFilterChange}
+                                onInput={handleFilterChange}
                               />
                             </label>
                           </div>
