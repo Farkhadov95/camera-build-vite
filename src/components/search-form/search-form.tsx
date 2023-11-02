@@ -20,9 +20,9 @@ const SearchForm = () => {
       focusedIndex >= 0 &&
       focusedIndex < foundProducts.length
     ) {
-      // Scroll the focused item into view
       document
-        .querySelectorAll('.form-search__select-item')[focusedIndex].scrollIntoView({
+        .querySelectorAll('.form-search__select-item')
+        [focusedIndex].scrollIntoView({
           block: 'nearest',
         });
     }
@@ -51,15 +51,6 @@ const SearchForm = () => {
       setDropList(false);
     }
   };
-
-  // const handleKeyPress = (
-  //   product: CatalogItem,
-  //   event: React.KeyboardEvent<HTMLLIElement>
-  // ) => {
-  //   if (event.key === 'Enter') {
-  //     navigate(`/product/${product.id}`);
-  //   }
-  // };
 
   const handleKeyPress = (
     product: CatalogItem,
