@@ -130,7 +130,9 @@ const Catalog = () => {
 
   const getPrice = (input: string, onBlur = false) => {
     const intValue = Math.abs(Number(input));
-    if (intValue < 0) {
+    if (intValue === 0) {
+      return '';
+    } else if (intValue < 0) {
       return '0';
     } else if (intValue > priceRange[1]) {
       return priceRange[1].toString();
@@ -145,9 +147,11 @@ const Catalog = () => {
 
   const getPriceUp = (input: string, onBlur = false) => {
     const intValue = Math.abs(Number(input));
-    if (intValue < 0) {
+    if (intValue === 0) {
+      return '';
+    } else if (intValue < 0) {
       return '0';
-    } else if (intValue > priceRange[1]) {
+    } else if (intValue > priceRange[1] && onBlur) {
       return priceRange[1].toString();
     } else if (intValue < parseInt(filters.price, 10) && onBlur) {
       return filters.price;
