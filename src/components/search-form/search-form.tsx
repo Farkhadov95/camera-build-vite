@@ -21,8 +21,7 @@ const SearchForm = () => {
       focusedIndex < foundProducts.length
     ) {
       document
-        .querySelectorAll('.form-search__select-item')
-        [focusedIndex].scrollIntoView({
+        .querySelectorAll('.form-search__select-item')[focusedIndex].scrollIntoView({
           block: 'nearest',
         });
     }

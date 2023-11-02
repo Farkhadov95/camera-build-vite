@@ -68,11 +68,6 @@ const Catalog = () => {
   const [priceRange, setPriceRange] = useState([0, 0]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const {
-  //   register,
-  //   formState: { errors },
-  // } = useForm<Filters>();
-
   const parseQueryToFilters = (
     query: Record<string, string | undefined>
   ): Filters => ({
@@ -133,12 +128,14 @@ const Catalog = () => {
     [location.search, location.pathname, navigate, initialFilters]
   );
 
-  const getPrice = (input: string) => {
+  const getPrice = (input: string, onBlur = false) => {
     const intValue = Math.abs(Number(input));
     if (intValue < 0) {
       return '0';
     } else if (intValue > priceRange[1]) {
       return priceRange[1].toString();
+    } else if (intValue < priceRange[0] && onBlur) {
+      return priceRange[0].toString();
     } else if (intValue > parseInt(filters.priceUp, 10)) {
       return filters.priceUp;
     } else {
@@ -146,15 +143,40 @@ const Catalog = () => {
     }
   };
 
-  const getPriceUp = (input: string) => {
+  const getPriceUp = (input: string, onBlur = false) => {
     const intValue = Math.abs(Number(input));
     if (intValue < 0) {
       return '0';
     } else if (intValue > priceRange[1]) {
       return priceRange[1].toString();
+    } else if (intValue < parseInt(filters.price, 10) && onBlur) {
+      return filters.price;
     } else {
       return intValue.toString();
     }
+  };
+
+  const handlePriceChange = (
+    e: React.FormEvent<HTMLInputElement>,
+    onBlur = false
+  ) => {
+    e.persist();
+    const { name, value } = e.target as HTMLInputElement;
+    let updatedFilters;
+
+    if (name === 'price') {
+      updatedFilters = {
+        ...filters,
+        price: getPrice(value, onBlur),
+      };
+    } else {
+      updatedFilters = {
+        ...filters,
+        priceUp: getPriceUp(value, onBlur),
+      };
+    }
+    setFilters(updatedFilters);
+    updateURL(FIRST_PAGE, sortType, sortOrder, updatedFilters);
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,16 +195,6 @@ const Catalog = () => {
         ...filters,
         videocamera: checked,
         photocamera: checked ? false : filters.photocamera,
-      };
-    } else if (name === 'price') {
-      updatedFilters = {
-        ...filters,
-        price: getPrice(value),
-      };
-    } else if (name === 'priceUp') {
-      updatedFilters = {
-        ...filters,
-        priceUp: getPriceUp(value),
       };
     } else {
       updatedFilters = {
@@ -498,7 +510,12 @@ const Catalog = () => {
                                 placeholder={priceRange[0].toString()}
                                 value={filters.price}
                                 name="price"
-                                onInput={handleFilterChange}
+                                onInput={(e) => {
+                                  handlePriceChange(e);
+                                }}
+                                onBlur={(e) => {
+                                  handlePriceChange(e, true);
+                                }}
                               />
                             </label>
                           </div>
@@ -509,7 +526,12 @@ const Catalog = () => {
                                 placeholder={priceRange[1].toString()}
                                 value={filters.priceUp}
                                 name="priceUp"
-                                onInput={handleFilterChange}
+                                onInput={(e) => {
+                                  handlePriceChange(e);
+                                }}
+                                onBlur={(e) => {
+                                  handlePriceChange(e, true);
+                                }}
                               />
                             </label>
                           </div>
