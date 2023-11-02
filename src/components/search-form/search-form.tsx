@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { catalogItemsSelector } from '../../store/selectors/catalog-selectors';
 import { CatalogItem, CatalogItems } from '../../type/catalog';
@@ -11,6 +11,22 @@ const SearchForm = () => {
   const [isDropList, setDropList] = useState(false);
   const [foundProducts, setFoundProducts] = useState<CatalogItems>([]);
   const searchFormRef = useRef<HTMLFormElement>(null);
+
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+
+  useEffect(() => {
+    if (
+      isDropList &&
+      focusedIndex >= 0 &&
+      focusedIndex < foundProducts.length
+    ) {
+      // Scroll the focused item into view
+      document
+        .querySelectorAll('.form-search__select-item')[focusedIndex].scrollIntoView({
+          block: 'nearest',
+        });
+    }
+  }, [focusedIndex, isDropList, foundProducts.length]);
 
   const findProducts = (text: string): CatalogItems => {
     const foundItems = products.filter((product) =>
@@ -36,12 +52,29 @@ const SearchForm = () => {
     }
   };
 
+  // const handleKeyPress = (
+  //   product: CatalogItem,
+  //   event: React.KeyboardEvent<HTMLLIElement>
+  // ) => {
+  //   if (event.key === 'Enter') {
+  //     navigate(`/product/${product.id}`);
+  //   }
+  // };
+
   const handleKeyPress = (
     product: CatalogItem,
     event: React.KeyboardEvent<HTMLLIElement>
   ) => {
     if (event.key === 'Enter') {
       navigate(`/product/${product.id}`);
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setFocusedIndex((prevIndex) => (prevIndex + 1) % foundProducts.length);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setFocusedIndex((prevIndex) =>
+        prevIndex <= 0 ? foundProducts.length - 1 : prevIndex - 1
+      );
     }
   };
 
@@ -74,13 +107,20 @@ const SearchForm = () => {
         </label>
         {isDropList && (
           <ul className="form-search__select-list">
-            {foundProducts?.map((product) => (
+            {foundProducts?.map((product, index) => (
               <li
-                className="form-search__select-item"
+                className={`form-search__select-item${
+                  index === focusedIndex ? ' focused' : ''
+                }`}
                 tabIndex={0}
                 key={product.id}
                 onClick={() => navigate(`/product/${product.id}`)}
                 onKeyDown={(event) => handleKeyPress(product, event)}
+                ref={(el) => {
+                  if (index === focusedIndex && el) {
+                    el.focus();
+                  }
+                }}
               >
                 {product.name}
               </li>
