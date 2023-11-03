@@ -30,7 +30,7 @@ describe('Reducer: CatalogData', () => {
       productToAdd: null,
       error: null,
     };
-    const action = setBasketItem(catalogItemMock);
+    const action = setBasketItem(catalogItemMock.id);
     const newState = catalogData.reducer(state, action);
     expect(newState).toEqual({
       ...state,

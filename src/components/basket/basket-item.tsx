@@ -62,11 +62,12 @@ const BasketItem = ({ product, quantity }: Props) => {
           min="1"
           max="99"
           aria-label="количество товара"
+          onChange={() => {}}
         />
         <button
           className="btn-icon btn-icon--next"
           aria-label="увеличить количество товара"
-          onClick={() => dispatch(setBasketItem(product))}
+          onClick={() => dispatch(setBasketItem(product.id))}
         >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>

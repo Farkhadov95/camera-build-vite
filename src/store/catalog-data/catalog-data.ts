@@ -78,14 +78,15 @@ export const catalogData = createSlice({
     removeVisibleItems: (state) => {
       state.visibleCatalog = [];
     },
-    setBasketItem: (state, action: {payload: CatalogItem}) => {
-      const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
+    setBasketItem: (state, action: {payload: number}) => {
+      const existingItem = state.basket.find((item) => item.product.id === action.payload);
+      const newItem = state.catalog.find((item) => item.id === action.payload);
 
       if (existingItem) {
         existingItem.quantity += 1;
-      } else {
+      } else if (newItem){
         state.basket.push({
-          product: action.payload,
+          product: newItem,
           quantity: 1,
         });
       }

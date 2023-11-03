@@ -43,7 +43,7 @@ const BasketAdd = () => {
   } = product;
 
   const handleAddToBasket = () => {
-    dispatch(setBasketItem(product));
+    dispatch(setBasketItem(product.id));
     handleClose();
   };
 
