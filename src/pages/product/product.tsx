@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
+  basketSelector,
   errorSelector,
   isAddedToBasketSelector,
   isLoadingSelector,
@@ -35,6 +36,7 @@ import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
 import BasketAddSuccess from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import ButtonUp from '../../components/button-up/button-up';
+import { isInBasket } from '../../utils';
 
 const Product = () => {
   const { id } = useParams();
@@ -47,6 +49,7 @@ const Product = () => {
   const productToAdd = useAppSelector(productToAddSelector);
   const reviewsError = useAppSelector(reviewsErrorSelector);
   const error = useAppSelector(errorSelector);
+  const basket = useAppSelector(basketSelector);
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.SPECS);
 
   const updateTabInURL = (tab: Tabs) => {
@@ -201,16 +204,28 @@ const Product = () => {
                     <span className="visually-hidden">Цена:</span>
                     {price} ₽
                   </p>
-                  <button
-                    className="btn btn--purple"
-                    type="button"
-                    onClick={handleAddToBasket}
-                  >
-                    <svg width="24" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-add-basket"></use>
-                    </svg>
-                    Добавить в корзину
-                  </button>
+                  {isInBasket(basket, Number(id)) ? (
+                    <Link
+                      className="btn btn--purple-border product-card__btn product-card__btn--in-cart"
+                      to="/basket"
+                    >
+                      <svg width="16" height="16" aria-hidden="true">
+                        <use xlinkHref="#icon-basket"></use>
+                      </svg>
+                      В корзине
+                    </Link>
+                  ) : (
+                    <button
+                      className="btn btn--purple"
+                      type="button"
+                      onClick={handleAddToBasket}
+                    >
+                      <svg width="24" height="16" aria-hidden="true">
+                        <use xlinkHref="#icon-add-basket"></use>
+                      </svg>
+                      Добавить в корзину
+                    </button>
+                  )}
                   <div className="tabs product__tabs">
                     <div className="tabs__controls product__tabs-controls">
                       <button
