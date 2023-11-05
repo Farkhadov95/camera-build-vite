@@ -1,8 +1,9 @@
 import { CatalogItem } from '../../type/catalog';
 import { Link } from 'react-router-dom';
 import Stars from '../rating-stars/stars';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setProductToAdd } from '../../store/catalog-data/catalog-data';
+import { basketSelector } from '../../store/selectors/catalog-selectors';
 
 type Props = {
   product: CatalogItem;
@@ -10,6 +11,7 @@ type Props = {
 
 const CatalogItemCard = ({ product }: Props) => {
   const dispatch = useAppDispatch();
+  const basket = useAppSelector(basketSelector);
   const handleAddToBasket = () => dispatch(setProductToAdd(product));
   const {
     id,
@@ -22,6 +24,8 @@ const CatalogItemCard = ({ product }: Props) => {
     previewImgWebp,
     previewImgWebp2x,
   } = product;
+
+  const isInBasket = basket.some((item) => item.product.id === id);
 
   return (
     <div className="product-card">
@@ -59,13 +63,26 @@ const CatalogItemCard = ({ product }: Props) => {
         </div>
       </div>
       <div className="product-card__buttons">
-        <button
-          className="btn btn--purple product-card__btn"
-          type="button"
-          onClick={handleAddToBasket}
-        >
-          Купить
-        </button>
+        {isInBasket ? (
+          <Link
+            className="btn btn--purple-border product-card__btn product-card__btn--in-cart"
+            to="/basket"
+          >
+            <svg width="16" height="16" aria-hidden="true">
+              <use xlinkHref="#icon-basket"></use>
+            </svg>
+            В корзине
+          </Link>
+        ) : (
+          <button
+            className="btn btn--purple product-card__btn"
+            type="button"
+            onClick={handleAddToBasket}
+          >
+            Купить
+          </button>
+        )}
+
         <Link className="btn btn--transparent" to={`/product/${id}`}>
           Подробнее
         </Link>
