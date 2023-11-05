@@ -104,23 +104,12 @@ export const catalogData = createSlice({
       const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
       const newItem = state.catalog.find((item) => item.id === action.payload.id);
 
-      // Unable to delete first digit to rewrite the quantiy
-      const getCorrectQuantity = () => {
-        if (action.payload.quantity >= MAX_BASKET_COUNT){
-          return MAX_BASKET_COUNT;
-        } else if (action.payload.quantity <= MIN_BASKET_COUNT){
-          return MIN_BASKET_COUNT;
-        } else {
-          return action.payload.quantity;
-        }
-      };
-
       if (existingItem) {
-        existingItem.quantity = getCorrectQuantity();
+        existingItem.quantity = action.payload.quantity;
       } else if (newItem && !existingItem){
         state.basket.push({
           product: newItem,
-          quantity: getCorrectQuantity(),
+          quantity: action.payload.quantity,
         });
       } else {
         state.error = 'Wrong Quantity';
@@ -133,10 +122,8 @@ export const catalogData = createSlice({
     decreaseBasketItem: (state, action: {payload: CatalogItem}) => {
       const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
 
-      if (state.basket[existingItemIndex].quantity > 1 && state.basket[existingItemIndex].quantity !== 0) {
+      if (state.basket[existingItemIndex].quantity > MIN_BASKET_COUNT && state.basket[existingItemIndex].quantity !== 0) {
         state.basket[existingItemIndex].quantity -= 1;
-      } else {
-        return;
       }
 
       localStorage.setItem('basket', JSON.stringify(state.basket));

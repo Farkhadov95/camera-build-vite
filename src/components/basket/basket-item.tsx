@@ -20,7 +20,6 @@ const BasketItem = ({ product, quantity }: Props) => {
 
   const handleBasketChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
-
     setItemQuantity(value);
   };
 
@@ -31,9 +30,22 @@ const BasketItem = ({ product, quantity }: Props) => {
     } else if (itemQuantity > MAX_BASKET_COUNT) {
       validatedQuantity = MAX_BASKET_COUNT;
     }
-
     setItemQuantity(validatedQuantity);
     dispatch(setBasketMultipleItems({ id, quantity: validatedQuantity }));
+  };
+
+  const handleBasketDecrease = () => {
+    if (itemQuantity > MIN_BASKET_COUNT) {
+      dispatch(decreaseBasketItem(product));
+      setItemQuantity(itemQuantity - 1);
+    }
+  };
+
+  const handleBasketIncrease = () => {
+    if (itemQuantity < MAX_BASKET_COUNT) {
+      dispatch(setBasketItem(product.id));
+      setItemQuantity(itemQuantity + 1);
+    }
   };
 
   return (
@@ -72,7 +84,7 @@ const BasketItem = ({ product, quantity }: Props) => {
         <button
           className="btn-icon btn-icon--prev"
           aria-label="уменьшить количество товара"
-          onClick={() => dispatch(decreaseBasketItem(product))}
+          onClick={handleBasketDecrease}
         >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>
@@ -96,7 +108,7 @@ const BasketItem = ({ product, quantity }: Props) => {
         <button
           className="btn-icon btn-icon--next"
           aria-label="увеличить количество товара"
-          onClick={() => dispatch(setBasketItem(product.id))}
+          onClick={handleBasketIncrease}
         >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>
