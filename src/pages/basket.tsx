@@ -1,11 +1,16 @@
 import BasketItem from '../components/basket/basket-item';
+import BasketRemoveModal from '../components/basket/basket-remove';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 import { useAppSelector } from '../hooks';
-import { basketSelector } from '../store/selectors/catalog-selectors';
+import {
+  basketSelector,
+  productToDeleteSelector,
+} from '../store/selectors/catalog-selectors';
 
 const Basket = () => {
   const basketItems = useAppSelector(basketSelector);
+  const productToDelete = useAppSelector(productToDeleteSelector);
 
   return (
     <>
@@ -43,13 +48,17 @@ const Basket = () => {
             <div className="container">
               <h1 className="title title--h2">Корзина</h1>
               <ul className="basket__list">
-                {basketItems.map((item) => (
-                  <BasketItem
-                    key={item.product.id}
-                    product={item.product}
-                    quantity={item.quantity}
-                  />
-                ))}
+                {basketItems.length !== 0 ? (
+                  basketItems.map((item) => (
+                    <BasketItem
+                      key={item.product.id}
+                      product={item.product}
+                      quantity={item.quantity}
+                    />
+                  ))
+                ) : (
+                  <p className="basket__empty">Корзина пуста</p>
+                )}
               </ul>
               <div className="basket__summary">
                 <div className="basket__promo">
@@ -116,6 +125,7 @@ const Basket = () => {
             </div>
           </section>
         </div>
+        {productToDelete && <BasketRemoveModal />}
       </main>
       <Footer />
     </>

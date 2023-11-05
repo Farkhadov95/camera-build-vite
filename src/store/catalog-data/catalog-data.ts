@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../../type/state';
 import { AxiosInstance } from 'axios';
-import { BasketItems, CatalogData, CatalogItem, CatalogItems} from '../../type/catalog';
+import { BasketItem, BasketItems, CatalogData, CatalogItem, CatalogItems, SetBasketItemType} from '../../type/catalog';
 import { PromoItems } from '../../type/catalog';
-import { ErrorMessages, NameSpace } from '../../const';
+import { ErrorMessages, MAX_BASKET_COUNT, MIN_BASKET_COUNT, NameSpace } from '../../const';
 
 const persistedBasket = localStorage.getItem('basket');
 
@@ -17,6 +17,7 @@ const initialState: CatalogData = {
   isDataLoading: false,
   isAddedToBasket: false,
   productToAdd: null,
+  productToDelete: null,
   error: null,
 };
 
@@ -82,9 +83,14 @@ export const catalogData = createSlice({
       const existingItem = state.basket.find((item) => item.product.id === action.payload);
       const newItem = state.catalog.find((item) => item.id === action.payload);
 
-      if (existingItem) {
+      const checkAvailableSlots = (item: BasketItem) => {
+        const availableCount = MAX_BASKET_COUNT - item.quantity;
+        return availableCount;
+      };
+
+      if (existingItem && checkAvailableSlots(existingItem) >= MIN_BASKET_COUNT) {
         existingItem.quantity += 1;
-      } else if (newItem){
+      } else if (newItem && !existingItem){
         state.basket.push({
           product: newItem,
           quantity: 1,
@@ -94,17 +100,58 @@ export const catalogData = createSlice({
       state.isAddedToBasket = true;
       state.productToAdd = null;
     },
-    removeBasketItem: (state, action: {payload: CatalogItem}) => {
-      const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
+    setBasketMultipleItems: (state, action: {payload: SetBasketItemType}) => {
+      const existingItem = state.basket.find((item) => item.product.id === action.payload.id);
+      const newItem = state.catalog.find((item) => item.id === action.payload.id);
 
-      if (existingItemIndex !== -1) {
-        if (state.basket[existingItemIndex].quantity > 1) {
-          state.basket[existingItemIndex].quantity -= 1;
+      // Unable to delete first digit to rewrite the quantiy
+      const getCorrectQuantity = () => {
+        if (action.payload.quantity >= MAX_BASKET_COUNT){
+          return MAX_BASKET_COUNT;
+        } else if (action.payload.quantity <= MIN_BASKET_COUNT){
+          return MIN_BASKET_COUNT;
         } else {
-          state.basket.splice(existingItemIndex, 1);
+          return action.payload.quantity;
         }
+      };
+
+      if (existingItem) {
+        existingItem.quantity = getCorrectQuantity();
+      } else if (newItem && !existingItem){
+        state.basket.push({
+          product: newItem,
+          quantity: getCorrectQuantity(),
+        });
+      } else {
+        state.error = 'Wrong Quantity';
+        return;
       }
       localStorage.setItem('basket', JSON.stringify(state.basket));
+      state.isAddedToBasket = true;
+      state.productToAdd = null;
+    },
+    decreaseBasketItem: (state, action: {payload: CatalogItem}) => {
+      const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload.id);
+
+      if (state.basket[existingItemIndex].quantity > 1 && state.basket[existingItemIndex].quantity !== 0) {
+        state.basket[existingItemIndex].quantity -= 1;
+      } else {
+        return;
+      }
+
+      localStorage.setItem('basket', JSON.stringify(state.basket));
+    },
+    removeBasketItem: (state, action: {payload: number}) => {
+      const existingItemIndex = state.basket.findIndex((item) => item.product.id === action.payload);
+
+      if (existingItemIndex !== -1) {
+        state.basket.splice(existingItemIndex, 1);
+      }
+      localStorage.setItem('basket', JSON.stringify(state.basket));
+      state.productToDelete = null;
+    },
+    clearRemoveBasketItemMessage: (state) => {
+      state.productToDelete = null;
     },
     removeAddedToBasketMessage: (state) => {
       state.isAddedToBasket = false;
@@ -112,6 +159,9 @@ export const catalogData = createSlice({
     },
     setProductToAdd: (state, action: {payload: CatalogItem}) => {
       state.productToAdd = action.payload;
+    },
+    setProductToDelete: (state, action: {payload: CatalogItem}) => {
+      state.productToDelete = action.payload;
     },
     removeProductToAdd: (state) => {
       state.productToAdd = null;
@@ -174,4 +224,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setBasketItem, removeBasketItem, removeAddedToBasketMessage, setProductToAdd, removeProductToAdd, setVisibleItems, removeVisibleItems, clearErrors } = catalogData.actions;
+export const { setBasketItem,setBasketMultipleItems, decreaseBasketItem, removeBasketItem, clearRemoveBasketItemMessage, removeAddedToBasketMessage, setProductToAdd, setProductToDelete, removeProductToAdd, setVisibleItems, removeVisibleItems, clearErrors } = catalogData.actions;

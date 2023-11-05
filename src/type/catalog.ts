@@ -64,6 +64,7 @@ export type CatalogData = {
     isDataLoading: boolean;
     isAddedToBasket: boolean;
     productToAdd: CatalogItem | null;
+    productToDelete: CatalogItem | null;
     error: string | null;
 }
 
@@ -79,4 +80,9 @@ export type Filters = {
     zero: boolean;
     nonProfessional: boolean;
     professional: boolean;
+}
+
+export type SetBasketItemType = {
+    id: number;
+    quantity: number;
 }

@@ -3720,4 +3720,12 @@ button,
   text-align: center;
   font-weight: bold;
  }
+
+ .basket__empty {
+  padding: 100px 0;
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+ }
 }

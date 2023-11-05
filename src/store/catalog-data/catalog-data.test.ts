@@ -1,5 +1,5 @@
 import { catalogItemMock } from '../../mocks';
-import { catalogData, removeAddedToBasketMessage, removeBasketItem, setBasketItem } from './catalog-data';
+import { catalogData, removeAddedToBasketMessage,decreaseBasketItem, setBasketItem } from './catalog-data';
 
 describe('Reducer: CatalogData', () => {
   it('should return the initial state', () => {
@@ -13,6 +13,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      productToDelete: null,
       error: null,
     });
   });
@@ -28,6 +29,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      productToDelete: null,
       error: null,
     };
     const action = setBasketItem(catalogItemMock.id);
@@ -56,9 +58,10 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: false,
       productToAdd: null,
+      productToDelete: null,
       error: null,
     };
-    const action = removeBasketItem(catalogItemMock);
+    const action = decreaseBasketItem(catalogItemMock);
     const newState = catalogData.reducer(state, action);
     expect(newState).toEqual({
       ...state,
@@ -77,6 +80,7 @@ describe('Reducer: CatalogData', () => {
       isDataLoading: false,
       isAddedToBasket: true,
       productToAdd: null,
+      productToDelete: null,
       error: null,
     };
     const action = removeAddedToBasketMessage();

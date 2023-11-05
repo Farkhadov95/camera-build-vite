@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import {
-  removeBasketItem,
+  decreaseBasketItem,
   setBasketItem,
+  setBasketMultipleItems,
+  setProductToDelete,
 } from '../../store/catalog-data/catalog-data';
 import { CatalogItem } from '../../type/catalog';
+import { MAX_BASKET_COUNT, MIN_BASKET_COUNT } from '../../const';
 
 type Props = {
   product: CatalogItem;
@@ -12,6 +16,26 @@ type Props = {
 
 const BasketItem = ({ product, quantity }: Props) => {
   const dispatch = useAppDispatch();
+  const [itemQuantity, setItemQuantity] = useState<number>(1);
+
+  const handleBasketChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value, 10);
+
+    setItemQuantity(value);
+  };
+
+  const handleBasketBlur = (id: number) => {
+    let validatedQuantity = itemQuantity;
+    if (isNaN(itemQuantity) || itemQuantity < MIN_BASKET_COUNT) {
+      validatedQuantity = MIN_BASKET_COUNT;
+    } else if (itemQuantity > MAX_BASKET_COUNT) {
+      validatedQuantity = MAX_BASKET_COUNT;
+    }
+
+    setItemQuantity(validatedQuantity);
+    dispatch(setBasketMultipleItems({ id, quantity: validatedQuantity }));
+  };
+
   return (
     <li className="basket-item">
       <div className="basket-item__img">
@@ -48,21 +72,26 @@ const BasketItem = ({ product, quantity }: Props) => {
         <button
           className="btn-icon btn-icon--prev"
           aria-label="уменьшить количество товара"
-          onClick={() => dispatch(removeBasketItem(product))}
+          onClick={() => dispatch(decreaseBasketItem(product))}
         >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>
           </svg>
         </button>
-        <label className="visually-hidden" htmlFor="counter1"></label>
+        <label
+          className="visually-hidden"
+          htmlFor={`counter ${product.id + 1}`}
+        />
         <input
           type="number"
-          id="counter1"
-          value={quantity}
+          id={`counter ${product.id + 1}`}
+          value={itemQuantity}
           min="1"
           max="99"
+          maxLength={2}
           aria-label="количество товара"
-          onChange={() => {}}
+          onChange={(e) => handleBasketChange(e)}
+          onBlur={() => handleBasketBlur(product.id)}
         />
         <button
           className="btn-icon btn-icon--next"
@@ -78,7 +107,12 @@ const BasketItem = ({ product, quantity }: Props) => {
         <span className="visually-hidden">Общая цена:</span>
         {product.price * quantity} ₽
       </div>
-      <button className="cross-btn" type="button" aria-label="Удалить товар">
+      <button
+        className="cross-btn"
+        type="button"
+        aria-label="Удалить товар"
+        onClick={() => dispatch(setProductToDelete(product))}
+      >
         <svg width="10" height="10" aria-hidden="true">
           <use xlinkHref="#icon-close"></use>
         </svg>

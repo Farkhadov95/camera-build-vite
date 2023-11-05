@@ -43,6 +43,7 @@ export const starsValues = [
   },
 ];
 
+
 export enum ErrorMessages {
   PROMO_LOAD = 'Ошибка загрузки промо',
   CATALOG_ITEMS_LOAD = 'Ошибка загрузки каталога',
@@ -50,7 +51,10 @@ export enum ErrorMessages {
   SIMILAR_ITEMS_LOAD = 'Ошибка загрузки похожих товаров',
   REVIEWS_LOAD = 'Ошибка загрузки отзывов',
   REVIEW_UPLOAD = 'Ошибка отправки отзыва',
+  BASKET_QUANTITY_ERROR = 'BASKET_QUANTITY_ERROR'
 }
 
 export const PAGES_LIST_SIZE = 3;
 export const ITEMS_PER_PAGE = 9;
+export const MAX_BASKET_COUNT = 99;
+export const MIN_BASKET_COUNT = 1;
