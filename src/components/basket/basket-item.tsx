@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import {
   decreaseBasketItem,
@@ -47,6 +47,10 @@ const BasketItem = ({ product, quantity }: Props) => {
       setItemQuantity(itemQuantity + 1);
     }
   };
+
+  useEffect(() => {
+    setItemQuantity(quantity);
+  }, [quantity]);
 
   return (
     <li className="basket-item">

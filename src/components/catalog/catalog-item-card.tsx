@@ -4,6 +4,7 @@ import Stars from '../rating-stars/stars';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setProductToAdd } from '../../store/catalog-data/catalog-data';
 import { basketSelector } from '../../store/selectors/catalog-selectors';
+import { isInBasket } from '../../utils';
 
 type Props = {
   product: CatalogItem;
@@ -24,8 +25,6 @@ const CatalogItemCard = ({ product }: Props) => {
     previewImgWebp,
     previewImgWebp2x,
   } = product;
-
-  const isInBasket = basket.some((item) => item.product.id === id);
 
   return (
     <div className="product-card">
@@ -63,7 +62,7 @@ const CatalogItemCard = ({ product }: Props) => {
         </div>
       </div>
       <div className="product-card__buttons">
-        {isInBasket ? (
+        {isInBasket(basket, id) ? (
           <Link
             className="btn btn--purple-border product-card__btn product-card__btn--in-cart"
             to="/basket"

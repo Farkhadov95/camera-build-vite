@@ -1,4 +1,4 @@
-import { CatalogItems } from './type/catalog';
+import { BasketItems, CatalogItems } from './type/catalog';
 
 export const convertDateFormat = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -29,3 +29,5 @@ export const getPriceRange = (items: CatalogItems) => {
   );
   return [lowestPrice, highestPrice];
 };
+
+export const isInBasket = (basket: BasketItems, id: number) => basket.some((item) => item.product.id === id);
