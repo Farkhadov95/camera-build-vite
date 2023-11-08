@@ -6,6 +6,7 @@ export enum Tabs {
 export enum NameSpace {
   Products = 'PRODUCTS',
   Reviews = 'REVIEWS',
+  Order = 'ORDER'
 }
 
 export enum SortType {
@@ -51,7 +52,8 @@ export enum ErrorMessages {
   SIMILAR_ITEMS_LOAD = 'Ошибка загрузки похожих товаров',
   REVIEWS_LOAD = 'Ошибка загрузки отзывов',
   REVIEW_UPLOAD = 'Ошибка отправки отзыва',
-  BASKET_QUANTITY_ERROR = 'BASKET_QUANTITY_ERROR'
+  BASKET_QUANTITY_ERROR = 'BASKET_QUANTITY_ERROR',
+  ORDER_SEND = 'Ошибка оформления заказа'
 }
 
 export const PAGES_LIST_SIZE = 3;

@@ -137,6 +137,10 @@ export const catalogData = createSlice({
       localStorage.setItem('basket', JSON.stringify(state.basket));
       state.productToDelete = null;
     },
+    clearBasket: (state) => {
+      state.basket = [];
+      localStorage.removeItem('basket');
+    },
     clearRemoveBasketItemMessage: (state) => {
       state.productToDelete = null;
     },
@@ -211,4 +215,4 @@ export const catalogData = createSlice({
   }
 });
 
-export const { setBasketItem,setBasketMultipleItems, decreaseBasketItem, removeBasketItem, clearRemoveBasketItemMessage, removeAddedToBasketMessage, setProductToAdd, setProductToDelete, removeProductToAdd, setVisibleItems, removeVisibleItems, clearErrors } = catalogData.actions;
+export const { setBasketItem,setBasketMultipleItems, decreaseBasketItem, removeBasketItem, clearRemoveBasketItemMessage, removeAddedToBasketMessage, clearBasket, setProductToAdd, setProductToDelete, removeProductToAdd, setVisibleItems, removeVisibleItems, clearErrors } = catalogData.actions;

@@ -1,16 +1,80 @@
+import { useForm } from 'react-hook-form';
 import BasketItem from '../components/basket/basket-item';
 import BasketRemoveModal from '../components/basket/basket-remove';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import {
+  CouponSeletor,
   basketSelector,
+  couponDiscountSelector,
+  isCouponValidSelector,
+  isOrderSuccessfulSelector,
   productToDeleteSelector,
 } from '../store/selectors/catalog-selectors';
+import {
+  activateCouponAction,
+  sendOrderAction,
+} from '../store/order-data/order-data';
+import { BasketItems } from '../type/catalog';
+import OrderSuccessMessage from '../components/basket/basket-order-success';
+import OrderFailMessage from '../components/basket/basket-order-fail';
 
 const Basket = () => {
+  const dispatch = useAppDispatch();
   const basketItems = useAppSelector(basketSelector);
   const productToDelete = useAppSelector(productToDeleteSelector);
+  const isCouponValid = useAppSelector(isCouponValidSelector);
+  const couponDiscount = useAppSelector(couponDiscountSelector);
+  const couponAvailable = useAppSelector(CouponSeletor);
+  const isOrderSuccessful = useAppSelector(isOrderSuccessfulSelector);
+
+  type CouponForm = {
+    promo: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CouponForm>();
+
+  const onSubmit = (data: CouponForm) => {
+    dispatch(activateCouponAction({ coupon: data.promo }));
+  };
+
+  const showMessage = () => {
+    if (isCouponValid === null) {
+      return '';
+    } else if (isCouponValid) {
+      return 'is-valid';
+    } else {
+      return 'is-invalid';
+    }
+  };
+
+  const totalPrice = (items: BasketItems) =>
+    items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
+  const discountValue = (price: number, discount: number) =>
+    (price / 100) * discount;
+
+  const totalPriceWithDiscount = (originalPrice: number, discount: number) =>
+    originalPrice - discountValue(originalPrice, discount);
+
+  const getBasketItemIds = (items: BasketItems): number[] =>
+    items.map((item) => item.product.id);
+
+  const handleGetValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const noSpaces = e.target.value.replace(/\s+/g, '');
+    e.target.value = noSpaces;
+  };
+
+  const handleOrderSubmit = () => {
+    const camerasIds = getBasketItemIds(basketItems);
+    const coupon = couponAvailable !== null ? couponAvailable : null;
+    dispatch(sendOrderAction({ order: { camerasIds, coupon } }));
+  };
 
   return (
     <>
@@ -57,7 +121,9 @@ const Basket = () => {
                     />
                   ))
                 ) : (
-                  <p className="basket__empty">Корзина пуста</p>
+                  <p className="basket__empty">
+                    Корзина пуста {errors.promo?.message}
+                  </p>
                 )}
               </ul>
               <div className="basket__summary">
@@ -67,22 +133,42 @@ const Basket = () => {
                     поле
                   </p>
                   <div className="basket-form">
-                    <form action="#">
-                      <div className="custom-input">
+                    <form
+                      method="post"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit(onSubmit)();
+                      }}
+                    >
+                      <div className={`custom-input ${showMessage()}`}>
                         <label>
                           <span className="custom-input__label">Промокод</span>
                           <input
                             type="text"
-                            name="promo"
+                            {...register('promo')}
                             placeholder="Введите промокод"
+                            disabled={couponAvailable !== null}
+                            onChange={handleGetValue}
+                            onKeyDown={(evt) => {
+                              if (evt.key === ' ') {
+                                evt.preventDefault();
+                              }
+                            }}
                           />
                         </label>
-                        <p className="custom-input__error">Промокод неверный</p>
                         <p className="custom-input__success">
                           Промокод принят!
                         </p>
+                        <p className="custom-input__error">Промокод неверный</p>
                       </div>
-                      <button className="btn" type="submit">
+                      <button
+                        className="btn"
+                        type="submit"
+                        disabled={
+                          couponAvailable !== null &&
+                          errors.promo?.message !== ''
+                        }
+                      >
                         Применить
                       </button>
                     </form>
@@ -92,17 +178,17 @@ const Basket = () => {
                   <p className="basket__summary-item">
                     <span className="basket__summary-text">Всего:</span>
                     <span className="basket__summary-value">
-                      {basketItems.reduce(
-                        (acc, item) => acc + item.product.price * item.quantity,
-                        0
-                      )}{' '}
-                      ₽
+                      {totalPrice(basketItems)} ₽
                     </span>
                   </p>
                   <p className="basket__summary-item">
                     <span className="basket__summary-text">Скидка:</span>
-                    <span className="basket__summary-value basket__summary-value--bonus">
-                      0 ₽
+                    <span
+                      className={`basket__summary-value ${
+                        isCouponValid ? 'basket__summary-value--bonus' : ''
+                      }`}
+                    >
+                      {discountValue(totalPrice(basketItems), couponDiscount)} ₽
                     </span>
                   </p>
                   <p className="basket__summary-item">
@@ -110,14 +196,19 @@ const Basket = () => {
                       К оплате:
                     </span>
                     <span className="basket__summary-value basket__summary-value--total">
-                      {basketItems.reduce(
-                        (acc, item) => acc + item.product.price * item.quantity,
-                        0
+                      {totalPriceWithDiscount(
+                        totalPrice(basketItems),
+                        couponDiscount
                       )}{' '}
                       ₽
                     </span>
                   </p>
-                  <button className="btn btn--purple" type="submit">
+                  <button
+                    className="btn btn--purple"
+                    type="submit"
+                    onClick={() => handleOrderSubmit()}
+                    disabled={basketItems.length === 0}
+                  >
                     Оформить заказ
                   </button>
                 </div>
@@ -126,6 +217,8 @@ const Basket = () => {
           </section>
         </div>
         {productToDelete && <BasketRemoveModal />}
+        {isOrderSuccessful && <OrderSuccessMessage />}
+        {isOrderSuccessful === false && <OrderFailMessage />}
       </main>
       <Footer />
     </>

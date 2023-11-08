@@ -3728,4 +3728,8 @@ button,
   text-align: center;
   font-weight: bold;
  }
+
+ .rotate-180 {
+  transform: rotate(180deg);
+ }
 }
