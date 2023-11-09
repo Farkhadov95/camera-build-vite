@@ -4,9 +4,16 @@ import { Provider } from 'react-redux';
 import CatalogItemCard from './catalog-item-card';
 import { catalogItemMock } from '../../mocks';
 import { configureMockStore } from '@jedmao/redux-mock-store';
+import { NameSpace } from '../../const';
+
+const initialState = {
+  [NameSpace.Products]: {
+    basket: [],
+  },
+};
 
 const mockStore = configureMockStore();
-const store = mockStore();
+const store = mockStore(initialState);
 
 describe('Component: Catalog-item-card', () => {
   it('should render correctly', () => {

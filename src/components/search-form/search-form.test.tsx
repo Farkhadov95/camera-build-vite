@@ -7,6 +7,7 @@ import { catalogItemsMock } from '../../mocks';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import SearchForm from './search-form';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 
 describe('Component: SearchFrom', () => {
   it('Should render the component correctly', () => {
@@ -48,7 +49,10 @@ describe('Component: SearchFrom', () => {
     );
 
     const input = screen.getByPlaceholderText('Поиск по сайту');
-    fireEvent.click(input);
+    act(() => {
+      fireEvent.click(input);
+    });
+
     await userEvent.type(input, 'Mock');
 
     await waitFor(() => {

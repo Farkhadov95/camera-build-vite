@@ -12,6 +12,7 @@ describe('Component: SimilarItem', () => {
     const store = mockStore({
       [NameSpace.Products]: {
         similarProducts: catalogItemsMock,
+        basket: [],
       },
     });
 

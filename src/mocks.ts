@@ -248,3 +248,27 @@ export const reviewsMocks = [
     cameraId: 5
   },
 ];
+
+export const basketMocks = [
+  {
+    quantity: 3,
+    product: catalogItemsMock[0],
+  },
+  {
+    quantity: 1,
+    product: catalogItemsMock[1],
+  },
+  {
+    quantity: 4,
+    product: catalogItemsMock[2],
+  },
+  {
+    quantity: 2,
+    product: catalogItemsMock[3],
+  },
+  {
+    quantity: 10,
+    product: catalogItemsMock[4],
+  },
+
+];

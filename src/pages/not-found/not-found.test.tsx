@@ -12,6 +12,7 @@ describe('Page: NotFound', () => {
     const store = mockStore({
       [NameSpace.Products]: {
         catalog: catalogItemsMock,
+        basket: [],
       },
     });
     render(

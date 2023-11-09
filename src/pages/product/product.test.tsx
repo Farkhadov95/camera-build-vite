@@ -20,6 +20,7 @@ describe('Page: Product', () => {
         isDataLoading: false,
         promos: [],
         productToAdd: catalogItemsMock[0],
+        basket: [],
       },
       [NameSpace.Reviews]: {
         reviews: reviewsMocks,

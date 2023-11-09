@@ -23,7 +23,10 @@ describe('Reducer: CatalogData', () => {
       catalog: [],
       visibleCatalog: [],
       product: null,
-      basket: [],
+      basket: [{
+        product: catalogItemMock,
+        quantity: 1,
+      }],
       similarProducts: [],
       promos: [],
       isDataLoading: false,
@@ -38,7 +41,7 @@ describe('Reducer: CatalogData', () => {
       ...state,
       basket: [{
         product: catalogItemMock,
-        quantity: 1,
+        quantity: 2,
       }],
       isAddedToBasket: true,
     });
@@ -51,7 +54,7 @@ describe('Reducer: CatalogData', () => {
       product: null,
       basket: [{
         product: catalogItemMock,
-        quantity: 1,
+        quantity: 2,
       }],
       similarProducts: [],
       promos: [],
@@ -65,7 +68,10 @@ describe('Reducer: CatalogData', () => {
     const newState = catalogData.reducer(state, action);
     expect(newState).toEqual({
       ...state,
-      basket: [],
+      basket: [{
+        product: catalogItemMock,
+        quantity: 1,
+      }],
     });
   });
 
