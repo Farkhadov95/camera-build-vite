@@ -39,7 +39,7 @@ export const sendOrderAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('data/sendOrder', async ({order}, {extra: api }) => {
-  const { data } = await api.post<string>('/ord1ers', order);
+  const { data } = await api.post<string>('/orders', order);
   return data;
 });
 

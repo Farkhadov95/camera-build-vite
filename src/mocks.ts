@@ -249,26 +249,33 @@ export const reviewsMocks = [
   },
 ];
 
+export const basketItemMock = [
+  {
+    quantity: 3,
+    product: catalogItemsMock[0], // price: 200
+  },
+];
+
 export const basketMocks = [
   {
     quantity: 3,
-    product: catalogItemsMock[0],
+    product: catalogItemsMock[0], // price: 200
   },
   {
     quantity: 1,
-    product: catalogItemsMock[1],
+    product: catalogItemsMock[1], // price: 300
   },
   {
     quantity: 4,
-    product: catalogItemsMock[2],
+    product: catalogItemsMock[2], // price: 400
   },
   {
     quantity: 2,
-    product: catalogItemsMock[3],
+    product: catalogItemsMock[3], // price: 500
   },
   {
-    quantity: 10,
-    product: catalogItemsMock[4],
+    quantity: 5,
+    product: catalogItemsMock[4], // price: 600
   },
 
 ];

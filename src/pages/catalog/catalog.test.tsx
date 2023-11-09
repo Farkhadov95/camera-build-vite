@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { NameSpace } from '../../const';
-import { catalogItemsMock } from '../../mocks';
+import { basketMocks, catalogItemsMock } from '../../mocks';
 
 describe('Page: Catalog', () => {
   it('should render the page correctrly', () => {
@@ -71,5 +71,30 @@ describe('Page: Catalog', () => {
         timeout: 1000,
       }
     );
+  });
+
+  it('basket items should have have different button', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      [NameSpace.Products]: {
+        catalog: catalogItemsMock,
+        similarProducts: catalogItemsMock,
+        promos: [],
+        productToAdd: catalogItemsMock[0],
+        basket: basketMocks,
+      },
+    });
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/catalog']}>
+          <Catalog />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const allBasketItems = screen.getAllByText(/В корзине/i);
+    allBasketItems.forEach((item) => {
+      expect(item).toBeInTheDocument();
+    });
   });
 });

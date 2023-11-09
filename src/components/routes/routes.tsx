@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Catalog from '../../pages/catalog/catalog';
 import Product from '../../pages/product/product';
 import NotFound from '../../pages/not-found/not-found';
-import Basket from '../../pages/basket';
+import Basket from '../../pages/basket/basket';
 
 const router = createBrowserRouter([
   { path: '/', element: <Catalog /> },

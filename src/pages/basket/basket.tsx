@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
-import BasketItem from '../components/basket/basket-item';
-import BasketRemoveModal from '../components/basket/basket-remove';
-import Footer from '../components/footer/footer';
-import Header from '../components/header/header';
-import { useAppDispatch, useAppSelector } from '../hooks';
+import BasketItem from '../../components/basket/basket-item';
+import BasketRemoveModal from '../../components/basket/basket-remove';
+import Footer from '../../components/footer/footer';
+import Header from '../../components/header/header';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   CouponSeletor,
   basketSelector,
@@ -11,14 +11,14 @@ import {
   isCouponValidSelector,
   isOrderSuccessfulSelector,
   productToDeleteSelector,
-} from '../store/selectors/catalog-selectors';
+} from '../../store/selectors/catalog-selectors';
 import {
   activateCouponAction,
   sendOrderAction,
-} from '../store/order-data/order-data';
-import { BasketItems } from '../type/catalog';
-import OrderSuccessMessage from '../components/basket/basket-order-success';
-import OrderFailMessage from '../components/basket/basket-order-fail';
+} from '../../store/order-data/order-data';
+import { BasketItems } from '../../type/catalog';
+import OrderSuccessMessage from '../../components/basket/basket-order-success';
+import OrderFailMessage from '../../components/basket/basket-order-fail';
 
 const Basket = () => {
   const dispatch = useAppDispatch();
