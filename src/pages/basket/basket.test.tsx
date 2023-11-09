@@ -1,10 +1,13 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { NameSpace } from '../../const';
-import { basketItemMock, basketMocks, catalogItemsMock } from '../../mocks';
+import { basketItemMock, catalogItemsMock } from '../../mocks';
 import Basket from './basket';
+
+const middlewares = [thunk];
 
 describe('Page: Catalog', () => {
   it('should render the page correctrly. No discount.', () => {
@@ -110,8 +113,8 @@ describe('Page: Catalog', () => {
     expect(orderBtn).toBeDisabled();
   });
 
-  it('should display success message on submit', () => {
-    const mockStore = configureMockStore();
+  it('should display success message on success', () => {
+    const mockStore = configureMockStore(middlewares);
     const store = mockStore({
       [NameSpace.Products]: {
         catalog: catalogItemsMock,
@@ -123,6 +126,8 @@ describe('Page: Catalog', () => {
       [NameSpace.Order]: {
         couponDiscount: 0,
         isCouponValid: null,
+        isOrderSending: false,
+        isOrderSuccessful: true,
       },
     });
     render(
@@ -133,13 +138,37 @@ describe('Page: Catalog', () => {
       </Provider>
     );
 
-    const firstItem = screen.getByText(/Mock Retrocamera 1/i);
+    const successMessage = screen.getByText(/Спасибо за покупку/i);
+    expect(successMessage).toBeInTheDocument();
+  });
 
-    const totalPrice = screen.getAllByText(/600/i);
-
-    totalPrice.forEach((item) => {
-      expect(item).toBeInTheDocument();
+  it('should display success message on success', () => {
+    const mockStore = configureMockStore(middlewares);
+    const store = mockStore({
+      [NameSpace.Products]: {
+        catalog: catalogItemsMock,
+        similarProducts: catalogItemsMock,
+        promos: [],
+        productToAdd: catalogItemsMock[0],
+        basket: basketItemMock,
+      },
+      [NameSpace.Order]: {
+        couponDiscount: 0,
+        isCouponValid: null,
+        isOrderSending: false,
+        isOrderSuccessful: false,
+        error: 'Ошибка',
+      },
     });
-    expect(firstItem).toBeInTheDocument();
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/catalog']}>
+          <Basket />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const errorMessage = screen.getByText(/Ошибка/i);
+    expect(errorMessage).toBeInTheDocument();
   });
 });

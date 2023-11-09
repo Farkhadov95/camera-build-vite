@@ -64,7 +64,6 @@ describe('Page: Catalog', () => {
         const allItems = screen.getAllByText(/₽/i);
         allItems.forEach((item) => {
           expect(item).toBeInTheDocument();
-          // console.log(`Item ${index}:`, item.textContent);
         });
       },
       {
@@ -73,7 +72,7 @@ describe('Page: Catalog', () => {
     );
   });
 
-  it('basket items should have have different button', () => {
+  it('items in the basket should have different button', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       [NameSpace.Products]: {

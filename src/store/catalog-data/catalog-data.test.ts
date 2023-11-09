@@ -47,6 +47,35 @@ describe('Reducer: CatalogData', () => {
     });
   });
 
+  it('should not add item to the basket if max', () => {
+    const state = {
+      catalog: [],
+      visibleCatalog: [],
+      product: null,
+      basket: [{
+        product: catalogItemMock,
+        quantity: 99,
+      }],
+      similarProducts: [],
+      promos: [],
+      isDataLoading: false,
+      isAddedToBasket: false,
+      productToAdd: null,
+      productToDelete: null,
+      error: null,
+    };
+    const action = setBasketItem(catalogItemMock.id);
+    const newState = catalogData.reducer(state, action);
+    expect(newState).toEqual({
+      ...state,
+      basket: [{
+        product: catalogItemMock,
+        quantity: 99,
+      }],
+      isAddedToBasket: true,
+    });
+  });
+
   it('should remove item from the basket', () => {
     const state = {
       catalog: [],
