@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import {
   decreaseBasketItem,
@@ -17,35 +17,60 @@ type Props = {
 
 const BasketItem = ({ product, quantity }: Props) => {
   const dispatch = useAppDispatch();
-  const [itemQuantity, setItemQuantity] = useState<number>(1);
+  const [itemQuantity, setItemQuantity] = useState<number | ''>(1);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleBasketChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    setItemQuantity(value);
+    const enteredValue = e.target.value;
+
+    if (enteredValue === '') {
+      setItemQuantity('');
+    } else {
+      const value = parseInt(enteredValue, 10);
+      if (!isNaN(value)) {
+        setItemQuantity(value);
+      }
+    }
   };
 
   const handleBasketBlur = (id: number) => {
-    let validatedQuantity = itemQuantity;
-    if (isNaN(itemQuantity) || itemQuantity < MIN_BASKET_COUNT) {
+    let validatedQuantity =
+      typeof itemQuantity === 'number' ? itemQuantity : MIN_BASKET_COUNT;
+
+    if (isNaN(validatedQuantity) || validatedQuantity < MIN_BASKET_COUNT) {
       validatedQuantity = MIN_BASKET_COUNT;
-    } else if (itemQuantity > MAX_BASKET_COUNT) {
+    } else if (validatedQuantity > MAX_BASKET_COUNT) {
       validatedQuantity = MAX_BASKET_COUNT;
     }
+
     setItemQuantity(validatedQuantity);
     dispatch(setBasketMultipleItems({ id, quantity: validatedQuantity }));
   };
 
+  const handleBasketKeyDown = (e: React.KeyboardEvent, id: number) => {
+    if (e.key === 'Enter') {
+      handleBasketBlur(id);
+      if (inputRef.current) {
+        inputRef.current.blur();
+      }
+    }
+  };
+
   const handleBasketDecrease = () => {
-    if (itemQuantity > MIN_BASKET_COUNT) {
-      dispatch(decreaseBasketItem(product));
-      setItemQuantity(itemQuantity - 1);
+    if (itemQuantity !== '') {
+      if (itemQuantity > MIN_BASKET_COUNT) {
+        dispatch(decreaseBasketItem(product));
+        setItemQuantity(itemQuantity - 1);
+      }
     }
   };
 
   const handleBasketIncrease = () => {
-    if (itemQuantity < MAX_BASKET_COUNT) {
-      dispatch(setBasketItem(product.id));
-      setItemQuantity(itemQuantity + 1);
+    if (itemQuantity !== '') {
+      if (itemQuantity < MAX_BASKET_COUNT) {
+        dispatch(setBasketItem(product.id));
+        setItemQuantity(itemQuantity + 1);
+      }
     }
   };
 
@@ -100,6 +125,7 @@ const BasketItem = ({ product, quantity }: Props) => {
           htmlFor={`counter ${product.id + 1}`}
         />
         <input
+          ref={inputRef}
           type="number"
           id={`counter ${product.id + 1}`}
           value={itemQuantity}
@@ -109,6 +135,7 @@ const BasketItem = ({ product, quantity }: Props) => {
           aria-label="количество товара"
           onChange={(e) => handleBasketChange(e)}
           onBlur={() => handleBasketBlur(product.id)}
+          onKeyDown={(e) => handleBasketKeyDown(e, product.id)}
         />
         <button
           className="btn-icon btn-icon--next"
