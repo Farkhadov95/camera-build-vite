@@ -50,7 +50,9 @@ const Header = () => {
           <svg width="16" height="16" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
           </svg>
-          <span className="header__basket-count">{basketItemsCount()}</span>
+          {basketItemsCount() > 0 && (
+            <span className="header__basket-count">{basketItemsCount()}</span>
+          )}
         </Link>
       </div>
     </header>
