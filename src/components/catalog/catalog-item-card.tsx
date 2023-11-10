@@ -4,7 +4,7 @@ import Stars from '../rating-stars/stars';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setProductToAdd } from '../../store/catalog-data/catalog-data';
 import { basketSelector } from '../../store/selectors/catalog-selectors';
-import { isInBasket } from '../../utils';
+import { formatNumberWithSpace, isInBasket } from '../../utils';
 
 type Props = {
   product: CatalogItem;
@@ -57,7 +57,7 @@ const CatalogItemCard = ({ product }: Props) => {
           <p className="product-card__title">{name}</p>
           <p className="product-card__price">
             <span className="visually-hidden">Цена: </span>
-            {price} ₽
+            {formatNumberWithSpace(price)} ₽
           </p>
         </div>
       </div>

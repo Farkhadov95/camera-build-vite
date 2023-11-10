@@ -35,6 +35,7 @@ import { isPostReviewSuccess } from '../../store/selectors/reviews-selectors';
 import BasketAddSuccess from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import ButtonUp from '../../components/button-up/button-up';
+import { formatNumberWithSpace } from '../../utils';
 
 const Product = () => {
   const { id } = useParams();
@@ -199,7 +200,7 @@ const Product = () => {
                   </div>
                   <p className="product__price">
                     <span className="visually-hidden">Цена:</span>
-                    {price} ₽
+                    {formatNumberWithSpace(price)} ₽
                   </p>
                   <button
                     className="btn btn--purple"

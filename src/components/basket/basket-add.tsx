@@ -6,6 +6,7 @@ import {
 } from '../../store/catalog-data/catalog-data';
 import { productToAddSelector } from '../../store/selectors/catalog-selectors';
 import FocusTrap from 'focus-trap-react';
+import { formatNumberWithSpace } from '../../utils';
 
 const BasketAdd = () => {
   const dispatch = useAppDispatch();
@@ -89,7 +90,7 @@ const BasketAdd = () => {
                 </ul>
                 <p className="basket-item__price">
                   <span className="visually-hidden">Цена:</span>
-                  {price} ₽
+                  {formatNumberWithSpace(price)} ₽
                 </p>
               </div>
             </div>

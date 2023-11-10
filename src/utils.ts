@@ -31,3 +31,4 @@ export const getPriceRange = (items: CatalogItems) => {
 };
 
 export const isInBasket = (basket: BasketItems, id: number) => basket.some((item) => item.product.id === id);
+export const formatNumberWithSpace = (int: number) => int.toLocaleString('fr-FR').replace(/,/g, ' ');

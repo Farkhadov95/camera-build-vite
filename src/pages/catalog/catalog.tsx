@@ -28,7 +28,7 @@ import Pagination from '../../components/pagination/pagination';
 import BasketAddModal from '../../components/basket/basket-add-success';
 import BasketAdd from '../../components/basket/basket-add';
 import { ITEMS_PER_PAGE, SortOrder, SortType } from '../../const';
-import { getPriceRange } from '../../utils';
+import { formatNumberWithSpace, getPriceRange } from '../../utils';
 import { clearErrors } from '../../store/catalog-data/catalog-data';
 
 const Catalog = () => {
@@ -512,7 +512,9 @@ const Catalog = () => {
                             <label>
                               <input
                                 type="number"
-                                placeholder={priceRange[0].toString()}
+                                placeholder={formatNumberWithSpace(
+                                  priceRange[0]
+                                ).toString()}
                                 value={filters.price}
                                 name="price"
                                 onInput={(e) => {
@@ -528,7 +530,9 @@ const Catalog = () => {
                             <label>
                               <input
                                 type="number"
-                                placeholder={priceRange[1].toString()}
+                                placeholder={formatNumberWithSpace(
+                                  priceRange[1]
+                                ).toString()}
                                 value={filters.priceUp}
                                 name="priceUp"
                                 onInput={(e) => {

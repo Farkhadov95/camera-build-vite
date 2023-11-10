@@ -8,6 +8,7 @@ import {
 } from '../../store/catalog-data/catalog-data';
 import { CatalogItem } from '../../type/catalog';
 import { MAX_BASKET_COUNT, MIN_BASKET_COUNT } from '../../const';
+import { formatNumberWithSpace } from '../../utils';
 
 type Props = {
   product: CatalogItem;
@@ -82,7 +83,7 @@ const BasketItem = ({ product, quantity }: Props) => {
       </div>
       <p className="basket-item__price">
         <span className="visually-hidden">Цена:</span>
-        {product.price} ₽
+        {formatNumberWithSpace(product.price)} ₽
       </p>
       <div className="quantity">
         <button
@@ -121,7 +122,7 @@ const BasketItem = ({ product, quantity }: Props) => {
       </div>
       <div className="basket-item__total-price">
         <span className="visually-hidden">Общая цена:</span>
-        {product.price * quantity} ₽
+        {formatNumberWithSpace(product.price * quantity)} ₽
       </div>
       <button
         className="cross-btn"

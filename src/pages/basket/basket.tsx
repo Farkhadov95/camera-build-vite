@@ -19,6 +19,7 @@ import {
 import { BasketItems } from '../../type/catalog';
 import OrderSuccessMessage from '../../components/basket/basket-order-success';
 import OrderFailMessage from '../../components/basket/basket-order-fail';
+import { formatNumberWithSpace } from '../../utils';
 
 const Basket = () => {
   const dispatch = useAppDispatch();
@@ -178,7 +179,7 @@ const Basket = () => {
                   <p className="basket__summary-item">
                     <span className="basket__summary-text">Всего:</span>
                     <span className="basket__summary-value">
-                      {totalPrice(basketItems)} ₽
+                      {formatNumberWithSpace(totalPrice(basketItems))} ₽
                     </span>
                   </p>
                   <p className="basket__summary-item">
@@ -188,7 +189,10 @@ const Basket = () => {
                         isCouponValid ? 'basket__summary-value--bonus' : ''
                       }`}
                     >
-                      {discountValue(totalPrice(basketItems), couponDiscount)} ₽
+                      {formatNumberWithSpace(
+                        discountValue(totalPrice(basketItems), couponDiscount)
+                      )}{' '}
+                      ₽
                     </span>
                   </p>
                   <p className="basket__summary-item">
@@ -196,9 +200,11 @@ const Basket = () => {
                       К оплате:
                     </span>
                     <span className="basket__summary-value basket__summary-value--total">
-                      {totalPriceWithDiscount(
-                        totalPrice(basketItems),
-                        couponDiscount
+                      {formatNumberWithSpace(
+                        totalPriceWithDiscount(
+                          totalPrice(basketItems),
+                          couponDiscount
+                        )
                       )}{' '}
                       ₽
                     </span>
