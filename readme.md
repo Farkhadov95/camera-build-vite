@@ -1,23 +1,25 @@
-## Структура проекта
+# Online Camera Store
 
-### markup
+## Introduction
 
-В директории находится вёрстка проекта: примеры страниц, ui-kit и карта сайта (`sitemap.html`). Начинать знакомство с проектом лучше с карты.
+Welcome to our Online Camera Store, a dynamic e-commerce platform designed for camera enthusiasts and professionals alike. Leveraging modern web technologies, our store offers a seamless and interactive shopping experience, focusing on user-friendly navigation and efficient management of a diverse camera catalog.
 
-### public
+## Features
 
-Директория для размещения статичных ресурсов (шрифты, стили, изображения и так далее).
+- State Management using Redux
+- Navigation using React Router
+- Live search matches
+- Promo slider using SwiperJS
+- Axios for retrieving and sending data from/to API
+- Filtration by price/category/type/level
+- Sorting by price or popularity in ascending or descending orders
+- Dynamic pagination
+- Add/removing items to/from basket
+- Reviews: retriving and posting reviews
+- Form validation using React Hook Form
+- Users can apply promo codes 'camera-333, camera-444, camera-555' to get a discount
+- Component render testing using React Testing Library and Vitest
 
-### src
+## Demo
 
-В директории размещается исходный код проекта: компоненты, файлы с тестами, модули и так далее. Структура директории `src` может быть произвольной.
-
-## Алгоритм работы над проектом
-
-1. Установите зависимости, выполнив команду `npm install`.
-
-2. Проверьте работу приложения, выполнив команду `npm start`.
-
-3. Перейдите по адресу, указанному в терминале (скорее всего, это будет `http://localhost:5173/`). Если сборка прошла успешно, то на странице вашего приложения вы увидите `Hello, world!`.
-
-4. Запрограммируйте проект.
+https://camera-online-store.vercel.app
